@@ -6,13 +6,11 @@ steps:
         name: 'Team2-P3'
         messageType: 'content'
         content: |
-          **Team 2 Project 3**: $(Build.SourceVersionMessage)
+          **Team 2 Project 3 Backend**: $(Build.SourceVersionMessage)
           ```
           Build Number: $(Build.BuildNumber)
           Build Branch: $(Build.SourceBranch)
           Build Reason: $(Build.Reason)
+          Build Image: backend-$(Build.SourceVersion)
           ```
           **Result**: $(Agent.JobStatus)
-          ```
-          Image: "$(service)-$(Build.SourceVersion)"
-          ```
