@@ -1,0 +1,20 @@
+steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Forge-SonarCloud'
+    organization: '1058-sophia-gavrila-forge'
+    scannerMode: 'Other'
+    extraProperties: |
+      sonar.branch.name=main
+      sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    codeCoverageToolOption: 'JaCoCo'
+    codeCoverageClassFilesDirectories: 'build/classes/main/'
+    javaHomeOption: 'JDKVersion'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false

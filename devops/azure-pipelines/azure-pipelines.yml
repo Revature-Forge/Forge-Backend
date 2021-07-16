@@ -9,22 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'Forge-SonarCloud'
-    organization: '1058-sophia-gavrila-forge'
-    scannerMode: 'Other'
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'build'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    codeCoverageToolOption: 'JaCoCo'
-    codeCoverageClassFilesDirectories: 'build/classes/main/'
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: true
-    sqGradlePluginVersionChoice: 'specify'
-    sonarQubeGradlePluginVersion: '2.6.1'
-    spotBugsAnalysis: false
+stages:
+- template: ./gradle-build-test-stage-template.yml
+- template: ./discord-job-template.yml

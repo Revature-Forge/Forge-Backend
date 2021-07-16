@@ -1,0 +1,18 @@
+steps: 
+    - task: ado-discord-webhook@1
+      inputs:
+        channelId: '856587514218545203'
+        webhookKey: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
+        name: 'Team2-P3'
+        messageType: 'content'
+        content: |
+          **Team 2 Project 3**: $(Build.SourceVersionMessage)
+          ```
+          Build Number: $(Build.BuildNumber)
+          Build Branch: $(Build.SourceBranch)
+          Build Reason: $(Build.Reason)
+          ```
+          **Result**: $(Agent.JobStatus)
+          ```
+          Image: "$(service)-$(Build.SourceVersion)"
+          ```
