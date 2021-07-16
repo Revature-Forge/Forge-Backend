@@ -9,6 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-stages:
+steps:
 - template: ./gradle-build-test-stage-template.yml
 - template: ./discord-job-template.yml
