@@ -1,8 +1,8 @@
 stages:
-- stage: "Build and Test"
+- stage: Build-and-Test
   displayName: ${{ parameters.displayName }}
   jobs:
-  - job: "Build and Test"
+  - job: Build-and-Test
     steps:
     - task: SonarCloudPrepare@1
       inputs:
