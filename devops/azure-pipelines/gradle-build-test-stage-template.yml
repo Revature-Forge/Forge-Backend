@@ -1,8 +1,8 @@
 stages:
-- stage: "Build & Test"
+- stage: "Build and Test"
   displayName: ${{ parameters.displayName }}
   jobs:
-  - job: "Build & Test"
+  - job: "Build and Test"
     steps:
     - task: Gradle@2
       inputs:
