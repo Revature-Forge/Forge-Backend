@@ -10,6 +10,7 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- template: ./gradle-build-test-stage-template.yml
-- template: ./discord-job-template.yml
+stages:
+- template: ./build-stage-template.yml
+  parameters:
+    displayName: 'Backend Build & Test'

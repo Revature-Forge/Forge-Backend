@@ -1,12 +1,14 @@
-steps: 
+jobs:
+  - job: DiscordMessage
+    dependsOn: ${{ parameters.dependOn }}
+    variables: 
+    - group: Discord-Webhook-Info
+    - name: discord_id
+      value: $[variables.discordid]
+    - name: discord_key
+      value: $[variables.discordkey]
+    steps:  
     - task: ado-discord-webhook@1
-      dependsOn: ${{ parameters.dependOn }}
-      variables: 
-      - group: Discord-Webhook-Info
-      - name: discord_id
-        value: $[variables.discordid]
-      - name: discord_key
-        value: $[variables.discordkey]
       inputs:
         channelId: $(discord_id)
         webhookKey: $(discord_key)
@@ -21,4 +23,3 @@ steps:
           Build Image: backend-$(Build.SourceVersion)
           ```
           **Result**: $(Agent.JobStatus)
-          
