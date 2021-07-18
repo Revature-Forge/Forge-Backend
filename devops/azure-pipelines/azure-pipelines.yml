@@ -11,6 +11,6 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-- template: ./build-stage-template.yml
+- template: ./gradle-build-test-stage-template.yml
   parameters:
     displayName: 'Backend Build & Test'
