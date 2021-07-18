@@ -1,12 +1,4 @@
 steps:
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'Forge-SonarCloud'
-    organization: '1058-sophia-gavrila-forge'
-    scannerMode: 'Other'
-    extraProperties: |
-      sonar.branch.name=main
-      sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
@@ -18,3 +10,4 @@ steps:
     javaHomeOption: 'JDKVersion'
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
+    

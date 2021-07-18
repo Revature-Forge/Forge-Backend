@@ -1,8 +1,15 @@
 steps: 
     - task: ado-discord-webhook@1
+      dependsOn: ${{ parameters.dependOn }}
+      variables: 
+      - group: Discord-Webhook-Info
+      - name: discord_id
+        value: $[variables.discordid]
+      - name: discord_key
+        value: $[variables.discordkey]
       inputs:
-        channelId: '856587514218545203'
-        webhookKey: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
+        channelId: $(discord_id)
+        webhookKey: $(discord_key)
         name: 'Team2-P3'
         messageType: 'content'
         content: |
@@ -14,3 +21,4 @@ steps:
           Build Image: backend-$(Build.SourceVersion)
           ```
           **Result**: $(Agent.JobStatus)
+          
