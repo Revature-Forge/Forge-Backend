@@ -15,4 +15,6 @@ stages:
         javaHomeOption: 'JDKVersion'
         sonarQubeRunAnalysis: false
         spotBugsAnalysis: false
-  - template: ./discord-job-template.yml  
+  - template: ./discord-job-template.yml
+    parameters:
+      dependOn: Build_and_Test  

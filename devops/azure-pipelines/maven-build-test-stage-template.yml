@@ -29,3 +29,5 @@ stages:
         sonarQubeRunAnalysis: true
         sqMavenPluginVersionChoice: 'latest'
   - template: ./discord-job-template.yml
+    parameters:
+      dependOn: Build_and_Test
