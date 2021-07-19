@@ -8,7 +8,7 @@ jobs:
     inputs:
       channelId: $[variables.discordid]
       webhookKey: $[variables.discordkey]
-      name: ${{ parameters.name }}
+      name: '${{ parameters.name }}'
       messageType: 'content'
       content: |
         **${{ parameters.title }}**: $(Build.SourceVersionMessage)

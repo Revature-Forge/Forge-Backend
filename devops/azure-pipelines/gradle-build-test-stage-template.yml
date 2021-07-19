@@ -17,4 +17,7 @@ stages:
         spotBugsAnalysis: false
   - template: ./discord-job-template.yml
     parameters:
-      dependOn: Build_and_Test  
+      dependOn: Build_and_Test
+      name: Team2-P3
+      title: Team 2 Project 3 Backend
+      
