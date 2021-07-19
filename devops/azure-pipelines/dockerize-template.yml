@@ -3,6 +3,7 @@ stages:
   displayName: ${{ parameters.displayName }}
   jobs:
   - job:
+    displayName: ${{ parameters.displayName }}
     steps:
     - task: Docker@2
       inputs:
