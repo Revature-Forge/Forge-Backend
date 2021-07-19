@@ -15,15 +15,6 @@ stages:
   parameters:
     displayName: 'Backend Build & Test'
 
-- stage:
-  #displayName: ${{ parameters.displayName }}
-  jobs:
-  - job:
-    steps:
-    - task: Docker@2
-      inputs:
-        repository: 'dajpearl/forge-backend'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: '$(Build.SourceVersion)'
-
+- template: ./dockerize-template.yml
+  parameters:
+    displayName: 'Build Docker Image and Push'
