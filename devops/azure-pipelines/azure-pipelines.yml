@@ -14,3 +14,16 @@ stages:
 - template: ./gradle-build-test-stage-template.yml
   parameters:
     displayName: 'Backend Build & Test'
+
+- stage:
+  #displayName: ${{ parameters.displayName }}
+  jobs:
+  - job:
+    steps:
+    - task: Docker@2
+      inputs:
+        repository: 'dajpearl/forge-backend'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: '$(Build.SourceVersion)'
+
