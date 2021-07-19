@@ -24,6 +24,7 @@ stages:
         script: |
           ls
           echo $(Pipeline.Workspace)
+          ls $(Pipeline.Workspace)
 
 - template: ./dockerize-template.yml
   parameters:
