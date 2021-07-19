@@ -15,6 +15,20 @@ stages:
   parameters:
     displayName: 'Backend Build & Test'
 
+- stage:
+  jobs:
+  - job:
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          ls
+          echo $(Pipeline.Workspace)
+          ls $(Pipeline.Workspace)
+          pwd
+          cd $(Pipeline.Workspace)
+          pwd
+
 - template: ./dockerize-template.yml
   parameters:
     displayName: 'Build Docker Image and Push'
