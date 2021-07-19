@@ -10,5 +10,5 @@ stages:
         containerRegistry: 'project-3-docker-hub'
         repository: 'dajpearl/forge-backend'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/devops/docker/gradle.Dockerfile'
         tags: '$(Build.SourceVersion)'
