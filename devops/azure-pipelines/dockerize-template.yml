@@ -12,3 +12,4 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/gradle.Dockerfile'
         tags: '$(Build.SourceVersion)'
+        buildContext: '$(Pipeline.Workspace)'
