@@ -18,3 +18,14 @@ stages:
 - template: ./dockerize-template.yml
   parameters:
     displayName: 'Build Docker Image and Push'
+
+- stage:
+  jobs:
+  - job:
+    steps:
+      - task: KubernetesManifest@0
+        inputs:
+          action: 'deploy'
+          kubernetesServiceConnection: 'Alex-Dev-Cluster'
+          manifests: '../kube/monolith-manifest.yml'
+          rolloutStatusTimeout: '10'
