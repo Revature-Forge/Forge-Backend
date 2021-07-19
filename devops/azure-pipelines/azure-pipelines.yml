@@ -27,5 +27,5 @@ stages:
         inputs:
           action: 'deploy'
           kubernetesServiceConnection: 'Alex-Dev-Cluster'
-          manifests: '../kube/monolith-manifest.yml'
+          manifests: 'devops/kube/monolith-manifest.yml'
           rolloutStatusTimeout: '10'
