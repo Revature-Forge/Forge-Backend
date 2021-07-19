@@ -6,6 +6,7 @@ stages:
     steps:
     - task: Docker@2
       inputs:
+        containerRegistry: 'project-3-docker-hub'
         repository: 'dajpearl/forge-backend'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
