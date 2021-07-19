@@ -25,6 +25,9 @@ stages:
           ls
           echo $(Pipeline.Workspace)
           ls $(Pipeline.Workspace)
+          pwd
+          cd $(Pipeline.Workspace)
+          pwd
 
 - template: ./dockerize-template.yml
   parameters:
