@@ -5,18 +5,18 @@ parameters:
     type: string
   - name: 'title'
     type: string
-  - name: 'discordVarGroup' # Secret discord information, channelID and key
+  - name: 'channelID' # Secret discord information, channelID and key
+    type: string
+  - name: 'webhookKey' # Secret discord information, channelID and key
     type: string
 jobs:
   - job: DiscordMessage
-    variables:
-      - group: ${{parameters.discordVarGroup}}
     dependsOn: ${{ parameters.dependOn }}
     steps:
       - task: ado-discord-webhook@1
         inputs:
-          channelId: '$(discordid)'
-          webhookKey: '$(discordkey)'
+          channelId: '${{ parameters.channelID }}'
+          webhookKey: '${{ parameters.webhookKey }}'
           name: ${{ parameters.name }}
           messageType: 'content'
           content: |
