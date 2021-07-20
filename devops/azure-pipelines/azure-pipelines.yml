@@ -1,11 +1,11 @@
 trigger:
-- main
-- staging
-- dev
+  - main
+  - staging
+  - dev
 pr:
-- main
-- staging
-- dev
+  - main
+  - staging
+  - dev
 
 pool:
   vmImage: ubuntu-latest

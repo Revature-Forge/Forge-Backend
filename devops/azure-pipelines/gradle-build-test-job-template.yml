@@ -1,10 +1,10 @@
 parameters:
   - name: 'jobName'
     type: string
-  - name: 'testPath'
+  - name: 'testPath' # file path to test results
     type: string
-  - name: 'ccPath'
-    type: string 
+  - name: 'ccPath' # file path to code coverage class files
+    type: string
 jobs:
   - job: ${{ parameters.jobName }}
     steps:
