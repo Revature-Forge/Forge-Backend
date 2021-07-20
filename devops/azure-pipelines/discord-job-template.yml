@@ -5,10 +5,12 @@ parameters:
     type: string
   - name: 'title'
     type: string
+  - name: 'discordVarGroup'
+    type: string
 jobs:
 - job: DiscordMessage
   variables: 
-    - group: Discord-Webhook-Info
+    - group: ${{parameters.discordVarGroup}}
   dependsOn: ${{ parameters.dependOn }}
   steps:  
   - task: ado-discord-webhook@1

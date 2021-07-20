@@ -20,3 +20,4 @@ stages:
       dependOn: Build_and_Test
       name: 'Team2-P3'
       title: 'Team 2 Project 3 Backend'
+      discordVarGroup: Discord-Webhook-Info
