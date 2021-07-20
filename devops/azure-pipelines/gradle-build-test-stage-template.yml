@@ -20,7 +20,5 @@ stages:
   - template: ./discord-job-template.yml
     parameters:
       dependOn: Build_and_Test
-      id: $[variables.discordid]
-      key: $[variables.discordkey]
       name: 'Team2-P3'
       title: 'Team 2 Project 3 Backend'
