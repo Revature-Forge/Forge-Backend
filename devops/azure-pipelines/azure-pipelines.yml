@@ -10,9 +10,6 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  - group: Discord-Webhook-Info
-
 stages:
   - stage: Build_and_Test
     jobs:
@@ -26,5 +23,4 @@ stages:
           dependOn: Build_and_Test
           name: 'Team2-P3'
           title: 'Team 2 Project 3 Backend'
-          channelID: ${{ variables.discordid }}
-          webhookKey: ${{ variables.discordkey }}
+          discordVarGroup: Discord-Webhook-Info
