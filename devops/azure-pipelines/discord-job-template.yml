@@ -10,11 +10,15 @@ jobs:
   dependsOn: ${{ parameters.dependOn }}
   variables: 
   - group: Discord-Webhook-Info
+  - name: discord_id
+    value: $[variables.discordid]
+  - name: discord_key
+    value: $[variables.discordkey]
   steps:  
   - task: ado-discord-webhook@1
     inputs:
-      channelId: ${{ variables.discordid }}
-      webhookKey: ${{ variables.discordkey }}
+      channelId: $(discord_id)
+      webhookKey: $(discord_key)
       name: ${{ parameters.name }}
       messageType: 'content'
       content: |
