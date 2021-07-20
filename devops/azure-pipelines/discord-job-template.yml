@@ -7,6 +7,8 @@ parameters:
     type: string
 jobs:
 - job: DiscordMessage
+  variables: 
+    - group: Discord-Webhook-Info
   dependsOn: ${{ parameters.dependOn }}
   steps:  
   - task: ado-discord-webhook@1

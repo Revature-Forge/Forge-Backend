@@ -16,8 +16,6 @@ stages:
         sonarQubeRunAnalysis: false
         spotBugsAnalysis: false
   - template: ./discord-job-template.yml
-    variables: 
-    - group: Discord-Webhook-Info
     parameters:
       dependOn: Build_and_Test
       name: 'Team2-P3'
