@@ -15,10 +15,10 @@ jobs:
     inputs:
       channelId: $[variables.discordid]
       webhookKey: $[variables.discordkey]
-      name: P3T2
+      name: ${{ parameters.title }}
       messageType: 'content'
       content: |
-        **${{ parameters.title }}**: $(Build.SourceVersionMessage)
+        **P3T2**: $(Build.SourceVersionMessage)
         ```
         Build Number: $(Build.BuildNumber)
         Build Branch: $(Build.SourceBranch)
