@@ -15,7 +15,7 @@ stages:
     jobs:
       - template: ./gradle-build-test-stage-template.yml
         parameters:
-          displayName: 'Build_and_Test'
+          jobName: 'Build_and_Test'
           testPath: '**/TEST-*.xml'
           ccPath: 'build/classes/main/'
       - template: ./discord-job-template.yml
