@@ -13,7 +13,7 @@ pool:
 stages:
   - stage: Build_and_Test
     jobs:
-      - template: ./gradle-build-test-stage-template.yml
+      - template: ./gradle-build-test-job-template.yml
         parameters:
           jobName: 'Build_and_Test'
           testPath: '**/TEST-*.xml'
