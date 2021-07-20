@@ -1,23 +1,22 @@
-stages:
-- stage: Build_and_Test
-  displayName: ${{ parameters.displayName }}
-  jobs:
-  - job: Build_and_Test
+parameters:
+  - name: 'jobName'
+    type: string
+  - name: 'testPath'
+    type: string
+  - name: 'ccPath'
+    type: string
+  
+jobs:
+  - job: ${{ parameters.jobName }}
     steps:
-    - task: Gradle@2
-      inputs:
-        gradleWrapperFile: 'gradlew'
-        tasks: 'build'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml'
-        codeCoverageToolOption: 'JaCoCo'
-        codeCoverageClassFilesDirectories: 'build/classes/main/'
-        javaHomeOption: 'JDKVersion'
-        sonarQubeRunAnalysis: false
-        spotBugsAnalysis: false
-  - template: ./discord-job-template.yml
-    parameters:
-      dependOn: Build_and_Test
-      name: 'Team2-P3'
-      title: 'Team 2 Project 3 Backend'
-      discordVarGroup: Discord-Webhook-Info
+      - task: Gradle@2
+        inputs:
+          gradleWrapperFile: 'gradlew'
+          tasks: 'build'
+          publishJUnitResults: true
+          testResultsFiles: '${{ parameters.testPath }}'
+          codeCoverageToolOption: 'JaCoCo'
+          codeCoverageClassFilesDirectories: '${{ parameters.ccPath }}'
+          javaHomeOption: 'JDKVersion'
+          sonarQubeRunAnalysis: false
+          spotBugsAnalysis: false

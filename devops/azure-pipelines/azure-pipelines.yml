@@ -11,6 +11,16 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-- template: ./gradle-build-test-stage-template.yml
-  parameters:
-    displayName: 'Backend Build & Test'
+  - stage: Build_and_Test
+    jobs:
+      - template: ./gradle-build-test-stage-template.yml
+        parameters:
+          displayName: 'Build_and_Test'
+          testPath: '**/TEST-*.xml'
+          ccPath: 'build/classes/main/'
+      - template: ./discord-job-template.yml
+        parameters:
+          dependOn: Build_and_Test
+          name: 'Team2-P3'
+          title: 'Team 2 Project 3 Backend'
+          discordVarGroup: Discord-Webhook-Info
