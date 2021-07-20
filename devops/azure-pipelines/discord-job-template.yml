@@ -1,3 +1,10 @@
+parameters:
+  - name: 'dependOn'
+    type: string
+  - name: 'name'
+    type: string
+  - name: 'title'
+    type: string
 jobs:
 - job: DiscordMessage
   dependsOn: ${{ parameters.dependOn }}
