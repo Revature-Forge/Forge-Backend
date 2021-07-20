@@ -4,8 +4,7 @@ parameters:
   - name: 'testPath'
     type: string
   - name: 'ccPath'
-    type: string
-  
+    type: string 
 jobs:
   - job: ${{ parameters.jobName }}
     steps:
