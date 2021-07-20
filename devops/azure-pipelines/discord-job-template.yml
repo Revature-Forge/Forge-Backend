@@ -1,10 +1,6 @@
 parameters:
   - name: 'dependOn'
     type: string
-  - name: 'id'
-    type: string
-  - name: 'key'
-    type: string
   - name: 'name'
     type: string
   - name: 'title'
