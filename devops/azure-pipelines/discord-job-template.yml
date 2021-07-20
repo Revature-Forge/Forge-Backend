@@ -15,8 +15,8 @@ jobs:
   steps:  
   - task: ado-discord-webhook@1
     inputs:
-      channelId: ${{ parameters.id }}
-      webhookKey: ${{ parameters.key }}
+      channelId: '${{ parameters.id }}'
+      webhookKey: '${{ parameters.key }}'
       name: ${{ parameters.name }}
       messageType: 'content'
       content: |
