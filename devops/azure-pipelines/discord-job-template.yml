@@ -1,0 +1,30 @@
+parameters:
+  - name: 'dependOn'
+    type: string
+  - name: 'name'
+    type: string
+  - name: 'title'
+    type: string
+  - name: 'discordVarGroup' # Secret discord information, channelID and key
+    type: string
+jobs:
+  - job: DiscordMessage
+    variables:
+      - group: ${{parameters.discordVarGroup}}
+    dependsOn: ${{ parameters.dependOn }}
+    steps:
+      - task: ado-discord-webhook@1
+        inputs:
+          channelId: '$(discordid)'
+          webhookKey: '$(discordkey)'
+          name: ${{ parameters.name }}
+          messageType: 'content'
+          content: |
+            **${{ parameters.title }}**: $(Build.SourceVersionMessage)
+            ```
+            Build Number: $(Build.BuildNumber)
+            Build Branch: $(Build.SourceBranch)
+            Build Reason: $(Build.Reason)
+            Commit Id: $(Build.SourceVersion)
+            ```
+            **Result**: $(Agent.JobStatus)
