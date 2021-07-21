@@ -45,6 +45,9 @@ dependencies {
 
 }
 
+apply plugin: "eclipse"
+apply plugin: "maven"
+
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
