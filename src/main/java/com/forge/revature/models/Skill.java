@@ -1,7 +1,7 @@
 package com.forge.revature.models;
 
 @Entity
-@Table(name="skills")
+@Table(name = "skills")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
