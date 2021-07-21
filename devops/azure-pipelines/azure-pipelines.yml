@@ -1,0 +1,30 @@
+trigger:
+  - main
+  - staging
+  - dev
+pr:
+  - main
+  - staging
+  - dev
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: Build_and_Test
+    jobs:
+      - template: ./gradle-build-test-job-template.yml
+        parameters:
+          jobName: 'Build_and_Test'
+          testPath: '**/TEST-*.xml'
+          ccPath: 'build/classes/main/'
+      - template: ./discord-job-template.yml
+        parameters:
+          dependOn: Build_and_Test
+          name: 'Team2-P3'
+          title: 'Team 2 Project 3 Backend'
+          discordVarGroup: Discord-Webhook-Info
+            # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
+            # the variable group contains two variables: discordid and discordkey
+            # currently, the discordVarGroup is named Discord-Webhook-Info, 
+            # but can be swapped out if you want to notify to multiple Discord webhooks.
