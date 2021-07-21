@@ -24,3 +24,7 @@ stages:
           name: 'Team2-P3'
           title: 'Team 2 Project 3 Backend'
           discordVarGroup: Discord-Webhook-Info
+            # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
+            # the variable group contains two variables: discordid and discordkey
+            # currently, the discordVarGroup is named Discord-Webhook-Info, 
+            # but can be swapped out if you want to notify to multiple Discord webhooks.
