@@ -11,6 +11,6 @@ jobs:
       - task: KubernetesManifest@0
         inputs:
           action: 'deploy'
-          kubernetesServiceConnection: '${{ parameters.jobName }}'
-          manifests: '${{ parameters.jobName }}'
+          kubernetesServiceConnection: '${{ parameters.serviceConnection }}'
+          manifests: '${{ parameters.manifestPath }}'
           rolloutStatusTimeout: '10'
