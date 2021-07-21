@@ -5,6 +5,8 @@ parameters:
     type: string
   - name: 'repository' #dockerhub repository name
     type: string
+  - name: 'imageTag' #docker image tag
+    type: string
   - name: 'dockerPath' #docker file path
     type: string
 jobs:
@@ -17,5 +19,5 @@ jobs:
           repository: '${{ parameters.repository }}'
           command: 'buildAndPush'
           Dockerfile: '${{ parameters.dockerPath }}'
-          tags: '$(Build.SourceVersion)'
+          tags: '${{ parameters.imageTag }}'
           buildContext: $(Build.Repository.LocalPath)
