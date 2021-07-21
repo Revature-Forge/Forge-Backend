@@ -33,7 +33,7 @@ stages:
         parameters:
           jobName: 'Deploy'
           serviceConnection: 'Alex-Dev-Cluster'
-          manifestPath: '**/backend_manifest.yml'
+          manifestPath: '**/backend_manifest.yaml'
       - template: ./discord-job-template.yml
         parameters:
           dependOn: Deploy
