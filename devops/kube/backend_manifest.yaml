@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: forge-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: forge-backend
+  template:
+    metadata:
+      labels:
+        app: forge-backend
+    spec:
+      containers:
+      - name: forge-backend
+        image: dajpearl/forge-backend:latest
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8081
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: forge-backend
+  ports:
+  - port: 8081
+    name: backend
+    protocol: TCP
