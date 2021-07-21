@@ -1,0 +1,15 @@
+stages:
+- stage:
+  displayName: ${{ parameters.displayName }}
+  jobs:
+  - job:
+    displayName: ${{ parameters.displayName }}
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'project-3-docker-hub'
+        repository: 'dajpearl/forge-backend'
+        command: 'buildAndPush'
+        Dockerfile: '**/gradle.Dockerfile'
+        tags: '$(Build.SourceVersion)'
+        buildContext: $(Build.Repository.LocalPath)
