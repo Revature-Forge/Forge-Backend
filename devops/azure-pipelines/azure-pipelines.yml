@@ -11,36 +11,35 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-- stage: Build_and_Test
+  - stage: Build_and_Test
     jobs:
       - template: ./gradle-build-test-job-template.yml
         parameters:
           jobName: 'Build_and_Test'
           testPath: '**/TEST-*.xml'
           ccPath: 'build/classes/main/'
-- stage:
-  jobs:
-  - job:
-    - template: ./dockerize-template.yml
-      parameters:
-        displayName: 'Build Docker Image and Push'
-- stage:
-  jobs:
-  - job:
-    steps:
-      - task: KubernetesManifest@0
-        inputs:
-          action: 'deploy'
-          kubernetesServiceConnection: 'Alex-Dev-Cluster'
-          manifests: '**/monolith-manifest.yml'
-          rolloutStatusTimeout: '10'
-  - template: ./discord-job-template.yml
-    parameters:
-         dependOn: Build_and_Test
-         name: 'Team2-P3'
-         title: 'Team 2 Project 3 Backend'
-         discordVarGroup: Discord-Webhook-Info
-           # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
-           # the variable group contains two variables: discordid and discordkey
-           # currently, the discordVarGroup is named Discord-Webhook-Info, 
-           # but can be swapped out if you want to notify to multiple Discord webhooks.
+  - stage: Dockerize
+    jobs:
+      - template: ./dockerize-template.yml
+        parameters:
+          jobName: 'Dockerize'
+          containerRegistry: 'project-3-docker-hub'
+          repository: 'dajpearl/forge-backend'
+          dockerPath: '**/gradle.Dockerfile'
+  - stage: Deploy
+    jobs:
+      - template: ./kubernetes-template.yml
+        parameters:
+          jobName: 'Deploy'
+          serviceConnection: 'Alex-Dev-Cluster'
+          manifestPath: '**/monolith-manifest.yml'
+      - template: ./discord-job-template.yml
+        parameters:
+          dependOn: Build_and_Test
+          name: 'Team2-P3'
+          title: 'Team 2 Project 3 Backend'
+          discordVarGroup: Discord-Webhook-Info
+            # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
+            # the variable group contains two variables: discordid and discordkey
+            # currently, the discordVarGroup is named Discord-Webhook-Info, 
+            # but can be swapped out if you want to notify to multiple Discord webhooks.
