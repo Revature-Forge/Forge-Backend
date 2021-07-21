@@ -35,7 +35,7 @@ stages:
           manifestPath: '**/monolith-manifest.yml'
       - template: ./discord-job-template.yml
         parameters:
-          dependOn: Build_and_Test
+          dependOn: Deploy
           name: 'Team2-P3'
           title: 'Team 2 Project 3 Backend'
           discordVarGroup: Discord-Webhook-Info
