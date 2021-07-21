@@ -1,38 +1,29 @@
 trigger:
-- main
-- staging
-- dev
+  - main
+  - staging
+  - dev
 pr:
-- main
-- staging
-- dev
+  - main
+  - staging
+  - dev
 
 pool:
   vmImage: ubuntu-latest
 
 stages:
-- template: ./gradle-build-test-stage-template.yml
-  parameters:
-    displayName: 'Backend Build & Test'
-
+- stage: Build_and_Test
+    jobs:
+      - template: ./gradle-build-test-job-template.yml
+        parameters:
+          jobName: 'Build_and_Test'
+          testPath: '**/TEST-*.xml'
+          ccPath: 'build/classes/main/'
 - stage:
   jobs:
   - job:
-    steps:
-    - task: CmdLine@2
-      inputs:
-        script: |
-          ls
-          echo $(Pipeline.Workspace)
-          ls $(Pipeline.Workspace)
-          pwd
-          cd $(Pipeline.Workspace)
-          pwd
-
-- template: ./dockerize-template.yml
-  parameters:
-    displayName: 'Build Docker Image and Push'
-
+    - template: ./dockerize-template.yml
+      parameters:
+        displayName: 'Build Docker Image and Push'
 - stage:
   jobs:
   - job:
@@ -43,3 +34,13 @@ stages:
           kubernetesServiceConnection: 'Alex-Dev-Cluster'
           manifests: '**/monolith-manifest.yml'
           rolloutStatusTimeout: '10'
+  - template: ./discord-job-template.yml
+    parameters:
+         dependOn: Build_and_Test
+         name: 'Team2-P3'
+         title: 'Team 2 Project 3 Backend'
+         discordVarGroup: Discord-Webhook-Info
+           # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
+           # the variable group contains two variables: discordid and discordkey
+           # currently, the discordVarGroup is named Discord-Webhook-Info, 
+           # but can be swapped out if you want to notify to multiple Discord webhooks.
