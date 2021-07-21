@@ -1,0 +1,13 @@
+com\forge\revature\demo\PortfolioTest.class
+com\forge\revature\demo\DemoApplicationTests.class
+com\forge\revature\demo\WorkHistoryControllerTest.class
+com\forge\revature\demo\EducationTests.class
+com\forge\revature\demo\WorkExperienceTest.class
+com\forge\revature\demo\GitHubControllerTest.class
+com\forge\revature\demo\CertificationTest.class
+com\forge\revature\demo\EquivalencyTest.class
+com\forge\revature\demo\HonorControllerTest.class
+com\forge\revature\demo\AboutMeTests.class
+com\forge\revature\demo\CertificationControllerTest.class
+com\forge\revature\demo\UserTest.class
+com\forge\revature\demo\ProjectTest.class
