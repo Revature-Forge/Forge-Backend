@@ -6,3 +6,4 @@ build
 .vscode
 .classpath
 target/
+.factorypath
