@@ -78,7 +78,3 @@ jacocoTestReport {
 		html.enabled true
 	}
 }
-
-apply plugin: "eclipse"
-
-apply plugin: 'maven'
