@@ -25,7 +25,7 @@ stages:
           jobName: 'Dockerize'
           containerRegistry: 'project-3-docker-hub'
           repository: 'dajpearl/forge-backend'
-          imageTag: '${{ Build.SourceVersion }}'
+          imageTag: '${{ variables.Build.SourceVersion }}'
           dockerPath: '**/gradle.Dockerfile'
   - stage: Deploy
     jobs:
