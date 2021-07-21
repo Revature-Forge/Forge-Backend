@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  # property-like keys; each key maps to a simple value
+  #database-port: 
+  #database-name: 
+  # spring:
+  #   h2:
+  #     console:
+  #       enabled: true
+  #   datasource:
+  #     url: 'jdbc:h2:mem:testdb'
+  #     driverClassName: 'org.h2.Driver'
+  #     # username:  secret refs in deployment file??
+  #     # password: 
+  #   jpa:
+  #     database-platform: 'org.hibernate.dialect.H2Dialect'
+  # server:
+  #   port: 8081
+    
+  spring.h2.console.enabled: 'true'
+  spring.datasource.url: 'jdbc:h2:mem:testdb'
+  spring.datasource.driverClassName: 'org.h2.Driver'
+# spring.datasource.username: sa
+# spring.datasource.password: ''
+  spring.jpa.database-platform: 'org.hibernate.dialect.H2Dialect'
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-database-login
+# default type Opaque, there are other types
+stringData:
+  username: 'sa'
+  password: ''

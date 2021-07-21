@@ -37,6 +37,40 @@ spec:
           - name: http
             containerPort: 8081
             protocol: TCP
+          env:
+          - name: spring.h2.console.enabled
+            valueFrom:
+              configMapKeyRef:
+                name: backend-config
+                key: spring.h2.console.enabled
+          - name: spring.datasource.url
+            valueFrom:
+              configMapKeyRef:
+                name: backend-config
+                key: spring.datasource.url
+          - name: spring.datasource.driverClassName
+            valueFrom:
+              configMapKeyRef:
+                name: backend-config
+                key: spring.datasource.driverClassName
+          - name: spring.jpa.database-platform
+            valueFrom:
+              configMapKeyRef:
+                name: backend-config
+                key: spring.jpa.database-platform
+
+          - name: spring.datasource.username
+            valueFrom:
+              secretKeyRef:
+                name: backend-database-login
+                key: username
+          - name: spring.datasource.password
+            valueFrom:
+              secretKeyRef:
+                name: backend-database-login
+                key: password
+          
+
           # livenessProbe:
           #   httpGet:
           #     path: /
