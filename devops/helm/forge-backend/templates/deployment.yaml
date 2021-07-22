@@ -37,6 +37,11 @@ spec:
           - name: http
             containerPort: 8081
             protocol: TCP
+            # envFrom:
+            # - configMapRef:
+            #   name: backend-config
+            # - secretRef:
+            #   name: backend-database-login
           env:
           - name: spring.h2.console.enabled
             valueFrom:
@@ -53,7 +58,7 @@ spec:
               configMapKeyRef:
                 name: backend-config
                 key: spring.datasource.driverClassName
-          - name: spring.jpa.database-platform
+          - name: spring.jpa.database.platform
             valueFrom:
               configMapKeyRef:
                 name: backend-config

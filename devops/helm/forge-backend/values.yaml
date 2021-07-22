@@ -80,3 +80,13 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+env:
+  normal:
+    spring_h2_console_enabled: true
+    spring_datasource_url: 'jdbc:h2:mem:testdb'
+    spring_datasource_driverClassName: 'org.h2.Driver'
+    spring_jpa_database_platform: 'org.hibernate.dialect.H2Dialect'
+  secret:
+    username: 'sa'
+    password: 'password'
