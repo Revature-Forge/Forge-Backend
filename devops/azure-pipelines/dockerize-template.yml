@@ -1,0 +1,23 @@
+parameters:
+  - name: 'jobName'
+    type: string
+  - name: 'containerRegistry' #service connection name
+    type: string
+  - name: 'repository' #dockerhub repository name
+    type: string
+  - name: 'imageTag' #docker image tag
+    type: string
+  - name: 'dockerPath' #docker file path
+    type: string
+jobs:
+  - job:
+    displayName: ${{ parameters.jobName }}
+    steps:
+      - task: Docker@2
+        inputs:
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          command: 'buildAndPush'
+          Dockerfile: '${{ parameters.dockerPath }}'
+          tags: '${{ parameters.imageTag }}'
+          buildContext: $(Build.Repository.LocalPath)
