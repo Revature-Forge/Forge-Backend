@@ -25,7 +25,7 @@ stages:
           containerRegistry: 'project-3-docker-hub'
           repository: 'dajpearl/forge-backend'
           imageTag: '${{ variables.Build.SourceVersion }}'
-          dockerPath: '**/gradle.Dockerfile'
+          dockerPath: '**/mavenpipe.dockerfile'
   - stage: Deploy
     jobs:
       - template: ./kubernetes-template.yml
