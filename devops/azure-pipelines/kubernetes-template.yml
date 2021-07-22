@@ -13,7 +13,7 @@ jobs:
   - job: ${{ parameters.jobName }}
     steps:
       - task: KubernetesManifest@0
-        condition: eq(variables['Build.SourceBranch'], '${{ parameters.main }}')
+        condition: eq(variables['Build.SourceBranch'], '${{ parameters.branchMain }}')
         inputs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionMain }}'
