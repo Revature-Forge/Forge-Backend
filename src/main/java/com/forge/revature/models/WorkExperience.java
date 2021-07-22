@@ -13,18 +13,23 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "workexperience")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class WorkExperience {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "workexperienceid")
     private long id;
 
-    @Column
     private String employer;
 
-    @Column
     private String title;
 
     @Column(length = 10000)
@@ -45,9 +50,6 @@ public class WorkExperience {
     @OneToOne
     @JoinColumn(name = "id")
     private Portfolio portfolio;
-
-    public WorkExperience() {
-    }
 
     public WorkExperience(String employer, String title, String responsibilities, String description,
             String technologies, Date startDate, Date endDate) {
@@ -70,78 +72,6 @@ public class WorkExperience {
         this.startDate = startDate;
         this.endDate = endDate;
         this.portfolio = portfolio;
-    }
-
-    public Portfolio getPortfolio() {
-        return portfolio;
-    }
-
-    public void setPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio;
-    }
-
-    public String getEmployer() {
-        return employer;
-    }
-
-    public void setEmployer(String employer) {
-        this.employer = employer;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getResponsibilities() {
-        return responsibilities;
-    }
-
-    public void setResponsibilities(String responsibilities) {
-        this.responsibilities = responsibilities;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getTechnologies() {
-        return technologies;
-    }
-
-    public void setTechnologies(String technologies) {
-        this.technologies = technologies;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @Override
