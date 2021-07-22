@@ -36,9 +36,13 @@ public class Matrix {
     private List<Skill> skills;
 
 	public Matrix(String header, Portfolio portfolio, List<Skill> skills) {
-		super();
 		this.header = header;
 		this.portfolio = portfolio;
         this.skills = skills;
+	}
+	
+	public Matrix(String header, Portfolio portfolio) {
+		this.header = header;
+		this.portfolio = portfolio;
 	}
 }

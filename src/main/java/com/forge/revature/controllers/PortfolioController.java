@@ -219,11 +219,14 @@ public class PortfolioController {
 		}
 		return matrices;
 	}
-	
+
 	private List<Skill> extractSkills(List<Matrix> matrices) {
 		List<Skill> skills = new ArrayList<>();
 		for (Matrix m : matrices) {
-			skills.addAll(m.getSkills());
+			for (Skill s : m.getSkills()) {
+				s.setMatrix(m);
+				skills.add(s);
+			}
 		}
 		return skills;
 	}
