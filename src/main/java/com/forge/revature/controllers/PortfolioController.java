@@ -1,5 +1,6 @@
 package com.forge.revature.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,10 @@ import com.forge.revature.models.Equivalency;
 import com.forge.revature.models.FullPortfolio;
 import com.forge.revature.models.GitHub;
 import com.forge.revature.models.Honor;
+import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Project;
+import com.forge.revature.models.Skill;
 import com.forge.revature.models.WorkExperience;
 import com.forge.revature.models.WorkHistory;
 import com.forge.revature.repo.*;
@@ -43,174 +46,186 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RequestMapping("/portfolios")
 public class PortfolioController {
-    @Autowired
-    PortfolioRepo portRepo;
+	@Autowired
+	PortfolioRepo portRepo;
 
-    @Autowired
-    AboutMeRepo aboutMeRepo;
+	@Autowired
+	AboutMeRepo aboutMeRepo;
 
-    @Autowired
-    CertificationRepo certificationRepo;
+	@Autowired
+	CertificationRepo certificationRepo;
 
-    @Autowired
-    EducationRepo educationRepo;
+	@Autowired
+	EducationRepo educationRepo;
 
-    @Autowired
-    EquivalencyRepo equivalencyRepo;
+	@Autowired
+	EquivalencyRepo equivalencyRepo;
 
-    @Autowired
-    GitHubRepo gitHubRepo;
+	@Autowired
+	GitHubRepo gitHubRepo;
 
-    @Autowired
-    HonorRepo honorRepo;
+	@Autowired
+	HonorRepo honorRepo;
 
-    @Autowired
-    ProjectRepo projectRepo;
+	@Autowired
+	ProjectRepo projectRepo;
 
-    @Autowired
-    WorkExperienceRepo workExperienceRepo;
+	@Autowired
+	WorkExperienceRepo workExperienceRepo;
 
-    @Autowired
-    WorkHistoryRepo workHistoryRepo;
+	@Autowired
+	WorkHistoryRepo workHistoryRepo;
 
-    public PortfolioController() {
-    }
+	@Autowired
+	MatrixRepo matrixRepo;
 
-    public PortfolioController(PortfolioRepo portRepo) {
-        this.portRepo = portRepo;
-    }
+	@Autowired
+	SkillRepo skillRepo;
 
-    public PortfolioController(PortfolioRepo portRepo, AboutMeRepo aboutMeRepo, CertificationRepo certificationRepo,
-            EducationRepo educationRepo, EquivalencyRepo equivalencyRepo, GitHubRepo gitHubRepo, HonorRepo honorRepo,
-            ProjectRepo projectRepo, WorkExperienceRepo workExperienceRepo, WorkHistoryRepo workHistoryRepo) {
-        this.portRepo = portRepo;
-        this.aboutMeRepo = aboutMeRepo;
-        this.certificationRepo = certificationRepo;
-        this.educationRepo = educationRepo;
-        this.equivalencyRepo = equivalencyRepo;
-        this.gitHubRepo = gitHubRepo;
-        this.honorRepo = honorRepo;
-        this.projectRepo = projectRepo;
-        this.workExperienceRepo = workExperienceRepo;
-        this.workHistoryRepo = workHistoryRepo;
-    }
+	public PortfolioController() {
+	}
 
-    @GetMapping
-    public List<Portfolio> getAll(){
-        List<Portfolio> ports = StreamSupport.stream(portRepo.findAll().spliterator(), false)
-        .collect(Collectors.toList());
-    return ports;
-    }
+	public PortfolioController(PortfolioRepo portRepo) {
+		this.portRepo = portRepo;
+	}
 
-    @GetMapping("/{id}")
-    public Portfolio getByID(@PathVariable(name = "id") int id){
-        return portRepo.findById(id).get();
-    }
+	public PortfolioController(PortfolioRepo portRepo, AboutMeRepo aboutMeRepo, CertificationRepo certificationRepo,
+			EducationRepo educationRepo, EquivalencyRepo equivalencyRepo, GitHubRepo gitHubRepo, HonorRepo honorRepo,
+			ProjectRepo projectRepo, WorkExperienceRepo workExperienceRepo, WorkHistoryRepo workHistoryRepo,
+			MatrixRepo matrixRepo, SkillRepo skillRepo) {
+		this.portRepo = portRepo;
+		this.aboutMeRepo = aboutMeRepo;
+		this.certificationRepo = certificationRepo;
+		this.educationRepo = educationRepo;
+		this.equivalencyRepo = equivalencyRepo;
+		this.gitHubRepo = gitHubRepo;
+		this.honorRepo = honorRepo;
+		this.projectRepo = projectRepo;
+		this.workExperienceRepo = workExperienceRepo;
+		this.workHistoryRepo = workHistoryRepo;
+		this.matrixRepo = matrixRepo;
+		this.skillRepo = skillRepo;
+	}
 
-    @GetMapping("/users/all/{id}")
-    public List<Portfolio> getPortfoliosByUserId(@PathVariable int id){
-        List<Portfolio> portfolios = portRepo.findAllByUserId(id);
-        return portfolios;
-    }
+	@GetMapping
+	public List<Portfolio> getAll() {
+		List<Portfolio> ports = StreamSupport.stream(portRepo.findAll().spliterator(), false)
+				.collect(Collectors.toList());
+		return ports;
+	}
 
-    @PostMapping
-    public Portfolio postPort(@RequestBody Portfolio port){
-        return portRepo.save(port);
-    }
-    @PostMapping("/{id}")
-    public void updateUser(@PathVariable int id , @RequestBody Portfolio updated){
-        Optional<Portfolio> old = portRepo.findById(id);
+	@GetMapping("/{id}")
+	public Portfolio getByID(@PathVariable(name = "id") int id) {
+		return portRepo.findById(id).get();
+	}
 
-        if(old.isPresent()){
-            old.get().setApproved(updated.isApproved());
-            old.get().setFeedback(updated.getFeedback());
-            old.get().setName(updated.getName());
-            old.get().setReviewed(updated.isReviewed());
-            old.get().setSubmitted(updated.isSubmitted());
-            old.get().setUser(updated.getUser());
-        
-            portRepo.save(old.get());
-        }
-    }
-    
-    @DeleteMapping("/{id}")
-    public Map<String, Boolean> deletePortfolio(@PathVariable int id) throws ResourceNotFoundException{
-        Optional<Portfolio> port = portRepo.findById(id);
+	@GetMapping("/users/all/{id}")
+	public List<Portfolio> getPortfoliosByUserId(@PathVariable int id) {
+		List<Portfolio> portfolios = portRepo.findAllByUserId(id);
+		return portfolios;
+	}
 
-        if(port.isPresent()){
-            portRepo.delete(port.get());
-        }else{
-            throw new ResourceNotFoundException("The Portfolio to be deleted could not be found");
-        }
+	@PostMapping
+	public Portfolio postPort(@RequestBody Portfolio port) {
+		return portRepo.save(port);
+	}
 
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
-    }
+	@PostMapping("/{id}")
+	public void updateUser(@PathVariable int id, @RequestBody Portfolio updated) {
+		Optional<Portfolio> old = portRepo.findById(id);
 
-    @GetMapping(value = "/full/{id}", produces = "application/octet-stream")
-    public ResponseEntity<ByteArrayResource> getFullPortfolio(@PathVariable int id, HttpServletResponse response) throws JsonProcessingException {
-        if (!portRepo.existsById(id)) return null;
-        Portfolio port = portRepo.findById(id).get();
-        FullPortfolio full = new FullPortfolio(
-            id,
-            port.getName(),
-            port.getUser(),
-            port.isSubmitted(),
-            port.isApproved(),
-            port.isReviewed(),
-            port.getFeedback(),
-            aboutMeRepo.findByPortfolioId(id).get(),
-            certificationRepo.findAllByPortfolioId(id),
-            educationRepo.findAllByPortfolioId(id),
-            equivalencyRepo.findAllByPortfolioId(id),
-            gitHubRepo.findByPortfolio(port),
-            honorRepo.findByPortfolio(port),
-            projectRepo.findByPortfolio_Id(id),
-            workExperienceRepo.findByPortfolio_Id(id),
-            workHistoryRepo.findByPortfolio(port)
-        );
-        response.setHeader("Content-Disposition", "attachment; filename=Portfolio-" + id + ".json");
-        return new ResponseEntity<ByteArrayResource>(new ByteArrayResource(new ObjectMapper().writeValueAsString(full).getBytes()), HttpStatus.OK);
-    }
+		if (old.isPresent()) {
+			old.get().setApproved(updated.isApproved());
+			old.get().setFeedback(updated.getFeedback());
+			old.get().setName(updated.getName());
+			old.get().setReviewed(updated.isReviewed());
+			old.get().setSubmitted(updated.isSubmitted());
+			old.get().setUser(updated.getUser());
 
-    @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio){
-        Portfolio newPortfolio = new Portfolio(
-            fullPortfolio.getId(),
-            fullPortfolio.getName(),
-            fullPortfolio.getUser(),
-            fullPortfolio.isSubmitted(),
-            fullPortfolio.isApproved(),
-            fullPortfolio.isReviewed(),
-            fullPortfolio.getFeedback()
-        );
-        AboutMe newAboutMe = new AboutMe(
-            fullPortfolio.getAboutMe().getBio(),
-            fullPortfolio.getAboutMe().getEmail(),
-            fullPortfolio.getAboutMe().getPhone()
-        );
-        List<Certification> newCertificationsList = fullPortfolio.getCertifications();
-        List<Education> newEducationsList = fullPortfolio.getEducations();
-        List<Equivalency> newEquivalencyList = fullPortfolio.getEquivalencies();
-        List<GitHub> newGitHub = fullPortfolio.getGitHubs();
-        List<Honor> newHonorsList = fullPortfolio.getHonors();
-        List<Project> newProjectsList = fullPortfolio.getProjects();
-        // User newUser = fullPortfolio.getUser();
-        List<WorkExperience> newWorkExperiencesList = fullPortfolio.getWorkExperiences();
-        List<WorkHistory> newWorkHistoryList = fullPortfolio.getWorkHistories();
+			portRepo.save(old.get());
+		}
+	}
 
-        portRepo.save(newPortfolio);
-        aboutMeRepo.save(newAboutMe);
-        certificationRepo.saveAll(newCertificationsList);
-        educationRepo.saveAll(newEducationsList);
-        equivalencyRepo.saveAll(newEquivalencyList);
-        gitHubRepo.saveAll(newGitHub);
-        honorRepo.saveAll(newHonorsList);
-        projectRepo.saveAll(newProjectsList);
-        workExperienceRepo.saveAll(newWorkExperiencesList);
-        workHistoryRepo.saveAll(newWorkHistoryList);
+	@DeleteMapping("/{id}")
+	public Map<String, Boolean> deletePortfolio(@PathVariable int id) throws ResourceNotFoundException {
+		Optional<Portfolio> port = portRepo.findById(id);
 
-    }
+		if (port.isPresent()) {
+			portRepo.delete(port.get());
+		} else {
+			throw new ResourceNotFoundException("The Portfolio to be deleted could not be found");
+		}
+
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return response;
+	}
+
+	@GetMapping(value = "/full/{id}", produces = "application/octet-stream")
+	public ResponseEntity<ByteArrayResource> getFullPortfolio(@PathVariable int id, HttpServletResponse response)
+			throws JsonProcessingException {
+		if (!portRepo.existsById(id))
+			return null;
+		Portfolio port = portRepo.findById(id).get();
+		FullPortfolio full = new FullPortfolio(id, port.getName(), port.getUser(), port.isSubmitted(),
+				port.isApproved(), port.isReviewed(), port.getFeedback(), aboutMeRepo.findByPortfolioId(id).get(),
+				certificationRepo.findAllByPortfolioId(id), educationRepo.findAllByPortfolioId(id),
+				equivalencyRepo.findAllByPortfolioId(id), gitHubRepo.findByPortfolio(port),
+				honorRepo.findByPortfolio(port), projectRepo.findByPortfolio_Id(id),
+				workExperienceRepo.findByPortfolio_Id(id), workHistoryRepo.findByPortfolio(port),
+				insertSkills(matrixRepo.findAllByPortfolioId(id)));
+		response.setHeader("Content-Disposition", "attachment; filename=Portfolio-" + id + ".json");
+		return new ResponseEntity<ByteArrayResource>(
+				new ByteArrayResource(new ObjectMapper().writeValueAsString(full).getBytes()), HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/full", consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio) {
+		Portfolio newPortfolio = new Portfolio(fullPortfolio.getId(), fullPortfolio.getName(), fullPortfolio.getUser(),
+				fullPortfolio.isSubmitted(), fullPortfolio.isApproved(), fullPortfolio.isReviewed(),
+				fullPortfolio.getFeedback());
+		AboutMe newAboutMe = new AboutMe(fullPortfolio.getAboutMe().getBio(), fullPortfolio.getAboutMe().getEmail(),
+				fullPortfolio.getAboutMe().getPhone());
+		List<Certification> newCertificationsList = fullPortfolio.getCertifications();
+		List<Education> newEducationsList = fullPortfolio.getEducations();
+		List<Equivalency> newEquivalencyList = fullPortfolio.getEquivalencies();
+		List<GitHub> newGitHub = fullPortfolio.getGitHubs();
+		List<Honor> newHonorsList = fullPortfolio.getHonors();
+		List<Project> newProjectsList = fullPortfolio.getProjects();
+		// User newUser = fullPortfolio.getUser();
+		List<WorkExperience> newWorkExperiencesList = fullPortfolio.getWorkExperiences();
+		List<WorkHistory> newWorkHistoryList = fullPortfolio.getWorkHistories();
+		List<Matrix> newMatrices = fullPortfolio.getMatrices();
+		List<Skill> newSkills = extractSkills(newMatrices);
+
+		portRepo.save(newPortfolio);
+		aboutMeRepo.save(newAboutMe);
+		certificationRepo.saveAll(newCertificationsList);
+		educationRepo.saveAll(newEducationsList);
+		equivalencyRepo.saveAll(newEquivalencyList);
+		gitHubRepo.saveAll(newGitHub);
+		honorRepo.saveAll(newHonorsList);
+		projectRepo.saveAll(newProjectsList);
+		workExperienceRepo.saveAll(newWorkExperiencesList);
+		workHistoryRepo.saveAll(newWorkHistoryList);
+		matrixRepo.saveAll(newMatrices);
+		skillRepo.saveAll(newSkills);
+
+	}
+
+	private List<Matrix> insertSkills(List<Matrix> matrices) {
+		for (Matrix m : matrices) {
+			m.setSkills(skillRepo.findAllByMatrix(m));
+		}
+		return matrices;
+	}
+	
+	private List<Skill> extractSkills(List<Matrix> matrices) {
+		List<Skill> skills = new ArrayList<>();
+		for (Matrix m : matrices) {
+			skills.addAll(m.getSkills());
+		}
+		return skills;
+	}
 
 }

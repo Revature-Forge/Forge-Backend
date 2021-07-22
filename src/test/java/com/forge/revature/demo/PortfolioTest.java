@@ -61,12 +61,18 @@ public class PortfolioTest {
 
     @MockBean
     WorkHistoryRepo workHistoryRepo;
-
+    
+    @MockBean
+    MatrixRepo matrixRepo;
+    
+    @MockBean
+    SkillRepo skillRepo;
+    
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .standaloneSetup(new PortfolioController(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
-                    gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo))
+                    gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo))
             .build();
     }
 
@@ -240,7 +246,7 @@ public class PortfolioTest {
         List<WorkHistory> testWorkHistoriesList = new ArrayList<>();
         testWorkHistoriesList.add(testWorkHistory);
         //Create full portfolio
-        FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList);
+        FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList, null);
         
         //Convert testFullPortfolio to JSON
         ObjectMapper mapper = new ObjectMapper();
