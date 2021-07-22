@@ -1,6 +1,8 @@
 parameters:
   - name: 'jobName'
     type: string
+  - name: 'branchMain' #Main branch name
+    type: string
   - name: 'serviceConnectionMain' #Kubernetes Service Connection name
     type: string
   - name: 'serviceConnectionDev' #Kubernetes Service Connection name
@@ -11,7 +13,7 @@ jobs:
   - job: ${{ parameters.jobName }}
     steps:
       - task: KubernetesManifest@0
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/dummymain')
+        condition: eq(variables['Build.SourceBranch'], '${{ parameters.main }}')
         inputs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionMain }}'

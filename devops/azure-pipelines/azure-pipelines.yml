@@ -31,7 +31,7 @@ stages:
       - template: ./kubernetes-template.yml
         parameters:
           jobName: 'Deploy'
-          main: 'refs/heads/azure-pipelines'
+          branchMain: 'refs/heads/azure-pipelines'
           serviceConnectionMain: 'Alex-Main-Cluster'
           serviceConnectionDev: 'may24-devops-team2-dev-cluster'
           manifestPath: '**/backend_manifest.yaml'
