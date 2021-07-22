@@ -27,7 +27,7 @@ jobs:
           Dockerfile: '${{ parameters.dockerPath }}'
           tags: '${{ parameters.imageTag }}'
           buildContext: $(Build.Repository.LocalPath)
-          arguments: '--build-arg JAR_FILE=$(Pipeline.Workspace)/*.jar'
+          arguments: '--build-arg JAR_FILE=$(Pipeline.Workspace)/*.war'
       - task: Docker@2
         inputs:
           containerRegistry: '${{ parameters.containerRegistry }}'

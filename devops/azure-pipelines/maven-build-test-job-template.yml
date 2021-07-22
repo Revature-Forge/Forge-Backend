@@ -32,10 +32,9 @@ jobs:
           effectivePomSkip: false
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest'
-      - script: find
       - task: PublishPipelineArtifact@1
         inputs:
-          targetPath: '$(Build.Repository.LocalPath)/target/*.jar'
+          targetPath: '$(Build.Repository.LocalPath)/target/*.war'
           artifact: 'maven-output'
           publishLocation: 'pipeline'
   
