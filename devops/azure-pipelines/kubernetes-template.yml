@@ -20,7 +20,7 @@ jobs:
           manifests: '${{ parameters.manifestPath }}'
           rolloutStatusTimeout: '10'
       - task: KubernetesManifest@0
-        condition: ne(variables['Build.SourceBranch'], 'refs/heads/dummydev')
+        condition: ne(variables['Build.SourceBranch'], '${{ parameters.branchMain }}')
         inputs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionDev }}'
