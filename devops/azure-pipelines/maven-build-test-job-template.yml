@@ -18,6 +18,7 @@ jobs:
           extraProperties: |
            sonar.branch.name=$(Build.SourceBranch) 
            sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
+           sonar.projectName=Forge-Backend
       - task: Maven@3
         inputs:
           mavenPomFile: 'pom.xml'
