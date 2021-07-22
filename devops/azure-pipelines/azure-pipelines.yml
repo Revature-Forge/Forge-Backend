@@ -1,10 +1,8 @@
 trigger:
   - main
-  - staging
   - dev
 pr:
   - main
-  - staging
   - dev
 
 pool:
@@ -13,11 +11,12 @@ pool:
 stages:
   - stage: Build_and_Test
     jobs:
-      - template: ./gradle-build-test-job-template.yml
+      - template: ./maven-build-test-job-template.yml
         parameters:
           jobName: 'Build_and_Test'
-          testPath: '**/TEST-*.xml'
-          ccPath: 'build/classes/main/'
+          serviceConnection: 'Forge-SonarCloud'
+          organization: '1058-sophia-gavrila-forge'
+          testPath: '**/surefire-reports/TEST-*.xml'
   - stage: Dockerize
     jobs:
       - template: ./dockerize-template.yml

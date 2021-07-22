@@ -1,0 +1,32 @@
+parameters:
+  - name: 'jobName'
+    type: string
+  - name: 'serviceConnection'
+    type: string
+  - name: 'organization'
+    type: string
+  - name: 'testPath' # file path to test results
+    type: string
+jobs:
+  - job: ${{ parameters.jobName }}
+    steps:
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'Forge-SonarCloud'
+          organization: '1058-sophia-gavrila-forge'
+          scannerMode: 'Other'
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          tasks: 'build'
+          publishJUnitResults: true
+          testResultsFiles: '${{ parameters.testPath }}'
+          codeCoverageToolOption: 'JaCoCo'
+          codeCoverageRestoreOriginalPomXml: true
+          javaHomeOption: 'JDKVersion'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: true
+          sqMavenPluginVersionChoice: 'latest'
+  
