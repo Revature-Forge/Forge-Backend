@@ -1,7 +1,9 @@
 parameters:
   - name: 'jobName'
     type: string
-  - name: 'serviceConnection' #Kubernetes Service Connection name
+  - name: 'serviceConnectionMain' #Kubernetes Service Connection name
+    type: string
+  - name: 'serviceConnectionDev' #Kubernetes Service Connection name
     type: string
   - name: 'manifestPath' #Kubernetes manifest file path
     type: string
@@ -9,8 +11,16 @@ jobs:
   - job: ${{ parameters.jobName }}
     steps:
       - task: KubernetesManifest@0
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/dummymain')
         inputs:
           action: 'deploy'
-          kubernetesServiceConnection: '${{ parameters.serviceConnection }}'
+          kubernetesServiceConnection: '${{ parameters.serviceConnectionMain }}'
+          manifests: '${{ parameters.manifestPath }}'
+          rolloutStatusTimeout: '10'
+      - task: KubernetesManifest@0
+        condition: ne(variables['Build.SourceBranch'], 'refs/heads/dummydev')
+        inputs:
+          action: 'deploy'
+          kubernetesServiceConnection: '${{ parameters.serviceConnectionDev }}'
           manifests: '${{ parameters.manifestPath }}'
           rolloutStatusTimeout: '10'

@@ -31,7 +31,8 @@ stages:
       - template: ./kubernetes-template.yml
         parameters:
           jobName: 'Deploy'
-          serviceConnection: 'may24-devops-team2-dev-cluster'
+          serviceConnectionMain: 'Alex-Main-Cluster'
+          serviceConnectionDev: 'may24-devops-team2-dev-cluster'
           manifestPath: '**/backend_manifest.yaml'
       - template: ./discord-job-template.yml
         parameters:

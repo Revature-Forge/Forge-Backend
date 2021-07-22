@@ -15,6 +15,7 @@ jobs:
           SonarCloud: 'Forge-SonarCloud'
           organization: '1058-sophia-gavrila-forge'
           scannerMode: 'Other'
+          extraProperties: 'sonar.branch.name=main'
       - task: Maven@3
         inputs:
           mavenPomFile: 'pom.xml'
