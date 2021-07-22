@@ -25,11 +25,15 @@ import com.forge.revature.repo.SkillRepo;
 @RequestMapping("/matrix")
 public class MatrixController {
 
-	@Autowired
 	MatrixRepo matrixRepo;
 
-	@Autowired
 	SkillRepo skillRepo;
+	
+	@Autowired
+	public MatrixController(MatrixRepo matrixRepo, SkillRepo skillRepo) {
+		this.matrixRepo = matrixRepo;
+		this.skillRepo = skillRepo;
+	}
 
 	@GetMapping
 	public List<Matrix> getAll() {
