@@ -40,11 +40,8 @@ jobs:
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
-          sonarQubeRunAnalysis: false
-          # sqMavenPluginVersionChoice: 'latest'
-      - script: |
-          pwd
-          find
+          sonarQubeRunAnalysis: true
+          sqMavenPluginVersionChoice: 'latest'
       - task: PublishPipelineArtifact@1
         inputs:
           targetPath: '$(Pipeline.Workspace)/s/target/demo-0.0.1-SNAPSHOT.war'
