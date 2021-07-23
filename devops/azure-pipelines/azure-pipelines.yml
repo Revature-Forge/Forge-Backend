@@ -19,6 +19,9 @@ stages:
           testPath: '**/surefire-reports/TEST-*.xml'
   - stage: Dockerize
     jobs:
+      - job: debugScript
+        steps:
+          - script: echo ${{ variables.Build.SourceVersion }}
       - template: ./dockerize-template.yml
         parameters:
           jobName: 'Dockerize'
