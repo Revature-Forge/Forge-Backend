@@ -32,8 +32,8 @@ jobs:
           command: 'build'
           Dockerfile: '${{ parameters.dockerPath }}'
           tags: '${{ parameters.imageTag }}'
-          buildContext: $(Build.Repository.LocalPath)
-          arguments: '--build-arg JAR_FILE=home/vsts/work/1/demo-0.0.1-SNAPSHOT.war'
+          buildContext: $(Build.Repository.LocalPath)/..
+          arguments: '--build-arg JAR_FILE=demo-0.0.1-SNAPSHOT.war'
       - task: Docker@2
         displayName: 'Docker Push'
         inputs:
