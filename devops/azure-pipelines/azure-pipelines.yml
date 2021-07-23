@@ -27,7 +27,7 @@ stages:
           jobName: 'Dockerize'
           containerRegistry: 'project-3-docker-hub'
           repository: 'dajpearl/forge-backend'
-          imageTag: '$(variables.Build.SourceVersion)'
+          imageTag: $(variables.Build.SourceVersion)
           dockerPath: '**/mavenpipe.dockerfile'
   - stage: Deploy
     jobs:
