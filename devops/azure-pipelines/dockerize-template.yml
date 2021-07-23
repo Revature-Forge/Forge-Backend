@@ -16,13 +16,14 @@ jobs:
     displayName: ${{ parameters.jobName }}
     dependsOn: ${{ parameters.dependOn }}
     steps:
-      # - task: DownloadPipelineArtifact@2
-      #   inputs:
-      #     buildType: 'current'
-      #     artifactName: 'maven-output'
-      #     targetPath: '$(Pipeline.Workspace)'
-      #     publishLocation: 'pipeline'
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'maven-output'
+          targetPath: '$(Pipeline.Workspace)'
+          publishLocation: 'pipeline'
       - script: |
+          cd ..
           pwd
           find
       - task: Docker@2

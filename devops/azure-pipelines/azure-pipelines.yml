@@ -9,7 +9,7 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: Build_Test_and_Dockerize
+  - stage: Build_and_Test
     jobs:
       - template: ./maven-build-test-job-template.yml
         parameters:
@@ -17,6 +17,8 @@ stages:
           serviceConnection: 'Forge-SonarCloud'
           organization: '1058-sophia-gavrila-forge'
           testPath: '**/surefire-reports/TEST-*.xml'
+  - stage: Dockerize
+    jobs:
       - template: ./dockerize-template.yml
         parameters:
           jobName: 'Dockerize'

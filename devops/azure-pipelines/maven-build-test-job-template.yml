@@ -42,9 +42,9 @@ jobs:
           effectivePomSkip: false
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest'
-      # - task: PublishPipelineArtifact@1
-      #   inputs:
-      #     targetPath: '$(Pipeline.Workspace)/target/demo-0.0.1-SNAPSHOT.war'
-      #     artifact: 'maven-output'
-      #     publishLocation: 'pipeline'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Pipeline.Workspace)/target/demo-0.0.1-SNAPSHOT.war'
+          artifact: 'maven-output'
+          publishLocation: 'pipeline'
   
