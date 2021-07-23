@@ -22,7 +22,7 @@ jobs:
       - script: |
           cd ..
           pwd
-          find ..
+          find
       - task: Docker@2
         displayName: 'Docker Build'
         inputs:
