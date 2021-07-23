@@ -2,7 +2,7 @@ parameters:
   - name: 'jobName'
     type: string
   - name: 'dependOn'
-    value: string
+    type: string
   - name: 'containerRegistry' #service connection name
     type: string
   - name: 'repository' #dockerhub repository name
