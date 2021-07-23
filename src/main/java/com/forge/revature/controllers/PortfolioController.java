@@ -22,6 +22,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -189,6 +190,7 @@ public class PortfolioController {
         return new ResponseEntity<ByteArrayResource>(new ByteArrayResource(mapper.writeValueAsString(full).getBytes()), HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio, HttpSession session){
     	
