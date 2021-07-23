@@ -40,8 +40,8 @@ jobs:
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
-          sonarQubeRunAnalysis: true
-          sqMavenPluginVersionChoice: 'latest'
+          sonarQubeRunAnalysis: false
+          # sqMavenPluginVersionChoice: 'latest'
       - script: |
           pwd
           find
