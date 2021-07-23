@@ -20,6 +20,7 @@ stages:
       - template: ./dockerize-template.yml
         parameters:
           jobName: 'Dockerize'
+          dependOn: Build_and_Test
           containerRegistry: 'project-3-docker-hub'
           repository: 'dajpearl/forge-backend'
           imageTag: "$(Build.SourceVersion)"

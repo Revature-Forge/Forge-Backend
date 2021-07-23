@@ -1,6 +1,8 @@
 parameters:
   - name: 'jobName'
     type: string
+  - name: 'dependOn'
+    value: string
   - name: 'containerRegistry' #service connection name
     type: string
   - name: 'repository' #dockerhub repository name
@@ -12,6 +14,7 @@ parameters:
 jobs:
   - job:
     displayName: ${{ parameters.jobName }}
+    dependsOn: ${{ parameters.dependOn }}
     steps:
       # - task: DownloadPipelineArtifact@2
       #   inputs:
