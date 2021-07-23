@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.forge.revature.exception.NotFoundException;
 import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Skill;
 import com.forge.revature.repo.MatrixRepo;
@@ -28,7 +29,7 @@ public class MatrixController {
 	MatrixRepo matrixRepo;
 
 	SkillRepo skillRepo;
-	
+
 	@Autowired
 	public MatrixController(MatrixRepo matrixRepo, SkillRepo skillRepo) {
 		this.matrixRepo = matrixRepo;
@@ -42,7 +43,8 @@ public class MatrixController {
 
 	@GetMapping("/{id}")
 	public Matrix getById(@PathVariable("id") int id) {
-		return insertSkills(matrixRepo.findById(id));
+		Matrix max = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Honor not Found for ID: " + id));
+		return insertSkills(max);
 	}
 
 	@GetMapping("/portfolio/{id}")
@@ -62,13 +64,13 @@ public class MatrixController {
 	public Matrix putMatrix(@RequestBody Matrix matrix) {
 		List<Skill> newSkills = extractSkills(matrix);
 		List<Skill> oldSkills = skillRepo.findAllByMatrix(matrix);
-		matrix = matrixRepo.save(matrix);
 		if (!oldSkills.isEmpty()) {
 			skillRepo.deleteAll(oldSkills);
 		}
 		if (!newSkills.isEmpty()) {
 			skillRepo.saveAll(newSkills);
 		}
+		matrix = matrixRepo.save(matrix);
 		return matrix;
 	}
 
@@ -88,15 +90,9 @@ public class MatrixController {
 		matrixRepo.delete(max);
 	}
 
-	private Matrix insertSkills(Optional<Matrix> m) {
-		Matrix max = new Matrix();
-		if (m.isPresent()) {
-			max = m.get();
-		} else {
-			return max;
-		}
-		max.setSkills(skillRepo.findAllByMatrix(max));
-		return max;
+	private Matrix insertSkills(Matrix m) {
+		m.setSkills(skillRepo.findAllByMatrix(m));
+		return m;
 	}
 
 	private List<Matrix> insertSkills(List<Matrix> matrices) {
