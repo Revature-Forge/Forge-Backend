@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -189,11 +190,14 @@ public class PortfolioController {
     }
 
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio){
+    public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio, HttpSession session){
     	
-    	User user = new User();
+    	User user = (User) session.getAttribute("user");
+    	if(user == null) {
+    		throw new IllegalArgumentException();
+    	}
     	
-    	//get the user info
+    	
     	Portfolio pf = new Portfolio();
     	pf.setName(fullPortfolio.getName());
     	pf.setUser(user);
