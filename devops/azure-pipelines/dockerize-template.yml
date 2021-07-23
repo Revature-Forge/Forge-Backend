@@ -13,14 +13,12 @@ jobs:
   - job:
     displayName: ${{ parameters.jobName }}
     steps:
-      - checkout: none
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
           artifactName: 'maven-output'
           targetPath: '$(Pipeline.Workspace)'
           publishLocation: 'pipeline'
-      - script: find
       - task: Docker@2
         displayName: 'Docker Build'
         inputs:
