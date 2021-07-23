@@ -46,4 +46,12 @@ public class Matrix {
 		this.portfolio = portfolio;
 	}
 	
+	public Matrix(String header, List<Skill> skills) {
+		this.header = header;
+		this.skills = skills;
+	}
+	
+	public Matrix(String header) {
+		this.header = header;
+	}
 }

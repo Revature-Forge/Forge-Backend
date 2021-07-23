@@ -41,4 +41,9 @@ public class Skill {
 		this.matrix = matrix;
 	}
 	
+	public Skill(String name, int value) {
+		this.name = name;
+		this.value = value;
+	}
+	
 }

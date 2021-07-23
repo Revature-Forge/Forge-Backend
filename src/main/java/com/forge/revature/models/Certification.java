@@ -18,19 +18,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "certification")
+@Table(name = "certifications")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Certification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "certificationid")
-    private long id;
+    private int id;
 
     @ManyToOne
-    @JoinColumn(name = "portfolio_id", nullable = false)
+    @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
     private String name;

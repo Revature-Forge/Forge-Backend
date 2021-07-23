@@ -32,22 +32,22 @@ public class MatrixControllerTest {
 
 	@MockBean
 	private SkillRepo skillRepo;
-	
+
 	private Matrix matrix;
-	
+
 	private Portfolio portfolio;
-	
+
 	private List<Skill> skills;
 
 	@BeforeEach
 	public void setup() {
 		mvc = MockMvcBuilders.standaloneSetup(new MatrixController(matrixRepo, skillRepo)).build();
-		this.portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.");
-		this.matrix = new Matrix("Languages", this.portfolio);
-		this.skills = new ArrayList<>();
+		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.");
+		matrix = new Matrix("Languages", this.portfolio);
+		skills = new ArrayList<>();
 		skills.add(new Skill("Java", 6, matrix));
-		skills.add(new Skill("Python", 10, matrix));
-		skills.add(new Skill("Java", 6, matrix));
-		
+		skills.add(new Skill("Python", 3, matrix));
+		skills.add(new Skill("COBOL", 6, matrix));
+		matrix.setSkills(skills);
 	}
 }

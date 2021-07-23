@@ -18,15 +18,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "workexperience")
+@Table(name = "workexperiences")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class WorkExperience {
+	
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "workexperienceid")
-    private long id;
+    private int id;
 
     private String employer;
 
@@ -48,7 +49,7 @@ public class WorkExperience {
     private Date endDate;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn
     private Portfolio portfolio;
 
     public WorkExperience(String employer, String title, String responsibilities, String description,
@@ -74,10 +75,4 @@ public class WorkExperience {
         this.portfolio = portfolio;
     }
 
-    @Override
-    public String toString() {
-        return "WorkExperience [description=" + description + ", employer=" + employer + ", endDate=" + endDate
-                + ", id=" + id + ", portfolio=" + portfolio + ", responsibilities=" + responsibilities + ", startDate="
-                + startDate + ", technologies=" + technologies + ", title=" + title + "]";
-    }
 }

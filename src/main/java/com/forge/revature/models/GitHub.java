@@ -17,23 +17,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class GitHub{
-  
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+public class GitHub {
 
-  private String url;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-  private String image;
+	private String url;
 
-  @ManyToOne
-  @JoinColumn
-  private Portfolio portfolio;
+	private String image;
 
-  public GitHub(String url, String image) {
-    this.url = url;
-    this.image = image;
-  }
+	@ManyToOne
+	@JoinColumn
+	private Portfolio portfolio;
+
+	public GitHub(String url, String image) {
+		this.url = url;
+		this.image = image;
+	}
 
 }

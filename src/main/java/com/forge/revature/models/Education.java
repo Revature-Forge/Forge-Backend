@@ -8,9 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * @author Max Lee 
@@ -19,21 +18,27 @@ import lombok.Setter;
  * Represents the education section for a portfolio. One portfolio can have multiple education sections.
  */
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Education {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     @ManyToOne
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
+    
     private String university;
+    
     private String degree;
+    
     private String graduationDate;
+    
     private double gpa;
+    
     private String logoUrl;
 
     public Education(String university, String degree, String graduationDate, double gpa, String logoUrl) {
