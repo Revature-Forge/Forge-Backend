@@ -9,20 +9,10 @@ import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forge.revature.models.AboutMe;
-import com.forge.revature.models.Certification;
-import com.forge.revature.models.Education;
-import com.forge.revature.models.Equivalency;
-import com.forge.revature.models.FullPortfolio;
-import com.forge.revature.models.GitHub;
-import com.forge.revature.models.Honor;
-import com.forge.revature.models.Portfolio;
-import com.forge.revature.models.Project;
-import com.forge.revature.models.User;
-import com.forge.revature.models.WorkExperience;
-import com.forge.revature.models.WorkHistory;
+import com.forge.revature.models.*;
 import com.forge.revature.repo.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +29,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+abstract class PortfolioIgnoreMixin {
+    @JsonIgnore
+    Portfolio portfolio;
+}
+
+abstract class UserIgnoreMixin {
+    @JsonIgnore
+    User user;
+}
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -171,8 +171,21 @@ public class PortfolioController {
             workExperienceRepo.findByPortfolio_Id(id),
             workHistoryRepo.findByPortfolio(port)
         );
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.addMixIn(FullPortfolio.class, UserIgnoreMixin.class);
+        mapper.addMixIn(AboutMe.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(Certification.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(Education.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(Equivalency.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(GitHub.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(Honor.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(Project.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(WorkExperience.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(WorkHistory.class, PortfolioIgnoreMixin.class);
+
         response.setHeader("Content-Disposition", "attachment; filename=Portfolio-" + id + ".json");
-        return new ResponseEntity<ByteArrayResource>(new ByteArrayResource(new ObjectMapper().writeValueAsString(full).getBytes()), HttpStatus.OK);
+        return new ResponseEntity<ByteArrayResource>(new ByteArrayResource(mapper.writeValueAsString(full).getBytes()), HttpStatus.OK);
     }
 
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
