@@ -21,13 +21,13 @@ stages:
     jobs:
       - job: debugScript
         steps:
-          - script: echo ${{ variables.Build.SourceVersion }}
+          - script: echo $(Build.SourceVersion)
       - template: ./dockerize-template.yml
         parameters:
           jobName: 'Dockerize'
           containerRegistry: 'project-3-docker-hub'
           repository: 'dajpearl/forge-backend'
-          imageTag: '${{ variables.Build.SourceVersion }}'
+          imageTag: '$(variables.Build.SourceVersion)'
           dockerPath: '**/mavenpipe.dockerfile'
   - stage: Deploy
     jobs:
