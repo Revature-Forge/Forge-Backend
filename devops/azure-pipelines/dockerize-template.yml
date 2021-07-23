@@ -19,6 +19,7 @@ jobs:
           artifactName: 'maven-output'
           targetPath: '$(Pipeline.Workspace)'
           publishLocation: 'pipeline'
+      - script: echo ${{ parameters.imageTag }}
       - task: Docker@2
         displayName: 'Docker Build'
         inputs:

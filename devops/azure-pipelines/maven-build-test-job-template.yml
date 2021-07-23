@@ -11,13 +11,22 @@ jobs:
   - job: ${{ parameters.jobName }}
     steps:
       - task: SonarCloudPrepare@1
-        #condition: ne(variables['Build.Reason'], 'PullRequest')
+        condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           SonarCloud: 'Forge-SonarCloud'
           organization: '1058-sophia-gavrila-forge'
           scannerMode: 'Other'
           extraProperties: |
            sonar.branch.name=$(Build.SourceBranchName) 
+           sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
+           sonar.projectName=Forge-Backend
+      - task: SonarCloudPrepare@1
+        condition: eq(variables['Build.Reason'], 'PullRequest')
+        inputs:
+          SonarCloud: 'Forge-SonarCloud'
+          organization: '1058-sophia-gavrila-forge'
+          scannerMode: 'Other'
+          extraProperties: |
            sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
            sonar.projectName=Forge-Backend
       - task: Maven@3
