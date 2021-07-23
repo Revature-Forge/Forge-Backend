@@ -23,6 +23,7 @@ jobs:
           cd ..
           pwd
           find
+          echo $(Build.Repository.LocalPath)
       - task: Docker@2
         displayName: 'Docker Build'
         inputs:
