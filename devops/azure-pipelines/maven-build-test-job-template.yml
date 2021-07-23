@@ -45,7 +45,7 @@ jobs:
           sqMavenPluginVersionChoice: 'latest'
       # - task: PublishPipelineArtifact@1
       #   inputs:
-      #     targetPath: '$(Build.Repository.LocalPath)/target/demo-0.0.1-SNAPSHOT.war'
+      #     targetPath: '$(Pipeline.Workspace)/target/demo-0.0.1-SNAPSHOT.war'
       #     artifact: 'maven-output'
       #     publishLocation: 'pipeline'
   
