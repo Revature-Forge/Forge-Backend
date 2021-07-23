@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/users")
@@ -49,11 +51,13 @@ public class UserController {
     public User getByID(@PathVariable(name = "id") int id){
         return userRepo.findById(id).get();
     }
+
     @PostMapping("/login")
-    public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
+    public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password, HttpSession session){
         Optional<User> user = userRepo.findByEmail(email);
         if(user.isPresent()){
             if(password.equals(user.get().getPassword())){
+                session.setAttribute("user", user.get());
                 return user.get();
             }
         }
