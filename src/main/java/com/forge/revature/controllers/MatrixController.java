@@ -17,39 +17,47 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.forge.revature.exception.NotFoundException;
 import com.forge.revature.models.Matrix;
+import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
 import com.forge.revature.repo.MatrixRepo;
+import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.SkillRepo;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/matrix")
 public class MatrixController {
-
+	
 	MatrixRepo matrixRepo;
 
 	SkillRepo skillRepo;
+	
+	PortfolioRepo portRepo;
 
 	@Autowired
-	public MatrixController(MatrixRepo matrixRepo, SkillRepo skillRepo) {
+	public MatrixController(MatrixRepo matrixRepo, SkillRepo skillRepo, PortfolioRepo portRepo) {
 		this.matrixRepo = matrixRepo;
 		this.skillRepo = skillRepo;
+		this.portRepo = portRepo;
 	}
 
 	@GetMapping
 	public List<Matrix> getAll() {
-		return insertSkills(matrixRepo.findAll());
+		List<Matrix> max = matrixRepo.findAll();
+		return insertSkills(max);
 	}
 
 	@GetMapping("/{id}")
 	public Matrix getById(@PathVariable("id") int id) {
-		Matrix max = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Honor not Found for ID: " + id));
-		return insertSkills(max);
+		return insertSkills(matrixRepo.findById(id)
+				.orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id)));
 	}
 
 	@GetMapping("/portfolio/{id}")
 	public List<Matrix> getByPortfolio(@PathVariable("id") int id) {
-		return insertSkills(matrixRepo.findAllByPortfolioId(id));
+		Portfolio port = portRepo.findById(id).orElseThrow(() -> new NotFoundException("Portfolio Not Found for ID: " + id));
+		List<Matrix> max = matrixRepo.findAllByPortfolio(port);
+		return insertSkills(max);
 	}
 
 	@PostMapping
@@ -90,9 +98,9 @@ public class MatrixController {
 		matrixRepo.delete(max);
 	}
 
-	private Matrix insertSkills(Matrix m) {
-		m.setSkills(skillRepo.findAllByMatrix(m));
-		return m;
+	private Matrix insertSkills(Matrix max) {
+		max.setSkills(skillRepo.findAllByMatrix(max));
+		return max;
 	}
 
 	private List<Matrix> insertSkills(List<Matrix> matrices) {

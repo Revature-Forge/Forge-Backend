@@ -1,11 +1,14 @@
 package com.forge.revature.demo;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,22 +19,29 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forge.revature.controllers.HonorController;
 import com.forge.revature.controllers.MatrixController;
 import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.MatrixRepo;
+import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.SkillRepo;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(MatrixController.class)
 public class MatrixControllerTest {
 
 	@Autowired
@@ -42,6 +52,9 @@ public class MatrixControllerTest {
 
 	@MockBean
 	private SkillRepo skillRepo;
+	
+	@MockBean
+	private PortfolioRepo portRepo;
 
 	private Matrix matrix;
 
@@ -51,9 +64,10 @@ public class MatrixControllerTest {
 
 	@BeforeEach
 	public void setup() {
-		mvc = MockMvcBuilders.standaloneSetup(new MatrixController(matrixRepo, skillRepo)).build();
+		mvc = MockMvcBuilders.standaloneSetup(new MatrixController(matrixRepo, skillRepo, portRepo)).build();
 		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.");
-		matrix = new Matrix("Languages", this.portfolio);
+		matrix = new Matrix("Languages");
+		matrix.setPortfolio(portfolio);
 		skills = new ArrayList<>();
 		skills.add(new Skill("Java", 6, matrix));
 		skills.add(new Skill("Python", 3, matrix));
@@ -68,42 +82,62 @@ public class MatrixControllerTest {
 
 		given(matrixRepo.findAll()).willReturn(allMatrices);
 
-		mvc.perform(get("/matrix").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[0].header", is(matrix.getHeader())))
-				.andExpect(jsonPath("$[0].id", is(matrix.getId())));
+		mvc.perform(get("/matrix").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(1)))
+			.andExpect(jsonPath("$[0].header", is(matrix.getHeader())));
 	}
 
 	@Test
 	public void testGetById() throws Exception {
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
+		given(matrixRepo.findById(2)).willReturn(Optional.empty());
 
-		mvc.perform(get("/matrix/1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.header", is(matrix.getHeader())))
-				.andExpect(jsonPath("$.id", is(matrix.getId())));
+		mvc.perform(get("/matrix/1").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
 
 		// test if getting a matrix that doesn't exist
-		mvc.perform(get("/matrix/2")).andDo(print()).andExpect(status().isNotFound());
+		mvc.perform(get("/matrix/2"))
+			.andDo(print())
+			.andExpect(status().isNotFound())
+			.andExpect(content().string(containsString("Matrix Not Found")));
 	}
 
 	@Test
 	public void testGetByPortfolio() throws Exception {
-		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
+		
+		List<Matrix> allMatrices = Arrays.asList(matrix);
+		
+		given(matrixRepo.findAllByPortfolio(portfolio)).willReturn(allMatrices);
+		given(portRepo.findById(1)).willReturn(Optional.of(portfolio));
 
-		mvc.perform(get("/matrix/portfolio/1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.header", is(matrix.getHeader())))
-				.andExpect(jsonPath("$.id", is(matrix.getId())));
-
-		mvc.perform(get("/matrix/portfolio/2")).andDo(print()).andExpect(status().isNotFound());
+		mvc.perform(get("/matrix/portfolio/1").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(1)))
+			.andExpect(jsonPath("$[0].header", is(matrix.getHeader())));
 	}
 
 	@Test
 	public void testPost() throws Exception {
-		List<Matrix> allMatrices = Arrays.asList(matrix);
+		
+		given(matrixRepo.save(matrix)).willReturn(matrix);
 
-		given(matrixRepo.findAll()).willReturn(allMatrices);
+		mvc.perform(post("/matrix").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
+	  }
+	
+	@Test
+	public void testPut() throws Exception {
+		
+		Matrix badMax = new Matrix();
 
-		mvc.perform(post("/matrix").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[0].header", is(matrix.getHeader())))
-				.andExpect(jsonPath("$[0].id", is(matrix.getId())));
-	}
+		given(matrixRepo.save(matrix)).willReturn(matrix);
+
+		mvc.perform(put("/matrix").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
+		
+	  }
 }
