@@ -67,6 +67,8 @@ public class PortfolioControllerTest {
 
     @Test
     public void testValidJsonUpload() throws Exception {
+        User u = new User(0, "fname", "", "", "", false);
+
         ObjectNode portfolio = objectMapper.createObjectNode();
         portfolio.put("name", "");
         portfolio.put("submitted", false);
@@ -153,6 +155,7 @@ public class PortfolioControllerTest {
 
         mvc.perform(post("/portfolios/upload")
                 .contentType(MediaType.APPLICATION_JSON)
+                .sessionAttr("user", u)
                 .content(portfolio.toString()))
                 .andExpect(status().isOk());
     }
