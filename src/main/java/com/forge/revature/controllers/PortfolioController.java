@@ -194,11 +194,14 @@ public class PortfolioController {
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio, HttpSession session){
     	
+    	System.out.println("Method initializes");
+    	
     	User user = (User) session.getAttribute("user");
     	if(user == null) {
     		throw new IllegalArgumentException();
     	}
     	
+    	System.out.println(fullPortfolio);
     	
     	Portfolio pf = new Portfolio();
     	pf.setName(fullPortfolio.getName());

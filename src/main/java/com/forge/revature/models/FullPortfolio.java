@@ -44,8 +44,31 @@ public class FullPortfolio {
         this.workExperiences = workExperiences;
         this.workHistories = workHistories;
     }
+    
+    
 
-    public int getId() {
+    public FullPortfolio(String name, boolean submitted, boolean approved, boolean reviewed, String feedback,
+			AboutMe aboutMe, List<Certification> certifications, List<Education> educations,
+			List<Equivalency> equivalencies, List<GitHub> gitHubs, List<Honor> honors, List<Project> projects,
+			List<WorkExperience> workExperiences, List<WorkHistory> workHistories) {
+		super();
+		this.name = name;
+		this.submitted = submitted;
+		this.approved = approved;
+		this.reviewed = reviewed;
+		this.feedback = feedback;
+		this.aboutMe = aboutMe;
+		this.certifications = certifications;
+		this.educations = educations;
+		this.equivalencies = equivalencies;
+		this.gitHubs = gitHubs;
+		this.honors = honors;
+		this.projects = projects;
+		this.workExperiences = workExperiences;
+		this.workHistories = workHistories;
+	}
+
+	public int getId() {
         return id;
     }
 

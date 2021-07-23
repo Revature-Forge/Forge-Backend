@@ -210,6 +210,8 @@ public class PortfolioTest {
         portfolio.put("approved", false);
         portfolio.put("reviewed", false);
         portfolio.put("feedback", "");
+        
+        System.out.println(portfolio);
 
         ObjectNode aboutMe = objectMapper.createObjectNode();
         aboutMe.put("bio", "bio");
@@ -288,7 +290,7 @@ public class PortfolioTest {
         portfolio.putPOJO("workExperiences", workExperiences);
         portfolio.putPOJO("workHistories", workHistories);
 
-        mvc.perform(post("/portfolios/upload")
+        mvc.perform(post("/portfolios/full")
                 .contentType(MediaType.APPLICATION_JSON)
                 .sessionAttr("user", u)
                 .content(portfolio.toString()))
