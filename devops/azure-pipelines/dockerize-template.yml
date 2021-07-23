@@ -19,10 +19,6 @@ jobs:
           artifactName: 'maven-output'
           targetPath: '$(Pipeline.Workspace)'
           publishLocation: 'pipeline'
-      - script: |
-          cd ..
-          pwd
-          find
       - task: Docker@2
         displayName: 'Docker Build'
         inputs:
