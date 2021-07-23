@@ -192,28 +192,18 @@ public class PortfolioController {
 
     @Transactional
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio, HttpSession session){
-    	
-    	System.out.println("Method initializes");
-    	
-    	User user = (User) session.getAttribute("user");
-    	if(user == null) {
-    		throw new IllegalArgumentException();
-    	}
-    	
-    	System.out.println(fullPortfolio);
-    	
+    public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio){
     	Portfolio pf = new Portfolio();
     	pf.setName(fullPortfolio.getName());
-    	pf.setUser(user);
+    	pf.setUser(fullPortfolio.getUser());
     	pf.setSubmitted(fullPortfolio.isSubmitted());
     	pf.setApproved(fullPortfolio.isApproved());
     	pf.setReviewed(fullPortfolio.isReviewed());
     	pf.setFeedback(fullPortfolio.getFeedback());
-    	
+
     	int pfid = portRepo.save(pf).getId();
     	pf.setId(pfid);
-    	
+
     	AboutMe newMe = new AboutMe();
     	newMe.setPortfolio(pf);
     	newMe.setBio(fullPortfolio.getAboutMe().getBio());
@@ -252,7 +242,5 @@ public class PortfolioController {
     	projectRepo.saveAll(projects);
     	workExperienceRepo.saveAll(workExp);
     	workHistoryRepo.saveAll(workHist);
-
     }
-
 }

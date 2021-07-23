@@ -53,11 +53,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password, HttpSession session){
+    public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
         Optional<User> user = userRepo.findByEmail(email);
         if(user.isPresent()){
             if(password.equals(user.get().getPassword())){
-                session.setAttribute("user", user.get());
                 return user.get();
             }
         }
