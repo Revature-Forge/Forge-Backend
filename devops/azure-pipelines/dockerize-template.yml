@@ -22,7 +22,9 @@ jobs:
       #     artifactName: 'maven-output'
       #     targetPath: '$(Pipeline.Workspace)'
       #     publishLocation: 'pipeline'
-      - script: find
+      - script: |
+          pwd
+          find
       - task: Docker@2
         displayName: 'Docker Build'
         inputs:
@@ -31,7 +33,7 @@ jobs:
           command: 'build'
           Dockerfile: '${{ parameters.dockerPath }}'
           tags: '${{ parameters.imageTag }}'
-          buildContext: $(Pipeline.Workspace)/target/
+          buildContext: $(Pipeline.Workspace)
           arguments: '--build-arg JAR_FILE=demo-0.0.1-SNAPSHOT.war'
       - task: Docker@2
         displayName: 'Docker Push'

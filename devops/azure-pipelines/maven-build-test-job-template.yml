@@ -32,7 +32,6 @@ jobs:
       - task: Maven@3
         inputs:
           mavenPomFile: 'pom.xml'
-          tasks: 'build'
           publishJUnitResults: true
           testResultsFiles: '${{ parameters.testPath }}'
           codeCoverageToolOption: 'JaCoCo'
