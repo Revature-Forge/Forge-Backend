@@ -41,5 +41,13 @@ public class Portfolio {
     private boolean reviewed;
 
     private String feedback;
+    
+    public Portfolio(String name, boolean submitted, boolean approved, boolean reviewed, String feedback) {
+    	this.name = name;
+    	this.submitted = submitted;
+    	this.approved = approved;
+    	this.reviewed = reviewed;
+    	this.feedback = feedback;
+    }
 
 }

@@ -20,6 +20,7 @@ import com.forge.revature.models.GitHub;
 import com.forge.revature.models.Honor;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Project;
+import com.forge.revature.models.User;
 import com.forge.revature.models.WorkExperience;
 import com.forge.revature.models.WorkHistory;
 import com.forge.revature.repo.*;
@@ -176,40 +177,59 @@ public class PortfolioController {
 
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio){
-        Portfolio newPortfolio = new Portfolio(
-            fullPortfolio.getId(),
-            fullPortfolio.getName(),
-            fullPortfolio.getUser(),
-            fullPortfolio.isSubmitted(),
-            fullPortfolio.isApproved(),
-            fullPortfolio.isReviewed(),
-            fullPortfolio.getFeedback()
-        );
-        AboutMe newAboutMe = new AboutMe(
-            fullPortfolio.getAboutMe().getBio(),
-            fullPortfolio.getAboutMe().getEmail(),
-            fullPortfolio.getAboutMe().getPhone()
-        );
-        List<Certification> newCertificationsList = fullPortfolio.getCertifications();
-        List<Education> newEducationsList = fullPortfolio.getEducations();
-        List<Equivalency> newEquivalencyList = fullPortfolio.getEquivalencies();
-        List<GitHub> newGitHub = fullPortfolio.getGitHubs();
-        List<Honor> newHonorsList = fullPortfolio.getHonors();
-        List<Project> newProjectsList = fullPortfolio.getProjects();
-        // User newUser = fullPortfolio.getUser();
-        List<WorkExperience> newWorkExperiencesList = fullPortfolio.getWorkExperiences();
-        List<WorkHistory> newWorkHistoryList = fullPortfolio.getWorkHistories();
+    	
+    	User user = new User();
+    	
+    	//get the user info
+    	Portfolio pf = new Portfolio();
+    	pf.setName(fullPortfolio.getName());
+    	pf.setUser(user);
+    	pf.setSubmitted(fullPortfolio.isSubmitted());
+    	pf.setApproved(fullPortfolio.isApproved());
+    	pf.setReviewed(fullPortfolio.isReviewed());
+    	pf.setFeedback(fullPortfolio.getFeedback());
+    	
+    	int pfid = portRepo.save(pf).getId();
+    	pf.setId(pfid);
+    	
+    	AboutMe newMe = new AboutMe();
+    	newMe.setPortfolio(pf);
+    	newMe.setBio(fullPortfolio.getAboutMe().getBio());
+    	newMe.setEmail(fullPortfolio.getAboutMe().getEmail());
+    	newMe.setPhone(fullPortfolio.getAboutMe().getPhone());
+    	
+    	List<Certification> certs = fullPortfolio.getCertifications();
+    	certs.forEach(cert -> cert.setPortfolio(pf));
+    	
+    	List<Education> ed = fullPortfolio.getEducations();
+    	ed.forEach(e -> e.setPortfolio(pf));
+    	
+    	List<Equivalency> equivs = fullPortfolio.getEquivalencies();
+    	equivs.forEach(e -> e.setPortfolio(pf));
+    	
+    	List<GitHub> git = fullPortfolio.getGitHubs();
+    	
+    	List<Honor> honors = fullPortfolio.getHonors();
+    	honors.forEach(honor -> honor.setPortfolio(pf));
 
-        portRepo.save(newPortfolio);
-        aboutMeRepo.save(newAboutMe);
-        certificationRepo.saveAll(newCertificationsList);
-        educationRepo.saveAll(newEducationsList);
-        equivalencyRepo.saveAll(newEquivalencyList);
-        gitHubRepo.saveAll(newGitHub);
-        honorRepo.saveAll(newHonorsList);
-        projectRepo.saveAll(newProjectsList);
-        workExperienceRepo.saveAll(newWorkExperiencesList);
-        workHistoryRepo.saveAll(newWorkHistoryList);
+    	List<Project> projects = fullPortfolio.getProjects();
+    	projects.forEach(project -> project.setPortfolio(pf));
+    	
+    	List<WorkExperience> workExp = fullPortfolio.getWorkExperiences();
+    	workExp.forEach(exp -> exp.setPortfolio(pf));
+    	
+    	List<WorkHistory> workHist = fullPortfolio.getWorkHistories();
+    	workHist.forEach(hist -> hist.setPortfolio(pf));
+    	
+    	aboutMeRepo.save(newMe);
+    	certificationRepo.saveAll(certs);
+    	educationRepo.saveAll(ed);
+    	equivalencyRepo.saveAll(equivs);
+    	gitHubRepo.saveAll(git);
+    	honorRepo.saveAll(honors);
+    	projectRepo.saveAll(projects);
+    	workExperienceRepo.saveAll(workExp);
+    	workHistoryRepo.saveAll(workHist);
 
     }
 

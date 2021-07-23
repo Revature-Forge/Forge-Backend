@@ -52,6 +52,16 @@ public class Project {
         this.workProducts = workProducts;
         this.portfolio = portfolio;
     }
+    
+    public Project(String name, String description, String responsibilities, String technologies, String respositoryUrl,
+            String workProducts) {
+        this.name = name;
+        this.description = description;
+        this.responsibilities = responsibilities;
+        this.technologies = technologies;
+        this.respositoryUrl = respositoryUrl;
+        this.workProducts = workProducts;
+    }
 
     public Project(String name, String description, String responsibilities, String technologies, String respositoryUrl,
             Portfolio portfolio) {
