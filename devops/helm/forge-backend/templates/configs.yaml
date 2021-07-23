@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: backend-config
+  name: {{ .Values.config.name }}
 data:
   spring.datasource.url: {{.Values.env.normal.spring_datasource_url}}
   spring.datasource.driverClassName: {{.Values.env.normal.spring_datasource_driverClassName}}

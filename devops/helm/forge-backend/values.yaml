@@ -90,3 +90,5 @@ env:
   secret:
     username: 'sa'
     password: 'password'
+config:
+  name: abc123
