@@ -13,16 +13,20 @@ jobs:
   - job: ${{ parameters.jobName }}
     steps:
       - task: KubernetesManifest@0
-        condition: eq(variables['Build.SourceBranch'], '${{ parameters.branchMain }}')
-        inputs:
-          action: 'deploy'
-          kubernetesServiceConnection: '${{ parameters.serviceConnectionMain }}'
-          manifests: '${{ parameters.manifestPath }}'
-          rolloutStatusTimeout: '10'
-      - task: KubernetesManifest@0
         condition: ne(variables['Build.SourceBranch'], '${{ parameters.branchMain }}')
         inputs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionDev }}'
           manifests: '${{ parameters.manifestPath }}'
           rolloutStatusTimeout: '10'
+        displayName: Deploy to Dev
+
+      - task: KubernetesManifest@0
+        condition: eq(variables['Build.SourceBranch'], '${{ parameters.branchMain }}')
+        inputs:
+          action: 'deploy'
+          kubernetesServiceConnection: '${{ parameters.serviceConnectionMain }}'
+          manifests: '${{ parameters.manifestPath }}'
+          rolloutStatusTimeout: '10'
+        displayName: Deploy to Staging
+    displayName: Deploy to Cluster
