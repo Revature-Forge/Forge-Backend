@@ -1,34 +1,31 @@
 parameters:
   - name: 'jobName'
     type: string
-  - name: 'serviceConnection'
+  - name: 'sonarServiceConnection'
     type: string
-  - name: 'organization'
+  - name: 'sonarOrganization'
+    type: string
+  - name: 'sonarProjectKey'
+    type: string
+  - name: 'sonarProjectName'
     type: string
   - name: 'testPath' # file path to test results
+    type: string
+  - name: 'mavenOutput'
     type: string
 jobs:
   - job: ${{ parameters.jobName }}
     steps:
       - task: SonarCloudPrepare@1
-        condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
-          SonarCloud: 'Forge-SonarCloud'
-          organization: '1058-sophia-gavrila-forge'
+          SonarCloud: '${{ parameters.sonarServiceConnection }}'
+          organization: '${{ parameters.sonarOrganization }}'
           scannerMode: 'Other'
           extraProperties: |
-           sonar.branch.name=$(Build.SourceBranchName) 
-           sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
-           sonar.projectName=Forge-Backend
-      - task: SonarCloudPrepare@1
-        condition: eq(variables['Build.Reason'], 'PullRequest')
-        inputs:
-          SonarCloud: 'Forge-SonarCloud'
-          organization: '1058-sophia-gavrila-forge'
-          scannerMode: 'Other'
-          extraProperties: |
-           sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
-           sonar.projectName=Forge-Backend
+           sonar.projectKey=${{ parameters.sonarProjectKey }}
+           sonar.projectName=${{ parameters.sonarProjectName }}
+        displayName: Configure Sonar Analysis Parameters
+
       - task: Maven@3
         inputs:
           mavenPomFile: 'pom.xml'
@@ -42,9 +39,12 @@ jobs:
           effectivePomSkip: false
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest'
+        displayName: Maven package, JUnit test, Sonar, JaCoCo
+
       - task: PublishPipelineArtifact@1
         inputs:
-          targetPath: '$(Pipeline.Workspace)/s/target/demo-0.0.1-SNAPSHOT.war'
+          targetPath: '$(Build.Repository.LocalPath)/target/${{ parameters.mavenOutput }}'
           artifact: 'maven-output'
           publishLocation: 'pipeline'
+        displayName: Publish Maven output as artifact
   
