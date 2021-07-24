@@ -25,8 +25,8 @@ stages:
       - template: ./dockerize-template.yml
         parameters:
           jobName: 'Dockerize'
-          containerRegistry: 'project-3-docker-hub'
-          repository: 'dajpearl/forge-backend'
+          containerRegistry: 'acr-team2'
+          repository: 'forge-backend'
           imageTag: "$(Build.SourceVersion)"
           dockerPath: '**/mavenpipe.dockerfile'
   - stage: Deploy
@@ -34,9 +34,9 @@ stages:
       - template: ./kubernetes-template.yml
         parameters:
           jobName: 'Deploy'
-          branchMain: 'refs/heads/azure-pipelines'
-          serviceConnectionMain: 'Alex-Main-Cluster'
-          serviceConnectionDev: 'Alex-Dev-Cluster'
+          branchMain: 'refs/heads/main'
+          serviceConnectionMain: 'may24-devops-team2-main-cluster'
+          serviceConnectionDev: 'may24-devops-team2-dev-cluster'
           manifestPath: '**/backend_manifest.yaml'
       - template: ./discord-job-template.yml
         parameters:
