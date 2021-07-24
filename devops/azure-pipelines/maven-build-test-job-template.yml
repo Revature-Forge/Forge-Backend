@@ -47,4 +47,5 @@ jobs:
           artifact: 'maven-output'
           publishLocation: 'pipeline'
         displayName: Publish Maven output as artifact
+    displayName: Maven Build, Test, Analyze
   
