@@ -14,9 +14,12 @@ stages:
       - template: ./maven-build-test-job-template.yml
         parameters:
           jobName: 'Build_and_Test'
-          serviceConnection: 'Forge-SonarCloud'
-          organization: '1058-sophia-gavrila-forge'
+          sonarServiceConnection: 'Forge-SonarCloud'
+          sonarOrganization: '1058-sophia-gavrila-forge'
+          sonarProjectKey: '1058-Sophia-Gavrila-Forge_Forge-Backend'
+          sonarProjectName: 'Forge-Backend'
           testPath: '**/surefire-reports/TEST-*.xml'
+          mavenOutput: demo-0.0.1-SNAPSHOT.war
   - stage: Dockerize
     jobs:
       - template: ./dockerize-template.yml
