@@ -40,7 +40,10 @@ stages:
           dockerPath: '**/mavenpipe.dockerfile'
 
   - stage: Deploy
-    condition: and( succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'), in(variables['Build.SourceBranch'], ${{parameters.branchMain}}, ${{parameters.branchDev}}) )
+    condition: >
+      and( succeeded(), 
+      in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'), 
+      in(variables['Build.SourceBranch'], '${{parameters.branchMain}}', '${{parameters.branchDev}}' ) )
     jobs:
       - template: ./kubernetes-template.yml
         parameters:
