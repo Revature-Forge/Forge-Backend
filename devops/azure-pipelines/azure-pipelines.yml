@@ -33,7 +33,7 @@ stages:
           jobName: 'Dockerize'
           containerRegistry: 'acr-team2'
           repository: 'forge-backend'
-          imageTag: "$(Build.SourceVersion)"
+          imageTag: latest
           dockerPath: '**/mavenpipe.dockerfile'
 
   - stage: Deploy
