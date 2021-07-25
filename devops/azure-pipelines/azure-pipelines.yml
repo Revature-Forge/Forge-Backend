@@ -11,7 +11,7 @@ pool:
 parameters:
   - name: 'branchMain'
     type: string
-
+    default: 'refs/heads/main'
 stages:
   - stage: Build_and_Test
     jobs:
@@ -40,7 +40,6 @@ stages:
       - template: ./kubernetes-template.yml
         parameters:
           jobName: 'Deploy'
-          branchMain: 'refs/heads/azure-pipelines'
           ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
             clusterServiceConnection: 'may24-devops-team2-main-cluster'
           ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
