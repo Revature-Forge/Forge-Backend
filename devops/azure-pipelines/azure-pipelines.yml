@@ -12,7 +12,7 @@ parameters:
   - name: 'branchMain'
     type: string
     default: 'refs/heads/main'
-  - name: 'branchMain'
+  - name: 'branchDev'
     type: string
     default: 'refs/heads/dev'
 
