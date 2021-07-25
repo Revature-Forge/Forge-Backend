@@ -22,15 +22,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forge.revature.controllers.HonorController;
 import com.forge.revature.controllers.MatrixController;
 import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Portfolio;
@@ -64,7 +60,6 @@ public class MatrixControllerTest {
 
 	@BeforeEach
 	public void setup() {
-		mvc = MockMvcBuilders.standaloneSetup(new MatrixController(matrixRepo, skillRepo, portRepo)).build();
 		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.");
 		matrix = new Matrix("Languages");
 		matrix.setPortfolio(portfolio);
