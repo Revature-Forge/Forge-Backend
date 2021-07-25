@@ -62,18 +62,12 @@ public class PortfolioTest {
 
     @MockBean
     WorkHistoryRepo workHistoryRepo;
-    
-    @MockBean
-    MatrixRepo matrixRepo;
-    
-    @MockBean
-    SkillRepo skillRepo;
-    
+
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .standaloneSetup(new PortfolioController(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
-                    gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo))
+                    gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo))
             .build();
     }
 
@@ -207,49 +201,6 @@ public class PortfolioTest {
 
     @Test
     public void testPostFullPortfolioWithJSON() throws Exception{
-<<<<<<< HEAD
-        //Create test data
-        Date dateForTest = new Date();
-        User testUser = new User();
-        Portfolio testPortfolio = new Portfolio();
-        AboutMe testAboutMe = new AboutMe();
-        //Create certifications list
-        Certification testCertification1 = new Certification("Test 1", "123", "Testing", dateForTest, "TestURL");
-        Certification testCertification2 = new Certification("Test 2", "321", "Testing2", dateForTest, "TestURL2");
-        List<Certification> testCertifications = new ArrayList<>();
-        testCertifications.add(testCertification1);
-        testCertifications.add(testCertification2);
-        //Create educations list
-        Education testEducation = new Education("Test University", "Degree", "A date", 0, "Testurl");
-        List<Education> testEducationList = new ArrayList<>();
-        testEducationList.add(testEducation);
-        //Create equivalency list
-        Equivalency testEquivalency = new Equivalency("Test", 0, testPortfolio);
-        List<Equivalency> testEquivalenciesList = new ArrayList<>();
-        testEquivalenciesList.add(testEquivalency);
-        //Create github data
-        GitHub testGitHub = new GitHub("Test GitHub", "testurl");
-        List<GitHub> testGitHubList = new ArrayList<>();
-        testGitHubList.add(testGitHub);
-        //Create honor list
-        Honor testHonor = new Honor("Test Honor", "Test honor description", "Test date", "Received from test");
-        List<Honor> testHonorList = new ArrayList<>();
-        testHonorList.add(testHonor);
-        //Create Project list
-        Project testProject = new Project("Project Name", "Project Description", "Project Responsibilities", "Project technologies", "Testurl");
-        List<Project> testProjectsList = new ArrayList<>();
-        testProjectsList.add(testProject);
-        //Create workexperience list
-        WorkExperience testWorkExperience = new WorkExperience("Test employer", "Test Title", "Test responsibilities", "Test description", "Test technologies", dateForTest, dateForTest);
-        List<WorkExperience> testWorkExperiences = new ArrayList<>();
-        testWorkExperiences.add(testWorkExperience);
-        //Create workhistory list
-        WorkHistory testWorkHistory = new WorkHistory("Test title", "Test employer", "Test responsibilities", "Test description", "test tools", "StartDate test", "Enddate test");
-        List<WorkHistory> testWorkHistoriesList = new ArrayList<>();
-        testWorkHistoriesList.add(testWorkHistory);
-        //Create full portfolio
-        FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList, null);
-=======
         ObjectMapper objectMapper = new ObjectMapper();
         User u = new User(0, "fname", "", "", "", false);
 
@@ -259,7 +210,6 @@ public class PortfolioTest {
         portfolio.put("approved", false);
         portfolio.put("reviewed", false);
         portfolio.put("feedback", "");
->>>>>>> 02501c92b5c9f7a28d6bdbaba2dc50fa86baf5d3
         
         System.out.println(portfolio);
 
