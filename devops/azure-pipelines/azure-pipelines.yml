@@ -40,21 +40,24 @@ stages:
           dockerPath: '**/mavenpipe.dockerfile'
 
   - stage: Deploy
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+    condition: and( succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI') )
     jobs:
-      - template: ./kubernetes-template.yml
-        parameters:
+      ${{ if in(variables['Build.SourceBranch'], parameters.branchMain, parameters.branchDev) }}:
+        - template: ./kubernetes-template.yml
+          parameters:
           jobName: 'Deploy'
           ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
-            clusterServiceConnection: 'may24-devops-team2-main-cluster'
+              clusterServiceConnection: 'may24-devops-team2-main-cluster'
           ${{ if eq(variables['Build.SourceBranch'], parameters.branchDev) }}:
-            clusterServiceConnection: 'may24-devops-team2-dev-cluster'
+              clusterServiceConnection: 'may24-devops-team2-dev-cluster'
           manifestPath: '**/backend_manifest.yaml'
           namespace: 'team2'
-
+  
+  - stage: Notify
+    condition: always()
+    jobs:
       - template: ./discord-job-template.yml
         parameters:
-          dependOn: Deploy
           name: 'Team2-P3-Backend'
           title: 'Forge Portfolio Management System DevOps'
           discordVarGroup: Discord-Webhook-Info
