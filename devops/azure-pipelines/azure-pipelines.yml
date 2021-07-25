@@ -8,6 +8,10 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
+parameters:
+  - name: 'branchMain'
+    type: string
+
 stages:
   - stage: Build_and_Test
     jobs:
@@ -20,6 +24,7 @@ stages:
           sonarProjectName: 'Forge-Backend'
           testPath: '**/surefire-reports/TEST-*.xml'
           mavenOutput: demo-0.0.1-SNAPSHOT.war
+          
   - stage: Dockerize
     jobs:
       - template: ./dockerize-template.yml
@@ -29,16 +34,20 @@ stages:
           repository: 'forge-backend'
           imageTag: "$(Build.SourceVersion)"
           dockerPath: '**/mavenpipe.dockerfile'
+
   - stage: Deploy
     jobs:
       - template: ./kubernetes-template.yml
         parameters:
           jobName: 'Deploy'
-          branchMain: 'refs/heads/main'
-          serviceConnectionMain: 'may24-devops-team2-main-cluster'
-          serviceConnectionDev: 'may24-devops-team2-dev-cluster'
+          branchMain: 'refs/heads/azure-pipelines'
+          ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: 'may24-devops-team2-main-cluster'
+          ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: 'may24-devops-team2-dev-cluster'
           manifestPath: '**/backend_manifest.yaml'
           namespace: 'team2'
+
       - template: ./discord-job-template.yml
         parameters:
           dependOn: Deploy
