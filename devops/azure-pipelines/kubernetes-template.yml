@@ -9,6 +9,8 @@ parameters:
     type: string
   - name: 'manifestPath' #Kubernetes manifest file path
     type: string
+  - name: namespace
+    type: string
 jobs:
   - job: ${{ parameters.jobName }}
     steps:
@@ -17,6 +19,7 @@ jobs:
         inputs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionDev }}'
+          namespace: 'team2'
           manifests: '${{ parameters.manifestPath }}'
           rolloutStatusTimeout: '10'
         displayName: Deploy to Dev
@@ -27,6 +30,7 @@ jobs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionMain }}'
           manifests: '${{ parameters.manifestPath }}'
+          namespace: 'team2'
           rolloutStatusTimeout: '10'
         displayName: Deploy to Staging
     displayName: Deploy to Cluster
