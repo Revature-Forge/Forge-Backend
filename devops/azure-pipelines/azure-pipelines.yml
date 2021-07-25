@@ -47,7 +47,7 @@ stages:
           jobName: 'Deploy'
           ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
               clusterServiceConnection: 'may24-devops-team2-main-cluster'
-          ${{ if eq(variables['Build.SourceBranch'], parameters.branchDev) }}:
+          ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
               clusterServiceConnection: 'may24-devops-team2-dev-cluster'
           manifestPath: '**/backend_manifest.yaml'
           namespace: 'team2'
