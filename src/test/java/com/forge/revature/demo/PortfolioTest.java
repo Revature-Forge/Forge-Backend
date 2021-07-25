@@ -1,6 +1,7 @@
 package com.forge.revature.demo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.forge.revature.controllers.PortfolioController;
 import com.forge.revature.models.*;
 import com.forge.revature.repo.*;
@@ -206,6 +207,7 @@ public class PortfolioTest {
 
     @Test
     public void testPostFullPortfolioWithJSON() throws Exception{
+<<<<<<< HEAD
         //Create test data
         Date dateForTest = new Date();
         User testUser = new User();
@@ -247,15 +249,101 @@ public class PortfolioTest {
         testWorkHistoriesList.add(testWorkHistory);
         //Create full portfolio
         FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList, null);
-        
-        //Convert testFullPortfolio to JSON
-        ObjectMapper mapper = new ObjectMapper();
-        String fullPortfolioAsJSON = mapper.writeValueAsString(testFullPortfolio);
+=======
+        ObjectMapper objectMapper = new ObjectMapper();
+        User u = new User(0, "fname", "", "", "", false);
 
-        mvc.perform(
-            post("/portfolios/full")
+        ObjectNode portfolio = objectMapper.createObjectNode();
+        portfolio.put("name", "");
+        portfolio.put("submitted", false);
+        portfolio.put("approved", false);
+        portfolio.put("reviewed", false);
+        portfolio.put("feedback", "");
+>>>>>>> 02501c92b5c9f7a28d6bdbaba2dc50fa86baf5d3
+        
+        System.out.println(portfolio);
+
+        ObjectNode aboutMe = objectMapper.createObjectNode();
+        aboutMe.put("bio", "bio");
+        aboutMe.put("email", "email");
+        aboutMe.put("phone", "phone");
+
+        List<ObjectNode> certifications = new ArrayList<>();
+        ObjectNode cert = objectMapper.createObjectNode();
+        cert.put("name", "");
+        cert.put("certId", "");
+        cert.put("issuedBy", "");
+        cert.put("issuedOn", 0);
+        cert.put("publicUrl", "");
+        certifications.add(cert);
+
+        List<ObjectNode> educations = new ArrayList<>();
+        ObjectNode edu = objectMapper.createObjectNode();
+        edu.put("university", "");
+        edu.put("degree", "");
+        edu.put("graduationDate", "2021-07-15");
+        edu.put("gpa", 0.0);
+        edu.put("logoUrl", "");
+        educations.add(edu);
+
+        List<ObjectNode> equivalencies = new ArrayList<>();
+        ObjectNode equiv = objectMapper.createObjectNode();
+        equiv.put("header", "header");
+        equiv.put("value", 0);
+        equivalencies.add(equiv);
+
+        List<ObjectNode> honors = new ArrayList<>();
+        ObjectNode honor = objectMapper.createObjectNode();
+        honor.put("title", "");
+        honor.put("description", "");
+        honor.put("dateReceived", "2021-07-15");
+        honor.put("receivedFrom", "");
+        honors.add(honor);
+
+        List<ObjectNode> projects = new ArrayList<>();
+        ObjectNode proj = objectMapper.createObjectNode();
+        proj.put("name", "");
+        proj.put("description", "");
+        proj.put("responsibilities", "");
+        proj.put("technologies", "");
+        proj.put("workProducts", "");
+        projects.add(proj);
+
+        List<ObjectNode> workExperiences = new ArrayList<>();
+        ObjectNode workExp = objectMapper.createObjectNode();
+        workExp.put("employer", "");
+        workExp.put("title", "");
+        workExp.put("responsibilities", "");
+        workExp.put("description", "");
+        workExp.put("technologies", "");
+        workExp.put("startDate", 1625374000);
+        workExp.put("endDate", 1625374000);
+        workExperiences.add(workExp);
+
+        List<ObjectNode> workHistories = new ArrayList<>();
+        ObjectNode workHistory = objectMapper.createObjectNode();
+        workHistory.put("title", "");
+        workHistory.put("employer", "");
+        workHistory.put("responsibilities", "");
+        workHistory.put("description", "");
+        workHistory.put("tools", "");
+        workHistory.put("startDate", "2021-07-08");
+        workHistory.put("endDate", "2021-07-08");
+        workHistories.add(workHistory);
+
+        portfolio.putPOJO("certifications", certifications);
+        portfolio.putPOJO("educations", educations);
+        portfolio.putPOJO("equivalencies", equivalencies);
+        portfolio.putPOJO("githubs", new ArrayList<ObjectNode>());
+        portfolio.putPOJO("honors", honors);
+        portfolio.putPOJO("projects", projects);
+        portfolio.putPOJO("workExperiences", workExperiences);
+        portfolio.putPOJO("workHistories", workHistories);
+
+        mvc.perform(post("/portfolios/full")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(fullPortfolioAsJSON))
-            .andExpect(status().isOk());
+                .sessionAttr("user", u)
+                .content(portfolio.toString()))
+                .andExpect(status().isOk());
     }
 }

@@ -36,5 +36,10 @@ public class Equivalency {
         this.value = value;
         this.portfolio = portfolio;
     }
+    
+    public Equivalency(String header, int value) {
+    	this.header = header;
+    	this.value = value;
+    }
 
 }
