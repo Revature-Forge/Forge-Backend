@@ -19,7 +19,7 @@ jobs:
         inputs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionDev }}'
-          namespace: 'team2'
+          namespace: '${{ parameters.namespace }}'
           manifests: '${{ parameters.manifestPath }}'
           rolloutStatusTimeout: '10'
         displayName: Deploy to Dev
@@ -30,7 +30,7 @@ jobs:
           action: 'deploy'
           kubernetesServiceConnection: '${{ parameters.serviceConnectionMain }}'
           manifests: '${{ parameters.manifestPath }}'
-          namespace: 'team2'
+          namespace: '${{ parameters.namespace }}'
           rolloutStatusTimeout: '10'
         displayName: Deploy to Staging
     displayName: Deploy to Cluster

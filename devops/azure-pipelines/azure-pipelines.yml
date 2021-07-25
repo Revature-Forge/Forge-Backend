@@ -38,6 +38,7 @@ stages:
           serviceConnectionMain: 'may24-devops-team2-main-cluster'
           serviceConnectionDev: 'may24-devops-team2-dev-cluster'
           manifestPath: '**/backend_manifest.yaml'
+          namespace: 'team2'
       - template: ./discord-job-template.yml
         parameters:
           dependOn: Deploy
