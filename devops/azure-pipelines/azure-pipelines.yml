@@ -15,6 +15,18 @@ parameters:
   - name: 'branchDev'
     type: string
     default: 'refs/heads/dev'
+  - name: 'mainCluster' 
+    type: string
+    default: 'may24-devops-team2-main-cluster'
+  - name: 'devCluster' 
+    type: string
+    default: 'may24-devops-team2-dev-cluster'
+  - name: 'containerRegistry'
+    type: string
+    default: 'acr-team2'
+  - name: 'repository'
+    type: string
+    default: 'forge-frontend'
 
 stages:
   - stage: Build_and_Test
@@ -34,26 +46,28 @@ stages:
       - template: ./dockerize-template.yml
         parameters:
           jobName: 'Dockerize'
-          containerRegistry: 'acr-team2'
-          repository: 'forge-backend'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
           imageTag: latest
           dockerPath: '**/mavenpipe.dockerfile'
 
   - stage: Deploy
     condition: >
       and( succeeded(), 
-      in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'), 
+      ne(variables['Build.Reason'], 'PullRequest'), 
       in(variables['Build.SourceBranch'], '${{ parameters.branchMain }}', '${{ parameters.branchDev }}' ) )
     jobs:
       - template: ./kubernetes-template.yml
         parameters:
           jobName: 'Deploy'
           ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
-            clusterServiceConnection: 'may24-devops-team2-main-cluster'
+            clusterServiceConnection: '${{ parameters.mainCluster }}'
           ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
-            clusterServiceConnection: 'may24-devops-team2-dev-cluster'
+            clusterServiceConnection: '${{ parameters.devCluster }}'
           manifestPath: '**/backend_manifest.yaml'
+          containerRegistry: '${{ parameters.containerRegistry }}'
           namespace: 'team2'
+          secretName: 'p3-team2-acr'
   
   - stage: Notify
     condition: always()

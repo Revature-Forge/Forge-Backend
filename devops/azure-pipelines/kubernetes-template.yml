@@ -5,11 +5,25 @@ parameters:
     type: string
   - name: 'manifestPath' #Kubernetes manifest file path
     type: string
-  - name: namespace
+  - name: 'containerRegistry'
+    type: string
+  - name: 'namespace'
+    type: string
+  - name: 'secretName'
     type: string
 jobs:
   - job: ${{ parameters.jobName }}
     steps:
+      - task: KubernetesManifest@0
+        inputs:
+          action: 'createSecret'
+          kubernetesServiceConnection: '${{ parameters.clusterServiceConnection }}'
+          namespace: '${{ parameters.namespace }}'
+          secretType: 'dockerRegistry'
+          secretName: '${{ parameters.secretName }}'
+          dockerRegistryEndpoint: '${{ parameters.containerRegistry }}'
+        displayName: Create ImagePullSecret
+
       - task: KubernetesManifest@0
         inputs:
           action: 'deploy'

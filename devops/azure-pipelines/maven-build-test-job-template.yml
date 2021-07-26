@@ -25,6 +25,7 @@ jobs:
            sonar.projectKey=${{ parameters.sonarProjectKey }}
            sonar.projectName=${{ parameters.sonarProjectName }}
         displayName: Configure Sonar Analysis Parameters
+
       - task: Maven@3
         inputs:
           mavenPomFile: 'pom.xml'
@@ -39,6 +40,7 @@ jobs:
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest'
         displayName: Maven package, JUnit test, Sonar, JaCoCo
+        
       - task: PublishPipelineArtifact@1
         inputs:
           targetPath: '$(Build.Repository.LocalPath)/target/${{ parameters.mavenOutput }}'
