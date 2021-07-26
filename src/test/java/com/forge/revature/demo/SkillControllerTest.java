@@ -13,9 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.forge.revature.controllers.SkillController;
 import com.forge.revature.models.Matrix;
-import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
-import com.forge.revature.models.User;
 import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.SkillRepo;
 

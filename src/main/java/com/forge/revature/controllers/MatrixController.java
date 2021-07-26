@@ -89,36 +89,4 @@ public class MatrixController {
 		matrixRepo.delete(max);
 	}
 
-//	private Matrix insertSkills(Matrix max) {
-//		max.setSkills(skillRepo.findAllByMatrix(max));
-//		return max;
-//	}
-//
-//	private List<Matrix> insertSkills(List<Matrix> matrices) {
-//		for (Matrix m : matrices) {
-//			m.setSkills(skillRepo.findAllByMatrix(m));
-//		}
-//		return matrices;
-//	}
-//
-//	private List<Skill> extractSkills(Matrix max) {
-//		List<Skill> skills = new ArrayList<>();
-//		for (Skill s : max.getSkills()) {
-//			s.setMatrix(max);
-//			skills.add(s);
-//		}
-//		return skills;
-//	}
-//
-//	private List<Skill> extractSkills(List<Matrix> matrices) {
-//		List<Skill> skills = new ArrayList<>();
-//		for (Matrix m : matrices) {
-//			for (Skill s : m.getSkills()) {
-//				s.setMatrix(m);
-//				skills.add(s);
-//			}
-//		}
-//		return skills;
-//	}
-
 }
