@@ -2,6 +2,11 @@ package com.forge.revature.models;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class FullPortfolio {
     private int id;
     private String name;
@@ -19,31 +24,6 @@ public class FullPortfolio {
     private List<Project> projects;
     private List<WorkExperience> workExperiences;
     private List<WorkHistory> workHistories;
-    
-    public FullPortfolio() {
-    }
-
-    public FullPortfolio(int id, String name, User user, boolean submitted, boolean approved, boolean reviewed,
-            String feedback, AboutMe aboutMe, List<Certification> certifications, List<Education> educations,
-            List<Equivalency> equivalencies, List<GitHub> gitHubs, List<Honor> honors, List<Project> projects,
-            List<WorkExperience> workExperiences, List<WorkHistory> workHistories) {
-        this.id = id;
-        this.name = name;
-        this.user = user;
-        this.submitted = submitted;
-        this.approved = approved;
-        this.reviewed = reviewed;
-        this.feedback = feedback;
-        this.aboutMe = aboutMe;
-        this.certifications = certifications;
-        this.educations = educations;
-        this.equivalencies = equivalencies;
-        this.gitHubs = gitHubs;
-        this.honors = honors;
-        this.projects = projects;
-        this.workExperiences = workExperiences;
-        this.workHistories = workHistories;
-    }
     
     
 

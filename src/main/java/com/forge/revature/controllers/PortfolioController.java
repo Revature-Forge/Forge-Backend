@@ -8,13 +8,14 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.models.*;
 import com.forge.revature.repo.*;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -45,6 +46,8 @@ abstract class UserIgnoreMixin {
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/portfolios")
+@NoArgsConstructor
+@AllArgsConstructor
 public class PortfolioController {
     @Autowired
     PortfolioRepo portRepo;
@@ -76,26 +79,8 @@ public class PortfolioController {
     @Autowired
     WorkHistoryRepo workHistoryRepo;
 
-    public PortfolioController() {
-    }
-
     public PortfolioController(PortfolioRepo portRepo) {
         this.portRepo = portRepo;
-    }
-
-    public PortfolioController(PortfolioRepo portRepo, AboutMeRepo aboutMeRepo, CertificationRepo certificationRepo,
-            EducationRepo educationRepo, EquivalencyRepo equivalencyRepo, GitHubRepo gitHubRepo, HonorRepo honorRepo,
-            ProjectRepo projectRepo, WorkExperienceRepo workExperienceRepo, WorkHistoryRepo workHistoryRepo) {
-        this.portRepo = portRepo;
-        this.aboutMeRepo = aboutMeRepo;
-        this.certificationRepo = certificationRepo;
-        this.educationRepo = educationRepo;
-        this.equivalencyRepo = equivalencyRepo;
-        this.gitHubRepo = gitHubRepo;
-        this.honorRepo = honorRepo;
-        this.projectRepo = projectRepo;
-        this.workExperienceRepo = workExperienceRepo;
-        this.workHistoryRepo = workHistoryRepo;
     }
 
     @GetMapping
@@ -187,7 +172,7 @@ public class PortfolioController {
         mapper.addMixIn(WorkHistory.class, PortfolioIgnoreMixin.class);
 
         response.setHeader("Content-Disposition", "attachment; filename=Portfolio-" + id + ".json");
-        return new ResponseEntity<ByteArrayResource>(new ByteArrayResource(mapper.writeValueAsString(full).getBytes()), HttpStatus.OK);
+        return new ResponseEntity<>(new ByteArrayResource(mapper.writeValueAsString(full).getBytes()), HttpStatus.OK);
     }
 
     @Transactional
