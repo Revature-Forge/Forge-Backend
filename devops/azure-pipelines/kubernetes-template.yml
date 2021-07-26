@@ -18,6 +18,5 @@ jobs:
           manifests: '${{ parameters.manifestPath }}'
           rolloutStatusTimeout: '10'
         displayName: Deploy to Cluster Step
-
     displayName: Deploy to Cluster Job
 
