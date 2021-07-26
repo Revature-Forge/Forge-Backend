@@ -2,6 +2,7 @@ package modelTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 
 @SpringBootTest(classes=Portfolio.class)
-public class PortfolioTests {
+class PortfolioTests {
 
 	Portfolio p = new Portfolio();
 	Portfolio fullP = new Portfolio(1, "Test", null, true, true, true, "");
@@ -21,20 +22,20 @@ public class PortfolioTests {
 		Portfolio p1 = new Portfolio();
 		Portfolio p2 = new Portfolio("Test", false, true, true, "none");
 		Portfolio p3 = new Portfolio(1, "Test", null, true, true, true, "");
-		
-		assertTrue(p1.getId() == 0);
-		assertTrue(p2.getName() == "Test");
-		assertTrue(p3.getId() == 1);
+	
+		assertEquals(0, p1.getId());
+		assertSame("Test", p2.getName());
+		assertEquals(1, p3.getId());
 	}
 	
 	@Test
 	void testGetId() {
-		assertEquals(fullP.getId(), 1);
+		assertEquals(1, fullP.getId());
 	}
 	
 	@Test
 	void testGetName() {
-		assertEquals(fullP.getName(), "Test");
+		assertSame("Test", fullP.getName());
 	}
 	
 	@Test
@@ -59,13 +60,13 @@ public class PortfolioTests {
 	
 	@Test
 	void testGetFeedback() {
-		assertEquals(fullP.getFeedback(), "");
+		assertEquals("", fullP.getFeedback());
 	}
 	
 	@Test
 	void testSetId() {
 		p.setId(17);
-		assertTrue(p.getId() == 17);
+		assertEquals(17, p.getId());
 	}
 	
 	@Test
@@ -74,7 +75,7 @@ public class PortfolioTests {
 		u.setFName("mockito!");
 		p.setUser(u);
 		
-		assertEquals(p.getUser().getFName(), "mockito!");
+		assertEquals("mockito!", p.getUser().getFName());
 	}
 	
 	@Test
@@ -98,6 +99,6 @@ public class PortfolioTests {
 	@Test
 	void testSetFeedback() {
 		p.setFeedback("feedback");
-		assertEquals(p.getFeedback(), "feedback");
+		assertEquals("feedback", p.getFeedback());
 	}
 }
