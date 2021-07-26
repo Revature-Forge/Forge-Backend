@@ -1,42 +1,79 @@
 trigger:
   - main
-  - staging
   - dev
 pr:
   - main
-  - staging
   - dev
 
 pool:
   vmImage: ubuntu-latest
 
+parameters:
+  - name: 'branchMain'
+    type: string
+    default: 'refs/heads/main'
+  - name: 'branchDev'
+    type: string
+    default: 'refs/heads/dev'
+  - name: 'mainCluster' 
+    type: string
+    default: 'may24-devops-team2-main-cluster'
+  - name: 'devCluster' 
+    type: string
+    default: 'may24-devops-team2-dev-cluster'
+  - name: 'containerRegistry'
+    type: string
+    default: 'acr-team2'
+  - name: 'repository'
+    type: string
+    default: 'forge-frontend'
+
 stages:
   - stage: Build_and_Test
     jobs:
-      - template: ./gradle-build-test-job-template.yml
+      - template: ./maven-build-test-job-template.yml
         parameters:
           jobName: 'Build_and_Test'
-          testPath: '**/TEST-*.xml'
-          ccPath: 'build/classes/main/'
+          sonarServiceConnection: 'Forge-SonarCloud'
+          sonarOrganization: '1058-sophia-gavrila-forge'
+          sonarProjectKey: '1058-Sophia-Gavrila-Forge_Forge-Backend'
+          sonarProjectName: 'Forge-Backend'
+          testPath: '**/surefire-reports/TEST-*.xml'
+          mavenOutput: demo-0.0.1-SNAPSHOT.war
+          
   - stage: Dockerize
     jobs:
       - template: ./dockerize-template.yml
         parameters:
           jobName: 'Dockerize'
-          containerRegistry: 'project-3-docker-hub'
-          repository: 'dajpearl/forge-backend'
-          imageTag: '${{ variables.Build.SourceVersion }}'
-          dockerPath: '**/gradle.Dockerfile'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          imageTag: latest
+          dockerPath: '**/mavenpipe.dockerfile'
+
   - stage: Deploy
+    condition: >
+      and( succeeded(), 
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      in(variables['Build.SourceBranch'], '${{ parameters.branchMain }}', '${{ parameters.branchDev }}' ) )
     jobs:
       - template: ./kubernetes-template.yml
         parameters:
           jobName: 'Deploy'
-          serviceConnection: 'may24-devops-team2-dev-cluster'
+          ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.mainCluster }}'
+          ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.devCluster }}'
           manifestPath: '**/backend_manifest.yaml'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          namespace: 'team2'
+          secretName: 'p3-team2-acr'
+  
+  - stage: Notify
+    condition: always()
+    jobs:
       - template: ./discord-job-template.yml
         parameters:
-          dependOn: Deploy
           name: 'Team2-P3-Backend'
           title: 'Forge Portfolio Management System DevOps'
           discordVarGroup: Discord-Webhook-Info
