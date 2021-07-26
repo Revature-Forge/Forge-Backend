@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -64,10 +63,9 @@ public class MatrixControllerTest {
 		matrix = new Matrix("Languages");
 		matrix.setPortfolio(portfolio);
 		skills = new ArrayList<>();
-		skills.add(new Skill("Java", 6, matrix));
+		skills.add(new Skill("Java", 9, matrix));
 		skills.add(new Skill("Python", 3, matrix));
 		skills.add(new Skill("COBOL", 6, matrix));
-		matrix.setSkills(skills);
 		matrix.setId(1);
 	}
 
@@ -124,13 +122,12 @@ public class MatrixControllerTest {
 	  }
 	
 	@Test
-	public void testPut() throws Exception {
-		
-		Matrix badMax = new Matrix();
+	public void testUpdate() throws Exception {
 
 		given(matrixRepo.save(matrix)).willReturn(matrix);
+		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 
-		mvc.perform(put("/matrix").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(post("/matrix/1").contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
 		

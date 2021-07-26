@@ -1,6 +1,5 @@
 package com.forge.revature.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,11 +25,11 @@ import com.forge.revature.repo.SkillRepo;
 @CrossOrigin(origins = "*")
 @RequestMapping("/matrix")
 public class MatrixController {
-	
+
 	MatrixRepo matrixRepo;
 
 	SkillRepo skillRepo;
-	
+
 	PortfolioRepo portRepo;
 
 	@Autowired
@@ -43,43 +41,36 @@ public class MatrixController {
 
 	@GetMapping
 	public List<Matrix> getAll() {
-		List<Matrix> max = matrixRepo.findAll();
-		return insertSkills(max);
+		return matrixRepo.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public Matrix getById(@PathVariable("id") int id) {
-		return insertSkills(matrixRepo.findById(id)
-				.orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id)));
+		return matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
 	}
 
 	@GetMapping("/portfolio/{id}")
 	public List<Matrix> getByPortfolio(@PathVariable("id") int id) {
-		Portfolio port = portRepo.findById(id).orElseThrow(() -> new NotFoundException("Portfolio Not Found for ID: " + id));
+		Portfolio port = portRepo.findById(id)
+				.orElseThrow(() -> new NotFoundException("Portfolio Not Found for ID: " + id));
 		List<Matrix> max = matrixRepo.findAllByPortfolio(port);
-		return insertSkills(max);
+		return max;
 	}
 
 	@PostMapping
 	public Matrix postMatrix(@RequestBody Matrix matrix) {
-		List<Skill> skills = extractSkills(matrix);
-		matrix = matrixRepo.save(matrix);
-		skillRepo.saveAll(skills);
-		return matrix;
+		return matrixRepo.save(matrix);
 	}
 
-	@PutMapping
-	public Matrix putMatrix(@RequestBody Matrix matrix) {
-		List<Skill> newSkills = extractSkills(matrix);
-		List<Skill> oldSkills = skillRepo.findAllByMatrix(matrix);
-		if (!oldSkills.isEmpty()) {
-			skillRepo.deleteAll(oldSkills);
+	@PostMapping("/{id}")
+	public Matrix putMatrix(@PathVariable("id") int id, @RequestBody Matrix matrix) {
+		Optional<Matrix> update = matrixRepo.findById(id);
+		if (update.isPresent()) {
+			update.get().setHeader(matrix.getHeader());
+			update.get().setPortfolio(matrix.getPortfolio());
+			matrix = update.get();
 		}
-		if (!newSkills.isEmpty()) {
-			skillRepo.saveAll(newSkills);
-		}
-		matrix = matrixRepo.save(matrix);
-		return matrix;
+		return matrixRepo.save(matrix);
 	}
 
 	@DeleteMapping("/{id}")
@@ -98,36 +89,36 @@ public class MatrixController {
 		matrixRepo.delete(max);
 	}
 
-	private Matrix insertSkills(Matrix max) {
-		max.setSkills(skillRepo.findAllByMatrix(max));
-		return max;
-	}
-
-	private List<Matrix> insertSkills(List<Matrix> matrices) {
-		for (Matrix m : matrices) {
-			m.setSkills(skillRepo.findAllByMatrix(m));
-		}
-		return matrices;
-	}
-
-	private List<Skill> extractSkills(Matrix max) {
-		List<Skill> skills = new ArrayList<>();
-		for (Skill s : max.getSkills()) {
-			s.setMatrix(max);
-			skills.add(s);
-		}
-		return skills;
-	}
-
-	private List<Skill> extractSkills(List<Matrix> matrices) {
-		List<Skill> skills = new ArrayList<>();
-		for (Matrix m : matrices) {
-			for (Skill s : m.getSkills()) {
-				s.setMatrix(m);
-				skills.add(s);
-			}
-		}
-		return skills;
-	}
+//	private Matrix insertSkills(Matrix max) {
+//		max.setSkills(skillRepo.findAllByMatrix(max));
+//		return max;
+//	}
+//
+//	private List<Matrix> insertSkills(List<Matrix> matrices) {
+//		for (Matrix m : matrices) {
+//			m.setSkills(skillRepo.findAllByMatrix(m));
+//		}
+//		return matrices;
+//	}
+//
+//	private List<Skill> extractSkills(Matrix max) {
+//		List<Skill> skills = new ArrayList<>();
+//		for (Skill s : max.getSkills()) {
+//			s.setMatrix(max);
+//			skills.add(s);
+//		}
+//		return skills;
+//	}
+//
+//	private List<Skill> extractSkills(List<Matrix> matrices) {
+//		List<Skill> skills = new ArrayList<>();
+//		for (Matrix m : matrices) {
+//			for (Skill s : m.getSkills()) {
+//				s.setMatrix(m);
+//				skills.add(s);
+//			}
+//		}
+//		return skills;
+//	}
 
 }

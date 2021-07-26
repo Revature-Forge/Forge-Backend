@@ -11,5 +11,4 @@ import com.forge.revature.models.Portfolio;
 @Repository
 public interface MatrixRepo extends JpaRepository<Matrix, Integer> {
 	public List<Matrix> findAllByPortfolio(Portfolio port);
-	public List<Matrix> findAllByPortfolioId(int id);
 }

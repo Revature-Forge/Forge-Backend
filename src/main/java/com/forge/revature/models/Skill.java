@@ -31,7 +31,6 @@ public class Skill {
 	
 	@ManyToOne
     @JoinColumn(name = "matrix_id")
-	@JsonIgnore
     private Matrix matrix;
 
 	public Skill(String name, int value, Matrix matrix) {
