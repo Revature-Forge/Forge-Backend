@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.config.name }}
+  name: {{.Values.env.normal.backend_config_name}}
 data:
   spring.datasource.url: {{.Values.env.normal.spring_datasource_url}}
   spring.datasource.driverClassName: {{.Values.env.normal.spring_datasource_driverClassName}}
   spring.jpa.database.platform: {{.Values.env.normal.spring_jpa_database_platform}}
-  spring.h2.console.enabled: {{.Values.env.normal.spring_h2_console_enabled | quote }} 
+  spring.h2.console.enabled: {{.Values.env.normal.spring_h2_console_enabled | quote }}
   # server.port: "8082"
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: backend-database-login
+  name: {{.Values.env.normal.backend_database_login_name}}
 
 stringData:
   username: {{.Values.env.secret.username}}
