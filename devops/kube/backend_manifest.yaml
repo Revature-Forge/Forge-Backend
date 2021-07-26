@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: forge-backend
-        image: dajpearl/forge-backend:latest
+        image: may24devopscontainers.azurecr.io/forge-frontend:latest
         resources:
           requests:
             memory: "500Mi"
@@ -24,6 +24,8 @@ spec:
             cpu: "200m"
         ports:
         - containerPort: 8081
+      imagePullSecrets:
+        - name: p3-team2-acr
 
 ---
 apiVersion: v1
