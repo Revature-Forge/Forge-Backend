@@ -6,7 +6,6 @@ import com.forge.revature.controllers.PortfolioController;
 import com.forge.revature.models.*;
 import com.forge.revature.repo.*;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -299,7 +297,6 @@ public class PortfolioTest {
         portfolio.putPOJO("workHistories", workHistories);
         
         given(repo.save(Mockito.any(Portfolio.class))).willReturn(new Portfolio(1, "test", u, false, false, false, ""));
-        
 
         mvc.perform(post("/portfolios/full")
                 .contentType(MediaType.APPLICATION_JSON)
