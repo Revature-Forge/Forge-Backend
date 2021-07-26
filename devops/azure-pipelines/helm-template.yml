@@ -1,0 +1,45 @@
+parameters:
+  - name: 'jobName'
+    type: string
+  - name: 'chartPath'
+    type: string 
+  - name: 'pkgPath'
+    type: string 
+  - name: 'releaseName'
+    type: string 
+  - name: 'repository'
+    type: string
+  - name: 'secretName'
+    type: string
+  - name: 'imageTag'
+    type: string 
+jobs:
+  - job: ${{ parameters.jobName }}
+    steps:
+      - task: HelmInstaller@0
+        inputs:
+          helmVersion: '3'
+          installKubectl: true
+      - task: HelmDeploy@0
+        inputs:
+          command: 'package'
+          chartPath: '${{ parameters.chartPath }}'
+          destination: '$(Build.ArtifactStagingDirectory)'
+      - task: HelmDeploy@0
+        inputs:
+          connectionType: 'Azure Resource Manager'
+          azureSubscription: 'RevatureProject3ARMSubscription'
+          azureResourceGroup: 'may24_devops_dev'
+          kubernetesCluster: 'may24_devops_aks_dev'
+          namespace: 'team2'
+          command: 'upgrade'
+          chartType: 'FilePath'
+          chartPath: '${{ parameters.pkgPath }}'
+          releaseName: '${{ parameters.releaseName }}'
+          overrideValues: |
+            image.repository=${{ parameters.repository }}
+            imagePullSecrets=${{ parameters.secretName }}
+            image.tag=${{ parameters.imageTag }}
+          arguments: |
+            --atomic 
+            --create-namespace
