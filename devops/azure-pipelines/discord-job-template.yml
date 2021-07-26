@@ -1,6 +1,4 @@
 parameters:
-  - name: 'dependOn'
-    type: string
   - name: 'name'
     type: string
   - name: 'title'
@@ -10,8 +8,7 @@ parameters:
 jobs:
   - job: DiscordMessage
     variables:
-      - group: ${{parameters.discordVarGroup}}
-    dependsOn: ${{ parameters.dependOn }}
+      - group: ${{ parameters.discordVarGroup }}
     steps:
       - task: ado-discord-webhook@1
         inputs:
@@ -28,3 +25,5 @@ jobs:
             Commit Id: $(Build.SourceVersion)
             ```
             **Result**: $(Agent.JobStatus)
+        displayName: Notify build info
+    displayName: Discord Notify
