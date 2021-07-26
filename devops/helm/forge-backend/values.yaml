@@ -56,7 +56,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: 
+resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -87,6 +87,8 @@ env:
     spring_datasource_url: 'jdbc:h2:mem:testdb'
     spring_datasource_driverClassName: 'org.h2.Driver'
     spring_jpa_database_platform: 'org.hibernate.dialect.H2Dialect'
+    backend_config_name: 'backend-config'
+    backend_database_login_name: 'backend-database-login'
   secret:
     username: 'sa'
     password: 'password'
