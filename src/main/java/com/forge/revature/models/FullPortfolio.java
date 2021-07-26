@@ -3,10 +3,14 @@ package com.forge.revature.models;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class FullPortfolio {
     private int id;
     private String name;
@@ -48,133 +52,6 @@ public class FullPortfolio {
 		this.workHistories = workHistories;
 	}
 
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public boolean isSubmitted() {
-        return submitted;
-    }
-
-    public void setSubmitted(boolean submitted) {
-        this.submitted = submitted;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
-    public boolean isReviewed() {
-        return reviewed;
-    }
-
-    public void setReviewed(boolean reviewed) {
-        this.reviewed = reviewed;
-    }
-
-    public String getFeedback() {
-        return feedback;
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
-    }
-
-    public AboutMe getAboutMe() {
-        return aboutMe;
-    }
-
-    public void setAboutMe(AboutMe aboutMe) {
-        this.aboutMe = aboutMe;
-    }
-
-    public List<Certification> getCertifications() {
-        return certifications;
-    }
-
-    public void setCertifications(List<Certification> certifications) {
-        this.certifications = certifications;
-    }
-
-    public List<Education> getEducations() {
-        return educations;
-    }
-
-    public void setEducations(List<Education> educations) {
-        this.educations = educations;
-    }
-
-    public List<Equivalency> getEquivalencies() {
-        return equivalencies;
-    }
-
-    public void setEquivalencies(List<Equivalency> equivalencies) {
-        this.equivalencies = equivalencies;
-    }
-
-    public List<GitHub> getGitHubs() {
-        return gitHubs;
-    }
-
-    public void setGitHubs(List<GitHub> gitHubs) {
-        this.gitHubs = gitHubs;
-    }
-
-    public List<Honor> getHonors() {
-        return honors;
-    }
-
-    public void setHonors(List<Honor> honors) {
-        this.honors = honors;
-    }
-
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    public List<WorkExperience> getWorkExperiences() {
-        return workExperiences;
-    }
-
-    public void setWorkExperiences(List<WorkExperience> workExperiences) {
-        this.workExperiences = workExperiences;
-    }
-
-    public List<WorkHistory> getWorkHistories() {
-        return workHistories;
-    }
-
-    public void setWorkHistories(List<WorkHistory> workHistories) {
-        this.workHistories = workHistories;
-    }
 
     @Override
     public String toString() {
