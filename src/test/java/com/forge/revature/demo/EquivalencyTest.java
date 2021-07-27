@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -79,8 +78,7 @@ public class EquivalencyTest {
 
     @Test
     void testPost() throws Exception{
-    	HashMap<String,String> map = new HashMap<>();
-        Equivalency port = new Equivalency(1, "testheader", 3  ,new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" ,"password", false), false, false, false, "", map));
+        Equivalency port = new Equivalency(1, "testheader", 3  ,new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" ,"password", false), false, false, false, ""));
             
         
         given(repo.save(port)).willReturn(port);
@@ -95,9 +93,8 @@ public class EquivalencyTest {
     }
     @Test
     void testUpdate() throws Exception{
-    	HashMap<String,String> map = new HashMap<>();
-        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map));
-        Equivalency equiv2 = new Equivalency(1, "equiv renamed", 3 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "email@test.com" , "password", false), false, false, false, "", map));
+        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, ""));
+        Equivalency equiv2 = new Equivalency(1, "equiv renamed", 3 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "email@test.com" , "password", false), false, false, false, ""));
         Optional<Equivalency> returned = Optional.of(equiv);
         
 
@@ -112,8 +109,7 @@ public class EquivalencyTest {
 
     @Test
     void testdelete() throws Exception {
-    	HashMap<String,String> map = new HashMap<>();
-        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "testemail@test.com" , "password", false), false, false, false, "", map));
+        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "testemail@test.com" , "password", false), false, false, false, ""));
         Optional<Equivalency> returned = Optional.of(equiv);
 
         given(repo.findById(1)).willReturn(returned);

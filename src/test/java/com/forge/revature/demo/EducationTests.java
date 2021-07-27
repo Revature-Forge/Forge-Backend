@@ -1,24 +1,14 @@
 package com.forge.revature.demo;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.EducationController;
@@ -26,6 +16,14 @@ import com.forge.revature.models.Education;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.EducationRepo;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 /**
  * @author Max Lee
@@ -55,8 +53,7 @@ public class EducationTests {
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(new EducationController(educationRepo)).build();
         User user = new User(1, "Max", "Lee" , "max.lee@email.com" , "password", true);
-        HashMap<String,String> map = new HashMap<>();
-        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "", map);
+        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "");
         this.testEducation = new Education(1, portfolio, "university", "degree", "graduationDate", 3.5, "");
         this.testEducation2 = new Education(2, portfolio, "uni", "deg", "2021", 2.0, "");
         this.testEducation3 = new Education(3, portfolio, "uni2", "deg2", "2021", 2.0, "");
