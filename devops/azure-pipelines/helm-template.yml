@@ -3,7 +3,6 @@ parameters:
     type: string
   - name: 'chartPath'
     type: string 
-    default: './devops/helm/forge-backend'
   - name: 'releaseName'
     type: string 
     default: 'test-release'
@@ -30,8 +29,8 @@ jobs:
           namespace: 'team2'
           command: 'upgrade'
           chartType: 'FilePath'
-          chartPath: '${{ parameters.chartPath }}'
-          releaseName: '${{ parameters.releaseName }}'
+          chartPath: './devops/helm/forge-backend' 
+          releaseName: 'test-release'
           overrideValues: |
             image.repository=${{ parameters.repository }}
             imagePullSecrets={name: ${{ parameters.secretName }}}
