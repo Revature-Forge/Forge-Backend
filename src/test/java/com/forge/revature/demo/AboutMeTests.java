@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,7 +52,8 @@ public class AboutMeTests {
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(new AboutMeController(aboutMeRepo)).build();
         User user = new User(1, "Max", "Lee" , "max.lee@email.com" , "password", true);
-        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "");
+        HashMap<String,String> map = new HashMap<>();
+        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "", map);
         this.testAboutMe = new AboutMe(1, portfolio, "Hi I'm Max", "max@mail.net", "(333) 333-4444");
     }
 

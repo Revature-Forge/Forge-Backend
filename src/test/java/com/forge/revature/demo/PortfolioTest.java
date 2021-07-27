@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,7 +108,8 @@ public class PortfolioTest {
 
     @Test
     void testPost() throws Exception{
-        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "");
+    	HashMap<String,String> map = new HashMap<>();
+        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map);
         
         given(repo.save(port)).willReturn(port);
 
@@ -121,8 +123,9 @@ public class PortfolioTest {
     }
 
     void testUpdate() throws Exception{
-        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "");
-        Portfolio port2 = new Portfolio(1, "new portfilio name", new User(1, "test", "user" , "test@email.com" , "password", false), true, true, true, "feedback");
+    	HashMap<String,String> map = new HashMap<>();
+        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map);
+        Portfolio port2 = new Portfolio(1, "new portfilio name", new User(1, "test", "user" , "test@email.com" , "password", false), true, true, true, "feedback", map);
         Optional<Portfolio> returned = Optional.of(port);
         
 
@@ -137,7 +140,8 @@ public class PortfolioTest {
 
     @Test
     void testdelete() throws Exception {
-        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "");
+    	HashMap<String,String> map = new HashMap<>();
+        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map);
         Optional<Portfolio> returned = Optional.of(port);
 
         given(repo.findById(1)).willReturn(returned);
@@ -148,8 +152,9 @@ public class PortfolioTest {
 
     @Test
     void testGetFullPortfolio() throws Exception {
+    	HashMap<String,String> map = new HashMap<>();
         Optional<Portfolio> port = Optional.of(new Portfolio(1, "new portfolio",
-                new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, ""));
+                new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map));
         given(repo.findById(1)).willReturn(port);
         given(repo.existsById(1)).willReturn(true);
 
@@ -201,6 +206,7 @@ public class PortfolioTest {
     @Test
     public void testPostFullPortfolioWithJSON() throws Exception{
         //Create test data
+    	HashMap<String,String> map = new HashMap<>();
         Date dateForTest = new Date();
         User testUser = new User();
         Portfolio testPortfolio = new Portfolio();
@@ -240,7 +246,7 @@ public class PortfolioTest {
         List<WorkHistory> testWorkHistoriesList = new ArrayList<>();
         testWorkHistoriesList.add(testWorkHistory);
         //Create full portfolio
-        FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList);
+        FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", map, testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList);
         
         //Convert testFullPortfolio to JSON
         ObjectMapper mapper = new ObjectMapper();
