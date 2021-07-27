@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: forge-backend
-        image: may24devopscontainers.azurecr.io/forge-frontend:latest
+        image: may24devopscontainers.azurecr.io/forge-backend:latest
         resources:
           requests:
             memory: "500Mi"
