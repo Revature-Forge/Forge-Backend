@@ -11,13 +11,31 @@ parameters:
     type: string
 jobs:
   - job:
-    displayName: ${{ parameters.jobName }}
     steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'maven-output' # has to match the publish step in the maven template
+          targetPath: '$(Pipeline.Workspace)'
+          publishLocation: 'pipeline'
+        displayName: Download maven output
+
       - task: Docker@2
         inputs:
           containerRegistry: '${{ parameters.containerRegistry }}'
           repository: '${{ parameters.repository }}'
-          command: 'buildAndPush'
+          command: 'build'
           Dockerfile: '${{ parameters.dockerPath }}'
           tags: '${{ parameters.imageTag }}'
-          buildContext: $(Build.Repository.LocalPath)
+          buildContext: $(Pipeline.Workspace)
+          arguments: '--build-arg JAR_FILE=demo-0.0.1-SNAPSHOT.war'
+        displayName: 'Docker Build'
+
+      - task: Docker@2
+        inputs:
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          command: 'push'
+          tags: '${{ parameters.imageTag }}'
+        displayName: 'Docker Push'
+    displayName: ${{ parameters.jobName }}
