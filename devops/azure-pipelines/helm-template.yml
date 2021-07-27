@@ -3,8 +3,6 @@ parameters:
     type: string
   - name: 'chartPath'
     type: string 
-  - name: 'pkgPath'
-    type: string 
   - name: 'releaseName'
     type: string 
   - name: 'repository'
@@ -30,7 +28,7 @@ jobs:
           namespace: 'team2'
           command: 'upgrade'
           chartType: 'FilePath'
-          chartPath: '${{ parameters.pkgPath }}'
+          chartPath: '${{ parameters.chartPath }}'
           releaseName: '${{ parameters.releaseName }}'
           overrideValues: |
             image.repository=${{ parameters.repository }}

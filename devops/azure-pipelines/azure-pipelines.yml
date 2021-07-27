@@ -77,7 +77,6 @@ stages:
         parameters:
           jobName: 'Deploy'
           chartPath: './devops/helm/forge-backend'
-          pkgPath: '$(Build.ArtifactStagingDirectory)/forge-backend-0.1.0.tgz'
           releaseName: 'backend-helm-release'
           repository: '${{ parameters.repository }}'
           secretName: '${{ parameters.secretName }}'
