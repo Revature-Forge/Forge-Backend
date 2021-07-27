@@ -5,7 +5,6 @@ parameters:
     type: string 
   - name: 'releaseName'
     type: string 
-    default: 'test-release'
   - name: 'repository'
     type: string
   - name: 'secretName'
@@ -14,6 +13,7 @@ parameters:
     type: string 
 jobs:
   - job: ${{ parameters.jobName }}
+    dependsOn: 'Secret_Creation'
     steps:
       - task: HelmInstaller@0
         inputs:
@@ -29,8 +29,8 @@ jobs:
           namespace: 'team2'
           command: 'upgrade'
           chartType: 'FilePath'
-          chartPath: './devops/helm/forge-backend' 
-          releaseName: 'test-release'
+          chartPath: '${{ parameters.chartPath }}'
+          releaseName: '${{ parameters.releaseName }}'
           overrideValues: |
             image.repository=${{ parameters.repository }}
             imagePullSecrets={name: ${{ parameters.secretName }}}
