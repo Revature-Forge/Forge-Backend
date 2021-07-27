@@ -1,5 +1,6 @@
 package modelTests;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -129,6 +130,12 @@ class WorkHistoryTests {
 		Portfolio pf = new Portfolio(1, "Test", null, false, false, false, "");
 		empty.setPortfolio(pf);
 		assertNotNull(empty.getPortfolio());
+	}
+	
+	@Test
+	void testToString() {
+		assertNotNull(full.toString());
+		assertTrue(full.toString().length() > 0);
 	}
 	
 	

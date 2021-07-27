@@ -1,5 +1,6 @@
 package modelTests;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -100,5 +101,11 @@ class PortfolioTests {
 	void testSetFeedback() {
 		p.setFeedback("feedback");
 		assertEquals("feedback", p.getFeedback());
+	}
+	
+	@Test
+	void testToString() {
+		assertNotNull(p.toString());
+		assertTrue(p.toString().length() > 0);
 	}
 }

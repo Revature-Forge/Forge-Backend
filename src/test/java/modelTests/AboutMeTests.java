@@ -5,8 +5,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.forge.revature.models.AboutMe;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.forge.revature.models.Portfolio;
 
@@ -70,6 +72,12 @@ void setEmailTest() {
 void setPhoneTest() {
 	me.setPhone("8675309");
 	assertSame("8675309", me.getPhone());
+}
+
+@Test
+void testToString() {
+	assertNotNull(fullMe.toString());
+	assertTrue(fullMe.toString().length() > 0);
 }
 
 }
