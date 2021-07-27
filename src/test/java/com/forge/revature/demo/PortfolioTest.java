@@ -1,10 +1,5 @@
 package com.forge.revature.demo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forge.revature.controllers.PortfolioController;
-import com.forge.revature.models.*;
-import com.forge.revature.repo.*;
-
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +22,31 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forge.revature.controllers.PortfolioController;
+import com.forge.revature.models.AboutMe;
+import com.forge.revature.models.Certification;
+import com.forge.revature.models.Education;
+import com.forge.revature.models.Equivalency;
+import com.forge.revature.models.FullPortfolio;
+import com.forge.revature.models.GitHub;
+import com.forge.revature.models.Honor;
+import com.forge.revature.models.Portfolio;
+import com.forge.revature.models.Project;
+import com.forge.revature.models.User;
+import com.forge.revature.models.WorkExperience;
+import com.forge.revature.models.WorkHistory;
+import com.forge.revature.repo.AboutMeRepo;
+import com.forge.revature.repo.CertificationRepo;
+import com.forge.revature.repo.EducationRepo;
+import com.forge.revature.repo.EquivalencyRepo;
+import com.forge.revature.repo.GitHubRepo;
+import com.forge.revature.repo.HonorRepo;
+import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.repo.ProjectRepo;
+import com.forge.revature.repo.WorkExperienceRepo;
+import com.forge.revature.repo.WorkHistoryRepo;
 
 
 @SpringBootTest
@@ -107,7 +128,8 @@ public class PortfolioTest {
 
     @Test
     void testPost() throws Exception{
-        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "");
+    	HashMap<String, String> map = new HashMap<>();
+        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map);
         
         given(repo.save(port)).willReturn(port);
 
@@ -121,8 +143,9 @@ public class PortfolioTest {
     }
 
     void testUpdate() throws Exception{
-        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "");
-        Portfolio port2 = new Portfolio(1, "new portfilio name", new User(1, "test", "user" , "test@email.com" , "password", false), true, true, true, "feedback");
+    	HashMap<String, String> map = new HashMap<>();
+        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map);
+        Portfolio port2 = new Portfolio(1, "new portfilio name", new User(1, "test", "user" , "test@email.com" , "password", false), true, true, true, "feedback", map);
         Optional<Portfolio> returned = Optional.of(port);
         
 
@@ -137,7 +160,8 @@ public class PortfolioTest {
 
     @Test
     void testdelete() throws Exception {
-        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "");
+    	HashMap<String, String> map = new HashMap<>();
+        Portfolio port = new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map);
         Optional<Portfolio> returned = Optional.of(port);
 
         given(repo.findById(1)).willReturn(returned);
@@ -148,8 +172,9 @@ public class PortfolioTest {
 
     @Test
     void testGetFullPortfolio() throws Exception {
+    	HashMap<String, String> map = new HashMap<>();
         Optional<Portfolio> port = Optional.of(new Portfolio(1, "new portfolio",
-                new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, ""));
+                new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map));
         given(repo.findById(1)).willReturn(port);
         given(repo.existsById(1)).willReturn(true);
 
@@ -240,7 +265,8 @@ public class PortfolioTest {
         List<WorkHistory> testWorkHistoriesList = new ArrayList<>();
         testWorkHistoriesList.add(testWorkHistory);
         //Create full portfolio
-        FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList);
+        HashMap<String, String> map = new HashMap<>();
+        FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback", map, testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList, testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList);
         
         //Convert testFullPortfolio to JSON
         ObjectMapper mapper = new ObjectMapper();
