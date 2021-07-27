@@ -13,6 +13,7 @@ parameters:
     type: string 
 jobs:
   - job: ${{ parameters.jobName }}
+    dependsOn: 'Secret_Creation'
     steps:
       - task: HelmInstaller@0
         inputs:
@@ -32,7 +33,7 @@ jobs:
           releaseName: '${{ parameters.releaseName }}'
           overrideValues: |
             image.repository=${{ parameters.repository }}
-            imagePullSecrets={name: ${{ parameters.secretName }}}
+            imagePullSecrets[0].name=${{ parameters.secretName }}
             image.tag=${{ parameters.imageTag }}
           arguments: |
             --atomic 
