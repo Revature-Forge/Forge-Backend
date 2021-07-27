@@ -25,7 +25,7 @@ spec:
         ports:
         - containerPort: 8081
       imagePullSecrets:
-        - name: 'p3-team2-acr'
+        name: 'p3-team2-acr'
 
 ---
 apiVersion: v1
