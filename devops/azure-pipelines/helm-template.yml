@@ -23,12 +23,6 @@ jobs:
         displayName: 'Helm Install'
       - task: HelmDeploy@0
         inputs:
-          command: 'package'
-          chartPath: '${{ parameters.chartPath }}'
-          destination: '$(Build.ArtifactStagingDirectory)'
-        displayName: 'Helm Package'
-      - task: HelmDeploy@0
-        inputs:
           connectionType: 'Azure Resource Manager'
           azureSubscription: 'RevatureProject3ARMSubscription'
           azureResourceGroup: 'may24_devops_dev'
