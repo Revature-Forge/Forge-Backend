@@ -20,11 +20,13 @@ jobs:
         inputs:
           helmVersion: '3'
           installKubectl: true
+        displayName: 'Helm Install'
       - task: HelmDeploy@0
         inputs:
           command: 'package'
           chartPath: '${{ parameters.chartPath }}'
           destination: '$(Build.ArtifactStagingDirectory)'
+        displayName: 'Helm Package'
       - task: HelmDeploy@0
         inputs:
           connectionType: 'Azure Resource Manager'
@@ -43,3 +45,4 @@ jobs:
           arguments: |
             --atomic 
             --create-namespace
+        displayName: 'Helm Deploy'
