@@ -3,8 +3,10 @@ parameters:
     type: string
   - name: 'chartPath'
     type: string 
+    default: './devops/helm/forge-backend'
   - name: 'releaseName'
     type: string 
+    default: 'test-release'
   - name: 'repository'
     type: string
   - name: 'secretName'
