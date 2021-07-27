@@ -1,9 +1,6 @@
 package com.forge.revature.models;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,13 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
-import com.forge.revature.converter.HashMapConverter;
-import com.forge.revature.models.User;
-
-import javax.persistence.Convert;
-
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +21,7 @@ import lombok.Setter;
 public class Portfolio {
     
     public Portfolio(int id, String name, User user, boolean submitted, boolean approved, boolean reviewed,
-            String feedback, HashMap<String, String> flags) {
+            String feedback) {
         this.id = id;
         this.name = name;
         this.user = user;
@@ -38,7 +29,6 @@ public class Portfolio {
         this.approved = approved;
         this.reviewed = reviewed;
         this.feedback = feedback;
-        this.flags = flags;
     }
 
     public Portfolio() {
@@ -69,16 +59,7 @@ public class Portfolio {
 
     @Column
     private String feedback;
-    
-//    @Column
-//    //@Convert(converter = HashMapConverter.class)
-//    @MapKey(name = "feedback")
-//    private Map<String, String> flags = new HashMap<>();
-    
-    @Column
-    @Convert(converter = HashMapConverter.class)
-    private HashMap<String, String> flags;
-    
+
     public int getId() {
         return id;
     }
@@ -135,5 +116,6 @@ public class Portfolio {
         this.feedback = feedback;
     }
 
+    
 
 }

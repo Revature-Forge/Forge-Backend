@@ -128,7 +128,7 @@ public class PortfolioController {
             old.get().setReviewed(updated.isReviewed());
             old.get().setSubmitted(updated.isSubmitted());
             old.get().setUser(updated.getUser());
-            old.get().setFlags(updated.getFlags());
+        
             portRepo.save(old.get());
         }
     }
@@ -160,7 +160,6 @@ public class PortfolioController {
             port.isApproved(),
             port.isReviewed(),
             port.getFeedback(),
-            port.getFlags(),
             aboutMeRepo.findByPortfolioId(id).get(),
             certificationRepo.findAllByPortfolioId(id),
             educationRepo.findAllByPortfolioId(id),
@@ -184,8 +183,7 @@ public class PortfolioController {
             fullPortfolio.isSubmitted(),
             fullPortfolio.isApproved(),
             fullPortfolio.isReviewed(),
-            fullPortfolio.getFeedback(),
-            fullPortfolio.getFlags()
+            fullPortfolio.getFeedback()
         );
         AboutMe newAboutMe = new AboutMe(
             fullPortfolio.getAboutMe().getBio(),
