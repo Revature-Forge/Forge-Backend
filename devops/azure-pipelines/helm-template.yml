@@ -37,6 +37,5 @@ jobs:
             image.tag=${{ parameters.imageTag }}
           arguments: |
             --atomic 
-            --create-namespace
             --dry-run
         displayName: 'Helm Deploy'
