@@ -34,7 +34,7 @@ jobs:
           releaseName: '${{ parameters.releaseName }}'
           overrideValues: |
             image.repository=${{ parameters.repository }}
-            imagePullSecrets=${{ parameters.secretName }}
+            imagePullSecrets={${{ parameters.secretName }}}
             image.tag=${{ parameters.imageTag }}
           arguments: |
             --atomic 
