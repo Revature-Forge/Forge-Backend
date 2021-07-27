@@ -37,8 +37,8 @@ jobs:
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
-          sonarQubeRunAnalysis: true
-          sqMavenPluginVersionChoice: 'latest'
+          sonarQubeRunAnalysis: false
+          #sqMavenPluginVersionChoice: 'latest'
         displayName: Maven package, JUnit test, Sonar, JaCoCo
         
       - task: PublishPipelineArtifact@1
