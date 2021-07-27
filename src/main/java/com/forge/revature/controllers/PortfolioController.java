@@ -127,7 +127,6 @@ public class PortfolioController {
             old.get().setName(updated.getName());
             old.get().setReviewed(updated.isReviewed());
             old.get().setSubmitted(updated.isSubmitted());
-            old.get().setUser(updated.getUser());
             old.get().setFlags(updated.getFlags());
             portRepo.save(old.get());
         }
