@@ -10,7 +10,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
-imagePullSecrets: ""
+imagePullSecrets: 
+- name: p3-team2-acr
 nameOverride: ""
 fullnameOverride: ""
 
