@@ -11,14 +11,16 @@ import javax.persistence.Table;
 import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "portfolios")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Portfolio {
 
     @Id
@@ -41,5 +43,19 @@ public class Portfolio {
     private boolean reviewed;
 
     private String feedback;
+    
+    public Portfolio(String name, boolean submitted, boolean approved, boolean reviewed, String feedback) {
+    	this.name = name;
+    	this.submitted = submitted;
+    	this.approved = approved;
+    	this.reviewed = reviewed;
+    	this.feedback = feedback;
+    }
+
+	@Override
+	public String toString() {
+		return "Portfolio [id=" + id + ", name=" + name + ", user=" + user + ", submitted=" + submitted + ", approved="
+				+ approved + ", reviewed=" + reviewed + ", feedback=" + feedback + "]";
+	}
 
 }

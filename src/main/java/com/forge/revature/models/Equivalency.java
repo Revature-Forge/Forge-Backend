@@ -9,14 +9,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "equivalencies")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class Equivalency {
 
     @Id
@@ -36,5 +38,17 @@ public class Equivalency {
         this.value = value;
         this.portfolio = portfolio;
     }
+    
+    public Equivalency(String header, int value) {
+    	this.header = header;
+    	this.value = value;
+    }
+
+	@Override
+	public String toString() {
+		return "Equivalency [id=" + id + ", header=" + header + ", value=" + value + ", portfolio=" + portfolio + "]";
+	}
+    
+    
 
 }

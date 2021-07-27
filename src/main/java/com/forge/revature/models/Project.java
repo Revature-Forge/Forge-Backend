@@ -10,14 +10,16 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "projects")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,6 +53,16 @@ public class Project {
         this.respositoryUrl = respositoryUrl;
         this.workProducts = workProducts;
         this.portfolio = portfolio;
+    }
+    
+    public Project(String name, String description, String responsibilities, String technologies, String respositoryUrl,
+            String workProducts) {
+        this.name = name;
+        this.description = description;
+        this.responsibilities = responsibilities;
+        this.technologies = technologies;
+        this.respositoryUrl = respositoryUrl;
+        this.workProducts = workProducts;
     }
 
     public Project(String name, String description, String responsibilities, String technologies, String respositoryUrl,
