@@ -15,12 +15,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -33,6 +33,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 public class PortfolioTest {
     private MockMvc mvc;
 
+    @MockBean
+    UserRepo userRepo;
+    
     @MockBean
     PortfolioRepo repo;
 
@@ -202,7 +205,9 @@ public class PortfolioTest {
     @Test
     public void testPostFullPortfolioWithJSON() throws Exception{
         ObjectMapper objectMapper = new ObjectMapper();
-        User u = new User(0, "fname", "", "", "", false);
+        User u = new User(1, "fname", "", "", "", false);
+
+        
 
         ObjectNode portfolio = objectMapper.createObjectNode();
         portfolio.put("name", "");
@@ -281,6 +286,7 @@ public class PortfolioTest {
         workHistory.put("endDate", "2021-07-08");
         workHistories.add(workHistory);
 
+        portfolio.putPOJO("aboutMe", aboutMe);
         portfolio.putPOJO("certifications", certifications);
         portfolio.putPOJO("educations", educations);
         portfolio.putPOJO("equivalencies", equivalencies);
@@ -289,6 +295,8 @@ public class PortfolioTest {
         portfolio.putPOJO("projects", projects);
         portfolio.putPOJO("workExperiences", workExperiences);
         portfolio.putPOJO("workHistories", workHistories);
+        
+        given(repo.save(Mockito.any(Portfolio.class))).willReturn(new Portfolio(1, "test", u, false, false, false, ""));
 
         mvc.perform(post("/portfolios/full")
                 .contentType(MediaType.APPLICATION_JSON)
