@@ -18,10 +18,12 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<sonar.projectKey>1058-Sophia-Gavrila-Forge_Forge-Backend</sonar.projectKey>
-		<sonar.organization>1058-sophia-gavrila-forge</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.organization>1058-sophia-gavrila-forge</sonar.organization>
+		<sonar.projectKey>1058-Sophia-Gavrila-Forge_Forge-Backend</sonar.projectKey>
+		<sonar.coverage.jacoco.xmlReportPaths>/home/vsts/work/1/s/CCReport43F6D5EF/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.jacoco.reportsPaths>/home/vsts/work/1/s/CCReport43F6D5EF/jacoco-ut.exec</sonar.jacoco.reportsPaths>
+		<sonar.tests>src/test/java</sonar.tests>
 	</properties>
 
 	<dependencies>
@@ -73,7 +75,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -108,11 +109,10 @@
 			<artifactId>spring-data-rest-webmvc</artifactId>
 			<version>3.5.3</version>
 		</dependency>
-
 		<dependency>
-			<groupId>org.codehaus.sonar.plugins</groupId>
-			<artifactId>sonar-jacoco-plugin</artifactId>
-			<version>3.2.1</version>
+			<groupId>org.sonarsource.scanner.maven</groupId>
+			<artifactId>sonar-maven-plugin</artifactId>
+			<version>3.7.0.1746</version>
 		</dependency>
 	</dependencies>
 
@@ -151,6 +151,44 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.4</version>
+				<configuration>
+					<destFile>/home/vsts/work/1/s/CCReport43F6D5EF/jacoco.exec</destFile>
+					<outputEncoding>UTF-8</outputEncoding>
+					<outputDirectory>/home/vsts/work/1/s/CCReport43F6D5EF</outputDirectory>
+					<dataFile>/home/vsts/work/1/s/CCReport43F6D5EF/jacoco.exec</dataFile>
+					<includes />
+					<excludes />
+				</configuration>
+				<executions>
+					<execution>
+						<configuration>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</configuration>
+						<id>default-prepare-agent-vsts</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-report-vsts</id>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<phase>test</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.7.0.1746</version>
 			</plugin>
 		</plugins>
 	</build>

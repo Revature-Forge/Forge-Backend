@@ -66,6 +66,7 @@ public class MatrixControllerTest {
 		skills.add(new Skill("Java", 9, matrix));
 		skills.add(new Skill("Python", 3, matrix));
 		skills.add(new Skill("COBOL", 6, matrix));
+		matrix.setSkills(skills);
 		matrix.setId(1);
 	}
 

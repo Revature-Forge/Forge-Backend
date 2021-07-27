@@ -41,25 +41,26 @@ public class MatrixController {
 
 	@GetMapping
 	public List<Matrix> getAll() {
-		return matrixRepo.findAll();
+		return insertSkills(matrixRepo.findAll());
 	}
 
 	@GetMapping("/{id}")
 	public Matrix getById(@PathVariable("id") int id) {
-		return matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
+		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
+		return insertSkills(m);
 	}
 
 	@GetMapping("/portfolio/{id}")
 	public List<Matrix> getByPortfolio(@PathVariable("id") int id) {
 		Portfolio port = portRepo.findById(id)
 				.orElseThrow(() -> new NotFoundException("Portfolio Not Found for ID: " + id));
-		List<Matrix> max = matrixRepo.findAllByPortfolio(port);
+		List<Matrix> max = insertSkills(matrixRepo.findAllByPortfolio(port));
 		return max;
 	}
 
 	@PostMapping
 	public Matrix postMatrix(@RequestBody Matrix matrix) {
-		return matrixRepo.save(matrix);
+		return extractSkills(matrixRepo.save(matrix));
 	}
 
 	@PostMapping("/{id}")
@@ -70,7 +71,7 @@ public class MatrixController {
 			update.get().setPortfolio(matrix.getPortfolio());
 			matrix = update.get();
 		}
-		return matrixRepo.save(matrix);
+		return extractSkills(matrixRepo.save(matrix));
 	}
 
 	@DeleteMapping("/{id}")
@@ -88,5 +89,48 @@ public class MatrixController {
 		}
 		matrixRepo.delete(max);
 	}
+
+	private Matrix insertSkills(Matrix m) {
+		List<Skill> skills = skillRepo.findAllByMatrix(m);
+		m.setSkills(skills);
+		return m;
+	}
+
+	private List<Matrix> insertSkills(List<Matrix> max) {
+		for (Matrix m : max) {
+			List<Skill> skills = skillRepo.findAllByMatrix(m);
+			m.setSkills(skills);
+		}
+		return max;
+	}
+
+	private Matrix extractSkills(Matrix m) {
+		List<Skill> oldSkills = skillRepo.findAllByMatrix(m);
+		List<Skill> newSkills = m.getSkills();
+		for(Skill s : newSkills) {
+			s.setMatrix(m);
+		}
+		if (!oldSkills.isEmpty()) {
+			skillRepo.deleteAll(oldSkills);
+		}
+		if (!newSkills.isEmpty()) {
+			skillRepo.saveAll(newSkills);
+		}
+		return m;
+	}
+
+//	private List<Matrix> extractSkills(List<Matrix> max) {
+//		for (Matrix m : max) {
+//			List<Skill> oldSkills = skillRepo.findAllByMatrix(m);
+//			List<Skill> newSkills = m.getSkills();
+//			if (!oldSkills.isEmpty()) {
+//				skillRepo.deleteAll(oldSkills);
+//			}
+//			if (!newSkills.isEmpty()) {
+//				skillRepo.saveAll(newSkills);
+//			}
+//		}
+//		return max;
+//	}
 
 }
