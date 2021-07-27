@@ -38,4 +38,5 @@ jobs:
           arguments: |
             --atomic 
             --create-namespace
+            --dry-run
         displayName: 'Helm Deploy'
