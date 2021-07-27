@@ -10,13 +10,16 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "workhistory")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class WorkHistory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,5 +64,12 @@ public class WorkHistory {
     this.endDate = endDate;
     this.portfolio = portfolio;
   }
+
+@Override
+public String toString() {
+	return "WorkHistory [id=" + id + ", title=" + title + ", employer=" + employer + ", responsibilities="
+			+ responsibilities + ", description=" + description + ", tools=" + tools + ", startDate=" + startDate
+			+ ", endDate=" + endDate + ", portfolio=" + portfolio + "]";
+}
 
 }
