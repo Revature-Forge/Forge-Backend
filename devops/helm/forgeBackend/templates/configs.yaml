@@ -5,7 +5,7 @@ metadata:
 data:
 {{- with .Values.dbconfig.datasource }}
   {{- toYaml | nindent 2 }}
-{{- else }}
+{{- end }}
   server.port: {{ .Values.port | quote }}
 
 ---
