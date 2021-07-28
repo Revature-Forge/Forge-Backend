@@ -37,14 +37,6 @@ spec:
             - name: {{ .Values.deploy.portName }}
               containerPort: {{ .Values.deploy.port }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.deploy.portName }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.deploy.portName }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           envFrom:

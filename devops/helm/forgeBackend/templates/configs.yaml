@@ -4,9 +4,9 @@ metadata:
   name: {{ .Values.dbconfig.name }}
 data:
 {{- with .Values.dbconfig.datasource }}
-  {{- toYaml | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
-  server.port: {{ .Values.port | quote }}
+  server.port: {{ .Values.deploy.port | quote }}
 
 ---
 apiVersion: v1
