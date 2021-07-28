@@ -1,12 +1,5 @@
 package com.forge.revature.demo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forge.revature.controllers.EquivalencyController;
-import com.forge.revature.models.Equivalency;
-import com.forge.revature.models.Portfolio;
-import com.forge.revature.models.User;
-import com.forge.revature.repo.EquivalencyRepo;
-
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +18,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forge.revature.controllers.EquivalencyController;
+import com.forge.revature.models.Equivalency;
+import com.forge.revature.models.Portfolio;
+import com.forge.revature.models.User;
+import com.forge.revature.repo.EquivalencyRepo;
 
 @SpringBootTest
 public class EquivalencyTest {
@@ -78,7 +79,8 @@ public class EquivalencyTest {
 
     @Test
     void testPost() throws Exception{
-        Equivalency port = new Equivalency(1, "testheader", 3  ,new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" ,"password", false), false, false, false, ""));
+    	HashMap<String, String> map = new HashMap<>();
+        Equivalency port = new Equivalency(1, "testheader", 3  ,new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" ,"password", false), false, false, false, "", map));
             
         
         given(repo.save(port)).willReturn(port);
@@ -93,8 +95,9 @@ public class EquivalencyTest {
     }
     @Test
     void testUpdate() throws Exception{
-        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, ""));
-        Equivalency equiv2 = new Equivalency(1, "equiv renamed", 3 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "email@test.com" , "password", false), false, false, false, ""));
+    	HashMap<String, String> map = new HashMap<>();
+        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map));
+        Equivalency equiv2 = new Equivalency(1, "equiv renamed", 3 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "email@test.com" , "password", false), false, false, false, "", map));
         Optional<Equivalency> returned = Optional.of(equiv);
         
 
@@ -109,7 +112,8 @@ public class EquivalencyTest {
 
     @Test
     void testdelete() throws Exception {
-        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "testemail@test.com" , "password", false), false, false, false, ""));
+    	HashMap<String, String> map = new HashMap<>();
+        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "testemail@test.com" , "password", false), false, false, false, "", map));
         Optional<Equivalency> returned = Optional.of(equiv);
 
         given(repo.findById(1)).willReturn(returned);

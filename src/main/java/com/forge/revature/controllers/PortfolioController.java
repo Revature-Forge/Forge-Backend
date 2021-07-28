@@ -43,6 +43,11 @@ abstract class UserIgnoreMixin {
     User user;
 }
 
+abstract class FlagIgnoreMixin {
+    @JsonIgnore
+    HashMap<String, String> flags;
+}
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/portfolios")
@@ -115,8 +120,7 @@ public class PortfolioController {
             old.get().setName(updated.getName());
             old.get().setReviewed(updated.isReviewed());
             old.get().setSubmitted(updated.isSubmitted());
-            old.get().setUser(updated.getUser());
-        
+            old.get().setFlags(updated.getFlags());
             portRepo.save(old.get());
         }
     }
@@ -148,6 +152,7 @@ public class PortfolioController {
             port.isApproved(),
             port.isReviewed(),
             port.getFeedback(),
+            port.getFlags(),
             aboutMeRepo.findByPortfolioId(id).get(),
             certificationRepo.findAllByPortfolioId(id),
             educationRepo.findAllByPortfolioId(id),
@@ -161,6 +166,7 @@ public class PortfolioController {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.addMixIn(FullPortfolio.class, UserIgnoreMixin.class);
+        mapper.addMixIn(FullPortfolio.class, FlagIgnoreMixin.class);
         mapper.addMixIn(AboutMe.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Certification.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Education.class, PortfolioIgnoreMixin.class);
@@ -178,54 +184,54 @@ public class PortfolioController {
     @Transactional
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio){
-    	Portfolio pf = new Portfolio();
-    	pf.setName(fullPortfolio.getName());
-    	pf.setUser(fullPortfolio.getUser());
-    	pf.setSubmitted(fullPortfolio.isSubmitted());
-    	pf.setApproved(fullPortfolio.isApproved());
-    	pf.setReviewed(fullPortfolio.isReviewed());
-    	pf.setFeedback(fullPortfolio.getFeedback());
+        Portfolio pf = new Portfolio();
+        pf.setName(fullPortfolio.getName());
+        pf.setUser(fullPortfolio.getUser());
+        pf.setSubmitted(fullPortfolio.isSubmitted());
+        pf.setApproved(fullPortfolio.isApproved());
+        pf.setReviewed(fullPortfolio.isReviewed());
+        pf.setFeedback(fullPortfolio.getFeedback());
 
-    	int pfid = portRepo.save(pf).getId();
-    	pf.setId(pfid);
+        int pfid = portRepo.save(pf).getId();
+        pf.setId(pfid);
 
-    	AboutMe newMe = new AboutMe();
-    	newMe.setPortfolio(pf);
-    	newMe.setBio(fullPortfolio.getAboutMe().getBio());
-    	newMe.setEmail(fullPortfolio.getAboutMe().getEmail());
-    	newMe.setPhone(fullPortfolio.getAboutMe().getPhone());
-    	
-    	List<Certification> certs = fullPortfolio.getCertifications();
-    	certs.forEach(cert -> cert.setPortfolio(pf));
-    	
-    	List<Education> ed = fullPortfolio.getEducations();
-    	ed.forEach(e -> e.setPortfolio(pf));
-    	
-    	List<Equivalency> equivs = fullPortfolio.getEquivalencies();
-    	equivs.forEach(e -> e.setPortfolio(pf));
-    	
-    	List<GitHub> git = fullPortfolio.getGitHubs();
-    	
-    	List<Honor> honors = fullPortfolio.getHonors();
-    	honors.forEach(honor -> honor.setPortfolio(pf));
+        AboutMe newMe = new AboutMe();
+        newMe.setPortfolio(pf);
+        newMe.setBio(fullPortfolio.getAboutMe().getBio());
+        newMe.setEmail(fullPortfolio.getAboutMe().getEmail());
+        newMe.setPhone(fullPortfolio.getAboutMe().getPhone());
 
-    	List<Project> projects = fullPortfolio.getProjects();
-    	projects.forEach(project -> project.setPortfolio(pf));
-    	
-    	List<WorkExperience> workExp = fullPortfolio.getWorkExperiences();
-    	workExp.forEach(exp -> exp.setPortfolio(pf));
-    	
-    	List<WorkHistory> workHist = fullPortfolio.getWorkHistories();
-    	workHist.forEach(hist -> hist.setPortfolio(pf));
-    	
-    	aboutMeRepo.save(newMe);
-    	certificationRepo.saveAll(certs);
-    	educationRepo.saveAll(ed);
-    	equivalencyRepo.saveAll(equivs);
-    	gitHubRepo.saveAll(git);
-    	honorRepo.saveAll(honors);
-    	projectRepo.saveAll(projects);
-    	workExperienceRepo.saveAll(workExp);
-    	workHistoryRepo.saveAll(workHist);
+        List<Certification> certs = fullPortfolio.getCertifications();
+        certs.forEach(cert -> cert.setPortfolio(pf));
+
+        List<Education> ed = fullPortfolio.getEducations();
+        ed.forEach(e -> e.setPortfolio(pf));
+
+        List<Equivalency> equivs = fullPortfolio.getEquivalencies();
+        equivs.forEach(e -> e.setPortfolio(pf));
+
+        List<GitHub> git = fullPortfolio.getGitHubs();
+
+        List<Honor> honors = fullPortfolio.getHonors();
+        honors.forEach(honor -> honor.setPortfolio(pf));
+
+        List<Project> projects = fullPortfolio.getProjects();
+        projects.forEach(project -> project.setPortfolio(pf));
+
+        List<WorkExperience> workExp = fullPortfolio.getWorkExperiences();
+        workExp.forEach(exp -> exp.setPortfolio(pf));
+
+        List<WorkHistory> workHist = fullPortfolio.getWorkHistories();
+        workHist.forEach(hist -> hist.setPortfolio(pf));
+
+        aboutMeRepo.save(newMe);
+        certificationRepo.saveAll(certs);
+        educationRepo.saveAll(ed);
+        equivalencyRepo.saveAll(equivs);
+        gitHubRepo.saveAll(git);
+        honorRepo.saveAll(honors);
+        projectRepo.saveAll(projects);
+        workExperienceRepo.saveAll(workExp);
+        workHistoryRepo.saveAll(workHist);
     }
 }
