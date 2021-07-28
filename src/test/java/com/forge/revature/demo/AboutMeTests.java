@@ -1,14 +1,23 @@
 package com.forge.revature.demo;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.AboutMeController;
@@ -16,14 +25,6 @@ import com.forge.revature.models.AboutMe;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.AboutMeRepo;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 /**
  * @author Max Lee
@@ -49,9 +50,10 @@ public class AboutMeTests {
 
     @BeforeEach
     public void setup() {
+    	HashMap<String, String> map = new HashMap<>();
         this.mockMvc = MockMvcBuilders.standaloneSetup(new AboutMeController(aboutMeRepo)).build();
         User user = new User(1, "Max", "Lee" , "max.lee@email.com" , "password", true);
-        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "");
+        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "", map);
         this.testAboutMe = new AboutMe(1, portfolio, "Hi I'm Max", "max@mail.net", "(333) 333-4444");
     }
 

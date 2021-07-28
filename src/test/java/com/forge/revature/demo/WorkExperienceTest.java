@@ -1,5 +1,8 @@
 package com.forge.revature.demo;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -123,4 +126,18 @@ public class WorkExperienceTest {
             .andExpect(content().contentType("application/json"))
             .andReturn();
     }
+    
+    @Test
+    void allArgsConstructorTest() {
+    	WorkExperience w = new WorkExperience(1, "employer", "title", "responsibilities", "description", "technologies", null, null, null);
+    	assertSame("employer", w.getEmployer());
+    }
+    
+    @Test
+    void testToString() {
+    	WorkExperience w = new WorkExperience(1, "employer", "title", "responsibilities", "description", "technologies", null, null, null);
+    	assertNotNull(w.toString());
+    	assertTrue(w.toString().length() > 0);
+    }
+    
 }

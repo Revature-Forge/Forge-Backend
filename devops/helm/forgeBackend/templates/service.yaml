@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "forgeBackend.fullname" . }}
+  labels:
+    {{- include "forgeBackend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.deploy.portName }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "forgeBackend.selectorLabels" . | nindent 4 }}

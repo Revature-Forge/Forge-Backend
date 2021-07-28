@@ -34,11 +34,13 @@ jobs:
           codeCoverageToolOption: 'JaCoCo'
           codeCoverageRestoreOriginalPomXml: true
           javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
           sonarQubeRunAnalysis: true
-          sqMavenPluginVersionChoice: 'latest'
+          sqMavenPluginVersionChoice: 'pom'
+
         displayName: Maven package, JUnit test, Sonar, JaCoCo
         
       - task: PublishPipelineArtifact@1

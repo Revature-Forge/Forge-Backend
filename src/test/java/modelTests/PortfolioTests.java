@@ -1,5 +1,6 @@
 package modelTests;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -15,13 +16,13 @@ import com.forge.revature.models.User;
 class PortfolioTests {
 
 	Portfolio p = new Portfolio();
-	Portfolio fullP = new Portfolio(1, "Test", null, true, true, true, "");
+	Portfolio fullP = new Portfolio(1, "Test", null, true, true, true, "", null);
 	
 	@Test
 	void testConstructor() {
 		Portfolio p1 = new Portfolio();
 		Portfolio p2 = new Portfolio("Test", false, true, true, "none");
-		Portfolio p3 = new Portfolio(1, "Test", null, true, true, true, "");
+		Portfolio p3 = new Portfolio(1, "Test", null, true, true, true, "", null);
 	
 		assertEquals(0, p1.getId());
 		assertSame("Test", p2.getName());
@@ -100,5 +101,11 @@ class PortfolioTests {
 	void testSetFeedback() {
 		p.setFeedback("feedback");
 		assertEquals("feedback", p.getFeedback());
+	}
+	
+	@Test
+	void testToString() {
+		assertNotNull(p.toString());
+		assertTrue(p.toString().length() > 0);
 	}
 }
