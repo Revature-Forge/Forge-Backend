@@ -4,7 +4,10 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.dbconfig.name }}
 data:
 {{- with .Values.dbconfig.datasource }}
-  {{- toYaml . | nindent 2 }}
+  spring.datasource.url: {{ .url | quote }}
+  spring.datasource.driverClassName: {{ .driverClassName | quote }}
+  spring.jpa.database.platform: {{ .platform | quote }}
+  spring.h2.console.enabled: {{ .h2enabled | quote }}
 {{- end }}
   server.port: {{ .Values.deploy.port | quote }}
 
