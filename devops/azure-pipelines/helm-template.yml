@@ -34,12 +34,17 @@ jobs:
           chartType: 'FilePath'
           chartPath: '${{ parameters.chartPath }}'
           releaseName: '${{ parameters.releaseName }}'
-          overrideValues: |
-            image.repository=${{ parameters.repository }}
-            imagePullSecrets[0].name=${{ parameters.secretName }}
-            image.tag=${{ parameters.imageTag }}
-            ${{ if parameters.persist }}:
-              dbconfig.datasource."spring\.h2\.console\.enabled"="false"
+          ${{ if parameters.persist }}:
+            overrideValues: |
+              image.repository=${{ parameters.repository }}
+              imagePullSecrets[0].name=${{ parameters.secretName }}
+              image.tag=${{ parameters.imageTag }}
+              dbconfig.datasource."spring\.h2\.console\.enabled"="true"
+          ${{ if not(parameters.persist) }}:
+            overrideValues: |
+              image.repository=${{ parameters.repository }}
+              imagePullSecrets[0].name=${{ parameters.secretName }}
+              image.tag=${{ parameters.imageTag }}
           arguments: |
             --atomic 
         displayName: 'Helm Deploy'
