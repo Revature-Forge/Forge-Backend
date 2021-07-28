@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -262,7 +263,7 @@ public class PortfolioTest {
 				map, testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList,
 				testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList);
 
-//		given(repo.save(Mockito.any(Portfolio.class))).willReturn(new Portfolio(1, "test", u, false, false, false, ""));
+		given(repo.save(Mockito.any(Portfolio.class))).willReturn(new Portfolio(1, "test", testUser, false, false, false, "", new HashMap<>()));
 
 		ObjectMapper om = new ObjectMapper();
 		mvc.perform(post("/portfolios/full").contentType(MediaType.APPLICATION_JSON)
