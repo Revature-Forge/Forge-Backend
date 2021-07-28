@@ -27,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.MatrixController;
 import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Portfolio;
@@ -117,10 +118,13 @@ public class MatrixControllerTest {
 	public void testPost() throws Exception {
 		
 		given(matrixRepo.save(matrix)).willReturn(matrix);
-
-		mvc.perform(post("/matrix", matrix).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
+		given(skillRepo.saveAll(skills)).willReturn(skills);
+		
+		mvc.perform(post("/matrix")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(new ObjectMapper().writeValueAsString(matrix)))
+			.andDo(print())
+			.andExpect(status().isOk());
 	  }
 	
 	@Test
@@ -128,10 +132,14 @@ public class MatrixControllerTest {
 
 		given(matrixRepo.save(matrix)).willReturn(matrix);
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
+		given(skillRepo.saveAll(skills)).willReturn(skills);
+		given(skillRepo.findAllByMatrix(matrix)).willReturn(skills);
 
-		mvc.perform(put("/matrix/1", matrix).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
+		mvc.perform(put("/matrix")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(new ObjectMapper().writeValueAsString(matrix)))
+			.andDo(print())
+			.andExpect(status().isOk());
 		
 	  }
 }

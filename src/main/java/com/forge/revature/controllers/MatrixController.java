@@ -93,9 +93,9 @@ public class MatrixController {
 	 * @param matrix with changes to update
 	 * @return the newly changed matrix
 	 */
-	@PutMapping("/{id}")
-	public Matrix putMatrix(@PathVariable("id") int id, @RequestBody Matrix matrix) {
-		Optional<Matrix> update = matrixRepo.findById(id);
+	@PutMapping
+	public Matrix putMatrix(@RequestBody Matrix matrix) {
+		Optional<Matrix> update = matrixRepo.findById(matrix.getId());
 		if (update.isPresent()) {
 			Matrix newMat = update.get();
 			newMat.setHeader(matrix.getHeader());
@@ -167,7 +167,6 @@ public class MatrixController {
 		List<Skill> skills = m.getSkills();
 		for(Skill s : skills) {
 			s.setMatrix(m);
-			skills.add(s);
 		}
 		return skills;
 	}

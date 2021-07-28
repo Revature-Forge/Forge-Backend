@@ -291,7 +291,13 @@ public class PortfolioTest {
         workHistory.put("startDate", "2021-07-08");
         workHistory.put("endDate", "2021-07-08");
         workHistories.add(workHistory);
-
+        
+        List<ObjectNode> matrices = new ArrayList<>();
+        ObjectNode matrix = objectMapper.createObjectNode();
+        matrix.put("header", "Languages");
+        matrix.putPOJO("skills", new ArrayList<ObjectNode>());
+        matrices.add(matrix);
+        
         portfolio.putPOJO("aboutMe", aboutMe);
         portfolio.putPOJO("certifications", certifications);
         portfolio.putPOJO("educations", educations);
@@ -301,13 +307,15 @@ public class PortfolioTest {
         portfolio.putPOJO("projects", projects);
         portfolio.putPOJO("workExperiences", workExperiences);
         portfolio.putPOJO("workHistories", workHistories);
-        
+        portfolio.putPOJO("matrices", matrices);
         given(repo.save(Mockito.any(Portfolio.class))).willReturn(new Portfolio(1, "test", u, false, false, false, ""));
 
         mvc.perform(post("/portfolios/full")
                 .contentType(MediaType.APPLICATION_JSON)
                 .sessionAttr("user", u)
-                .content(portfolio.toString()))
+                .content(portfolio.toString())
+        		.characterEncoding("utf-8"))
+        		.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
     }
 }
