@@ -14,7 +14,7 @@ parameters:
     default: 'refs/heads/main'
   - name: 'branchDev'
     type: string
-    default: 'refs/heads/mdhelm'
+    default: 'refs/heads/dev'
   - name: 'mainCluster' 
     type: string
     default: 'may24-devops-team2-main-cluster'
@@ -51,7 +51,7 @@ stages:
           jobName: 'Dockerize'
           containerRegistry: '${{ parameters.containerRegistry }}'
           repository: '${{ parameters.repository }}'
-          imageTag: ${{ variables.Build.SourceVersion }}
+          imageTag: ${{ variables['Build.SourceVersion'] }}
           dockerPath: '**/mavenpipe.dockerfile'
 
   - stage: Deploy
@@ -77,7 +77,7 @@ stages:
           releaseName: 't2backend'
           repository: 'may24devopscontainers.azurecr.io/${{ parameters.repository }}'
           secretName: '${{ parameters.secretName }}'
-          imageTag: ${{ variables.Build.SourceVersion }}
+          imageTag: ${{ variables['Build.SourceVersion'] }}
           persist: true
   
   - stage: Notify
