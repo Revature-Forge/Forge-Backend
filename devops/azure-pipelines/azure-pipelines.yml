@@ -27,6 +27,12 @@ parameters:
   - name: 'repository'
     type: string
     default: 'forge-backend'
+  - name: 'imageTag'
+    type: string
+    default: 'latest'
+  - name: 'secretName'
+    type: string
+    default: 'p3-team2-acr'
 
 stages:
   - stage: Build_and_Test
@@ -48,7 +54,7 @@ stages:
           jobName: 'Dockerize'
           containerRegistry: '${{ parameters.containerRegistry }}'
           repository: '${{ parameters.repository }}'
-          imageTag: latest
+          imageTag: ${{ parameters.imageTag }}
           dockerPath: '**/mavenpipe.dockerfile'
 
   - stage: Deploy
@@ -57,17 +63,24 @@ stages:
       ne(variables['Build.Reason'], 'PullRequest'), 
       in(variables['Build.SourceBranch'], '${{ parameters.branchMain }}', '${{ parameters.branchDev }}' ) )
     jobs:
-      - template: ./kubernetes-template.yml
+      - template: ./kubernetes-secret.yml
         parameters:
-          jobName: 'Deploy'
+          jobName: 'Secret_Creation'
           ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
             clusterServiceConnection: '${{ parameters.mainCluster }}'
           ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
             clusterServiceConnection: '${{ parameters.devCluster }}'
-          manifestPath: '**/backend_manifest.yaml'
           containerRegistry: '${{ parameters.containerRegistry }}'
           namespace: 'team2'
-          secretName: 'p3-team2-acr'
+          secretName: '${{ parameters.secretName }}'
+      - template: ./helm-template.yml
+        parameters:
+          jobName: 'Deploy'
+          chartPath: './devops/helm/forge-backend'
+          releaseName: 'backend-helm-release'
+          repository: '${{ parameters.repository }}'
+          secretName: '${{ parameters.secretName }}'
+          imageTag: ${{ parameters.imageTag }}
   
   - stage: Notify
     condition: always()

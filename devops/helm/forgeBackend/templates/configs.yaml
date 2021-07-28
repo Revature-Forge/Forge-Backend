@@ -7,6 +7,7 @@ data:
   {{- toYaml | nindent 2 }}
 {{- else }}
   server.port: {{ .Values.port | quote }}
+
 ---
 apiVersion: v1
 kind: Secret
