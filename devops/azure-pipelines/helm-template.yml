@@ -34,7 +34,7 @@ jobs:
           chartType: 'FilePath'
           chartPath: '${{ parameters.chartPath }}'
           releaseName: '${{ parameters.releaseName }}'
-          ${{ if parameters.persist }}:
+          ${{ if eq(parameters.persist, true) }}:
             overrideValues: |
               image.repository=${{ parameters.repository }}
               imagePullSecrets[0].name=${{ parameters.secretName }}
