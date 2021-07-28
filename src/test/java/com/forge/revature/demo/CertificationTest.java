@@ -4,6 +4,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.forge.revature.models.Certification;
 import com.forge.revature.models.Portfolio;
@@ -92,5 +93,11 @@ public class CertificationTest {
         testPortfolio.setName("Test");
         certification.setPortfolio(testPortfolio);
         assertEquals(certification.getPortfolio().getName(), "Test");
+    }
+    
+    @Test
+    void allArgsTest() {
+    	Certification c = new Certification(1, null, "cert", "id", "issuedby", null, "url");
+    	assertSame("issuedby", c.getIssuedBy());
     }
 }

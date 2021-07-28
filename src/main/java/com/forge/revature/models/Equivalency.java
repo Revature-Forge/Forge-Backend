@@ -1,6 +1,5 @@
 package com.forge.revature.models;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,11 +8,15 @@ import javax.persistence.Table;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "equivalencies")
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Equivalency {
@@ -22,61 +25,30 @@ public class Equivalency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
     private String header;
 
-    @Column
     private int value;
 
     @ManyToOne
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
-    public Equivalency() {
-    }
-
-    public Equivalency(int id, String header, int value, Portfolio portfolio) {
-        this.id = id;
-        this.header = header;
-        this.value = value;
-        this.portfolio = portfolio;
-    }
-
     public Equivalency(String header, int value, Portfolio portfolio) {
         this.header = header;
         this.value = value;
         this.portfolio = portfolio;
     }
-
-    public int getId() {
-        return id;
+    
+    public Equivalency(String header, int value) {
+    	this.header = header;
+    	this.value = value;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@Override
+	public String toString() {
+		return "Equivalency [id=" + id + ", header=" + header + ", value=" + value + ", portfolio=" + portfolio + "]";
+	}
+    
+    
 
-    public String getHeader() {
-        return header;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public Portfolio getPortfolio() {
-        return portfolio;
-    }
-
-    public void setPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio;
-    }
 }

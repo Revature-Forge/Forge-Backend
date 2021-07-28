@@ -1,0 +1,53 @@
+parameters:
+  - name: 'jobName'
+    type: string
+  - name: 'sonarServiceConnection'
+    type: string
+  - name: 'sonarOrganization'
+    type: string
+  - name: 'sonarProjectKey'
+    type: string
+  - name: 'sonarProjectName'
+    type: string
+  - name: 'testPath' # file path to test results
+    type: string
+  - name: 'mavenOutput'
+    type: string
+jobs:
+  - job: ${{ parameters.jobName }}
+    steps:
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: '${{ parameters.sonarServiceConnection }}'
+          organization: '${{ parameters.sonarOrganization }}'
+          scannerMode: 'Other'
+          extraProperties: |
+           sonar.projectKey=${{ parameters.sonarProjectKey }}
+           sonar.projectName=${{ parameters.sonarProjectName }}
+        displayName: Configure Sonar Analysis Parameters
+
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          publishJUnitResults: true
+          testResultsFiles: '${{ parameters.testPath }}'
+          codeCoverageToolOption: 'JaCoCo'
+          codeCoverageRestoreOriginalPomXml: true
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: true
+          sqMavenPluginVersionChoice: 'pom'
+
+        displayName: Maven package, JUnit test, Sonar, JaCoCo
+        
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.Repository.LocalPath)/target/${{ parameters.mavenOutput }}'
+          artifact: 'maven-output'
+          publishLocation: 'pipeline'
+        displayName: Publish Maven output as artifact
+    displayName: Maven Build, Test, Analyze
+  

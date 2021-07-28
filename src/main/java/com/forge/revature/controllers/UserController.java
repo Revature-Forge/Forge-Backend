@@ -21,11 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import io.netty.handler.codec.http.HttpResponse;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -52,6 +49,7 @@ public class UserController {
     public User getByID(@PathVariable(name = "id") int id){
         return userRepo.findById(id).get();
     }
+
     @PostMapping("/login")
     public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
         Optional<User> user = userRepo.findByEmail(email);

@@ -4,4 +4,6 @@
 bin
 build
 .vscode
-
+.classpath
+target/
+.factorypath

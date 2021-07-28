@@ -1,0 +1,93 @@
+trigger:
+  - main
+  - dev
+pr:
+  - main
+  - dev
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: 'branchMain'
+    type: string
+    default: 'refs/heads/main'
+  - name: 'branchDev'
+    type: string
+    default: 'refs/heads/dev'
+  - name: 'mainCluster' 
+    type: string
+    default: 'may24-devops-team2-main-cluster'
+  - name: 'devCluster' 
+    type: string
+    default: 'may24-devops-team2-dev-cluster'
+  - name: 'containerRegistry'
+    type: string
+    default: 'acr-team2'
+  - name: 'repository'
+    type: string
+    default: 'forge-backend'
+  - name: 'secretName'
+    type: string
+    default: 'p3-team2-acr'
+
+stages:
+  - stage: Build_and_Test
+    jobs:
+      - template: ./maven-build-test-job-template.yml
+        parameters:
+          jobName: 'Build_and_Test'
+          sonarServiceConnection: 'Forge-SonarCloud'
+          sonarOrganization: '1058-sophia-gavrila-forge'
+          sonarProjectKey: '1058-Sophia-Gavrila-Forge_Forge-Backend'
+          sonarProjectName: 'Forge-Backend'
+          testPath: '**/surefire-reports/TEST-*.xml'
+          mavenOutput: demo-0.0.1-SNAPSHOT.war
+          
+  - stage: Dockerize
+    jobs:
+      - template: ./dockerize-template.yml
+        parameters:
+          jobName: 'Dockerize'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          imageTag: ${{ variables['Build.SourceVersion'] }}
+          dockerPath: '**/mavenpipe.dockerfile'
+
+  - stage: Deploy
+    condition: >
+      and( succeeded(), 
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      in(variables['Build.SourceBranch'], '${{ parameters.branchMain }}', '${{ parameters.branchDev }}' ) )
+    jobs:
+      - template: ./kubernetes-secret.yml
+        parameters:
+          jobName: 'Secret_Creation'
+          ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.mainCluster }}'
+          ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.devCluster }}'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          namespace: 'team2'
+          secretName: '${{ parameters.secretName }}'
+      - template: ./helm-template.yml
+        parameters:
+          jobName: 'Deploy'
+          chartPath: './devops/helm/forgeBackend'
+          releaseName: 't2backend'
+          repository: 'may24devopscontainers.azurecr.io/${{ parameters.repository }}'
+          secretName: '${{ parameters.secretName }}'
+          imageTag: ${{ variables['Build.SourceVersion'] }}
+  
+  - stage: Notify
+    condition: always()
+    jobs:
+      - template: ./discord-job-template.yml
+        parameters:
+          name: 'Team2-P3-Backend'
+          title: 'Forge Portfolio Management System DevOps'
+          discordVarGroup: Discord-Webhook-Info
+            # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
+            # the variable group contains two variables: discordid and discordkey
+            # currently, the discordVarGroup is named Discord-Webhook-Info, 
+            # but can be swapped out if you want to notify to multiple Discord webhooks.
