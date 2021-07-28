@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "github")
 @NoArgsConstructor
-@AllArgsConstructo
+@AllArgsConstructor
 @Getter
 @Setter
 public class GitHub{
