@@ -29,7 +29,7 @@ public class WorkExperience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "workexperienceid")
-    private int id;
+    private long id;
 
     private String employer;
 
