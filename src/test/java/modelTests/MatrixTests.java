@@ -28,7 +28,7 @@ public class MatrixTests {
 		
 	@BeforeEach
 	void setup() {
-		pf = new Portfolio(1, "Test", null, false, false, false, "");
+		pf = new Portfolio(1, "Test", null, false, false, false, "", null);
 		matrix =  new Matrix();
 		fullMatrix = new Matrix("Languages", pf);
 		fullMatrix.setId(1);

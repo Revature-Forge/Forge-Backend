@@ -31,7 +31,7 @@ public class FullPortfolio {
 	private List<Project> projects;
 	private List<WorkExperience> workExperiences;
 	private List<WorkHistory> workHistories;
-  private List<Matrix> matrices;
+	private List<Matrix> matrices;
 
 	public FullPortfolio(String name, User user, boolean submitted, boolean approved, boolean reviewed, String feedback,
 			HashMap<String, String> flags, AboutMe aboutMe, List<Certification> certifications,
