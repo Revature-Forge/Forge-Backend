@@ -20,12 +20,13 @@ import lombok.Setter;
  * Represents the about me section for a portfolio.
  */
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class AboutMe {
-    @Id
+    
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @OneToOne
