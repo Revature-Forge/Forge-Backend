@@ -81,6 +81,7 @@ stages:
           repository: 'may24devopscontainers.azurecr.io/${{ parameters.repository }}'
           secretName: '${{ parameters.secretName }}'
           imageTag: ${{ parameters.imageTag }}
+          persist: true
   
   - stage: Notify
     condition: always()
