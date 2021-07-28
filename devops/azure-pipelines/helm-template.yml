@@ -11,9 +11,7 @@ parameters:
     type: string
   - name: 'imageTag'
     type: string 
-  - name: persist
-    type: boolean
-    default: false
+
 jobs:
   - job: ${{ parameters.jobName }}
     dependsOn: 'Secret_Creation'
@@ -34,17 +32,10 @@ jobs:
           chartType: 'FilePath'
           chartPath: '${{ parameters.chartPath }}'
           releaseName: '${{ parameters.releaseName }}'
-          ${{ if eq(parameters.persist, true) }}:
-            overrideValues: |
-              image.repository=${{ parameters.repository }}
-              imagePullSecrets[0].name=${{ parameters.secretName }}
-              image.tag=${{ parameters.imageTag }}
-              dbconfig.datasource."spring\.h2\.console\.enabled"="true"
-          ${{ if not(parameters.persist) }}:
-            overrideValues: |
-              image.repository=${{ parameters.repository }}
-              imagePullSecrets[0].name=${{ parameters.secretName }}
-              image.tag=${{ parameters.imageTag }}
+          overrideValues: |
+            image.repository=${{ parameters.repository }}
+            imagePullSecrets[0].name=${{ parameters.secretName }}
+            image.tag=${{ parameters.imageTag }}
           arguments: |
             --atomic 
         displayName: 'Helm Deploy'
