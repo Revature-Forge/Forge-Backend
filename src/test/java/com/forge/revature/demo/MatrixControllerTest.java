@@ -39,7 +39,7 @@ import com.forge.revature.repo.SkillRepo;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(MatrixController.class)
-public class MatrixControllerTest {
+class MatrixControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
@@ -60,7 +60,7 @@ public class MatrixControllerTest {
 	private List<Skill> skills;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.", null);
 		matrix = new Matrix("Languages");
 		matrix.setPortfolio(portfolio);
@@ -73,7 +73,7 @@ public class MatrixControllerTest {
 	}
 
 	@Test
-	public void testGetAll() throws Exception {
+	void testGetAll() throws Exception {
 		List<Matrix> allMatrices = Arrays.asList(matrix);
 
 		given(matrixRepo.findAll()).willReturn(allMatrices);
@@ -85,7 +85,7 @@ public class MatrixControllerTest {
 	}
 
 	@Test
-	public void testGetById() throws Exception {
+	void testGetById() throws Exception {
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 		given(matrixRepo.findById(2)).willReturn(Optional.empty());
 
@@ -101,7 +101,7 @@ public class MatrixControllerTest {
 	}
 
 	@Test
-	public void testGetByPortfolio() throws Exception {
+	void testGetByPortfolio() throws Exception {
 		
 		List<Matrix> allMatrices = Arrays.asList(matrix);
 		
@@ -128,7 +128,7 @@ public class MatrixControllerTest {
 	  }
 	
 	@Test
-	public void testUpdate() throws Exception {
+	void testUpdate() throws Exception {
 
 		given(matrixRepo.save(matrix)).willReturn(matrix);
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));

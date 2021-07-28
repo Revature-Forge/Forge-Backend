@@ -7,12 +7,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
 
-public class SkillTests {
+@SpringBootTest(classes=Skill.class)
+class SkillTests {
 	Portfolio pf;
 	Matrix fullMatrix;
 	Skill skill;

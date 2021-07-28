@@ -16,7 +16,7 @@ import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
 
 @SpringBootTest(classes = Matrix.class)
-public class MatrixTests {
+class MatrixTests {
 	
 	Portfolio pf;
 	Matrix matrix;

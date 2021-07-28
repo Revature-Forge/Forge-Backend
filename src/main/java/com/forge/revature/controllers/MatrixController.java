@@ -68,8 +68,7 @@ public class MatrixController {
 	public List<Matrix> getByPortfolio(@PathVariable("id") int id) {
 		Portfolio port = portRepo.findById(id)
 				.orElseThrow(() -> new NotFoundException("Portfolio Not Found for ID: " + id));
-		List<Matrix> max = insertSkills(matrixRepo.findAllByPortfolio(port));
-		return max;
+		return insertSkills(matrixRepo.findAllByPortfolio(port));
 	}
 	
 	/**
@@ -122,17 +121,13 @@ public class MatrixController {
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable("id") int id) {
 		Optional<Matrix> m = matrixRepo.findById(id);
-		Matrix max = new Matrix();
 		if (m.isPresent()) {
-			max = m.get();
-		} else {
-			return;
+			List<Skill> skills = skillRepo.findAllByMatrix(m.get());
+			if (!skills.isEmpty()) {
+				skillRepo.deleteAll(skills);
+			}
+			matrixRepo.delete(m.get());
 		}
-		List<Skill> skills = skillRepo.findAllByMatrix(max);
-		if (!skills.isEmpty()) {
-			skillRepo.deleteAll(skills);
-		}
-		matrixRepo.delete(max);
 	}
 	/**
 	 * 
