@@ -49,7 +49,8 @@ import com.forge.revature.repo.ProjectRepo;
 import com.forge.revature.repo.UserRepo;
 import com.forge.revature.repo.WorkExperienceRepo;
 import com.forge.revature.repo.WorkHistoryRepo;
-
+import com.forge.revature.repo.MatrixRepo;
+import com.forge.revature.repo.SkillRepo;
 @SpringBootTest
 public class PortfolioTest {
 
