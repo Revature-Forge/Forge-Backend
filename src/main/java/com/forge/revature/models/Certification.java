@@ -29,7 +29,7 @@ public class Certification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "certificationid")
-    private int id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "portfolio_id")
