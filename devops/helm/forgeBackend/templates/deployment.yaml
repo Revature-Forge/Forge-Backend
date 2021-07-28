@@ -41,17 +41,17 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           envFrom:
           - configMapRef:
-              name: {{ .Values.dbconfig.name }}
+              name: {{ .Release.Name }}-{{ .Values.dbconfig.name }}
           env:
           - name: spring.datasource.username
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.dbconfig.secretName }}
+                name: {{ .Release.Name }}-{{ .Values.dbconfig.secretName }}
                 key: username
           - name: spring.datasource.password
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.dbconfig.secretName }}
+                name: {{ .Release.Name }}-{{ .Values.dbconfig.secretName }}
                 key: password
       {{- with .Values.nodeSelector }}
       nodeSelector:

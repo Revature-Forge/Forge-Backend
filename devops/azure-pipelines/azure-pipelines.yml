@@ -76,7 +76,7 @@ stages:
       - template: ./helm-template.yml
         parameters:
           jobName: 'Deploy'
-          chartPath: './devops/helm/forge-backend'
+          chartPath: './devops/helm/forgeBackend'
           releaseName: 't2backend'
           repository: '${{ parameters.repository }}'
           secretName: '${{ parameters.secretName }}'

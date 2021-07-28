@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.dbconfig.name }}
+  name: {{ .Release.Name }}-{{ .Values.dbconfig.name }}
 data:
 {{- with .Values.dbconfig.datasource }}
   {{- toYaml . | nindent 2 }}
@@ -12,8 +12,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Values.dbconfig.secretName }}
-
+  name: {{ .Release.Name }}-{{ .Values.dbconfig.secretName }}
 stringData:
   username: {{ .Values.dbconfig.username }}
   password: {{ .Values.dbconfig.password }}
