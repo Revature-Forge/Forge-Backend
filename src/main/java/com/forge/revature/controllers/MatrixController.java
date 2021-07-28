@@ -148,7 +148,7 @@ public class MatrixController {
 	/**
 	 * 
 	 * @param max is the list of matrices to be serialized
-	 * @return the list with each matrix having its list of skills
+	 * @return the list with each matrix having its list of skills inserted
 	 */
 	private List<Matrix> insertSkills(List<Matrix> max) {
 		for (Matrix m : max) {
@@ -172,25 +172,4 @@ public class MatrixController {
 		return skills;
 	}
 
-	
-	
-	/*
-	 * for use in the full portfolio object
-	 */
-	
-	/**
-	 * 
-	 * @param listMax is the list of deserialized matrices
-	 * @return the list of all the matrices' skills with each Matrix field set for SQL storage
-	 */
-//	private List<Skill> extractSkills(List<Matrix> listMax) {
-//		List<Skill> allSkills = new ArrayList<>();
-//		for(Matrix m : listMax) {
-//			for(Skill s : m.getSkills()) {
-//				s.setMatrix(m);
-//				allSkills.add(s);
-//			}
-//		}
-//		return allSkills;
-//	}
 }

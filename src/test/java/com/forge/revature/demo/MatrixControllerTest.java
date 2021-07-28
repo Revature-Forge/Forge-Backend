@@ -118,7 +118,7 @@ public class MatrixControllerTest {
 		
 		given(matrixRepo.save(matrix)).willReturn(matrix);
 
-		mvc.perform(post("/matrix").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(post("/matrix", matrix).contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
 	  }
@@ -129,7 +129,7 @@ public class MatrixControllerTest {
 		given(matrixRepo.save(matrix)).willReturn(matrix);
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 
-		mvc.perform(put("/matrix/1").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(put("/matrix/1", matrix).contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
 		

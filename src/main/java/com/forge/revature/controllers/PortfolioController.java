@@ -1,5 +1,6 @@
 package com.forge.revature.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,12 @@ public class PortfolioController {
 
     @Autowired
     WorkHistoryRepo workHistoryRepo;
+    
+    @Autowired
+    MatrixRepo matrixRepo;
+    
+    @Autowired
+    SkillRepo skillRepo;
 
     public PortfolioController(PortfolioRepo portRepo) {
         this.portRepo = portRepo;
@@ -156,7 +163,8 @@ public class PortfolioController {
             honorRepo.findByPortfolio(port),
             projectRepo.findByPortfolio_Id(id),
             workExperienceRepo.findByPortfolio_Id(id),
-            workHistoryRepo.findByPortfolio(port)
+            workHistoryRepo.findByPortfolio(port),
+            insertSkills(matrixRepo.findAllByPortfolio(port))
         );
 
         ObjectMapper mapper = new ObjectMapper();
@@ -170,6 +178,7 @@ public class PortfolioController {
         mapper.addMixIn(Project.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(WorkExperience.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(WorkHistory.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(Matrix.class, PortfolioIgnoreMixin.class);
 
         response.setHeader("Content-Disposition", "attachment; filename=Portfolio-" + id + ".json");
         return new ResponseEntity<>(new ByteArrayResource(mapper.writeValueAsString(full).getBytes()), HttpStatus.OK);
@@ -218,6 +227,9 @@ public class PortfolioController {
     	List<WorkHistory> workHist = fullPortfolio.getWorkHistories();
     	workHist.forEach(hist -> hist.setPortfolio(pf));
     	
+    	List<Matrix> matrices = fullPortfolio.getMatrices();
+    	matrices.forEach(mat -> mat.setPortfolio(pf));
+    	
     	aboutMeRepo.save(newMe);
     	certificationRepo.saveAll(certs);
     	educationRepo.saveAll(ed);
@@ -227,5 +239,36 @@ public class PortfolioController {
     	projectRepo.saveAll(projects);
     	workExperienceRepo.saveAll(workExp);
     	workHistoryRepo.saveAll(workHist);
+    	matrixRepo.saveAll(matrices);
+    	skillRepo.saveAll(extractSkills(matrices));
     }
+	
+	/**
+	 * 
+	 * @param max is the list of matrices to be serialized
+	 * @return the list with each matrix having its list of skills inserted
+	 */
+	private List<Matrix> insertSkills(List<Matrix> max) {
+		for (Matrix m : max) {
+			List<Skill> skills = skillRepo.findAllByMatrix(m);
+			m.setSkills(skills);
+		}
+		return max;
+	}
+
+	/**
+	 * 
+	 * @param listMax is the list of deserialized matrices
+	 * @return the list of all the matrices' skills with each Matrix field set for SQL storage
+	 */
+	private List<Skill> extractSkills(List<Matrix> listMax) {
+		List<Skill> allSkills = new ArrayList<>();
+		for(Matrix m : listMax) {
+			for(Skill s : m.getSkills()) {
+				s.setMatrix(m);
+				allSkills.add(s);
+			}
+		}
+		return allSkills;
+	}
 }

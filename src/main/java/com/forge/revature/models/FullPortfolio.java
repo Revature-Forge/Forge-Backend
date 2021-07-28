@@ -28,13 +28,13 @@ public class FullPortfolio {
     private List<Project> projects;
     private List<WorkExperience> workExperiences;
     private List<WorkHistory> workHistories;
-    
+    private List<Matrix> matrices;
     
 
     public FullPortfolio(String name, boolean submitted, boolean approved, boolean reviewed, String feedback,
 			AboutMe aboutMe, List<Certification> certifications, List<Education> educations,
 			List<Equivalency> equivalencies, List<GitHub> gitHubs, List<Honor> honors, List<Project> projects,
-			List<WorkExperience> workExperiences, List<WorkHistory> workHistories) {
+			List<WorkExperience> workExperiences, List<WorkHistory> workHistories, List<Matrix> matrices) {
 		super();
 		this.name = name;
 		this.submitted = submitted;
@@ -50,6 +50,7 @@ public class FullPortfolio {
 		this.projects = projects;
 		this.workExperiences = workExperiences;
 		this.workHistories = workHistories;
+		this.matrices = matrices;
 	}
 
 
@@ -59,6 +60,6 @@ public class FullPortfolio {
                 + ", educations=" + educations + ", equivalencies=" + equivalencies + ", feedback=" + feedback
                 + ", gitHubs=" + gitHubs + ", honors=" + honors + ", id=" + id + ", name=" + name + ", projects="
                 + projects + ", reviewed=" + reviewed + ", submitted=" + submitted + ", user=" + user
-                + ", workExperiences=" + workExperiences + ", workHistories=" + workHistories + "]";
+                + ", workExperiences=" + workExperiences + ", workHistories=" + workHistories + ", matrices=" + matrices + "]";
     }
 }

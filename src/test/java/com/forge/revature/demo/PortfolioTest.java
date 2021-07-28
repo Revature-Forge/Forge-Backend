@@ -65,12 +65,18 @@ public class PortfolioTest {
 
     @MockBean
     WorkHistoryRepo workHistoryRepo;
+    
+    @MockBean
+    MatrixRepo matrixRepo;
+    
+    @MockBean
+    SkillRepo skillRepo;
 
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .standaloneSetup(new PortfolioController(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
-                    gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo))
+                    gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo))
             .build();
     }
 
