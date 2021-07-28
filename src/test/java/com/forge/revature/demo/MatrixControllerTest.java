@@ -115,7 +115,7 @@ class MatrixControllerTest {
 	}
 
 	@Test
-	public void testPost() throws Exception {
+	void testPost() throws Exception {
 		
 		given(matrixRepo.save(matrix)).willReturn(matrix);
 		given(skillRepo.saveAll(skills)).willReturn(skills);
