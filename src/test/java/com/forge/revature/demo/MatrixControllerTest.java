@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -128,7 +129,7 @@ public class MatrixControllerTest {
 		given(matrixRepo.save(matrix)).willReturn(matrix);
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 
-		mvc.perform(post("/matrix/1").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(put("/matrix/1").contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
 		
