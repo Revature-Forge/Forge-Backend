@@ -49,7 +49,12 @@ public class MatrixController {
 		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
 		return insertSkills(m);
 	}
-
+	
+	/**
+	 * 
+	 * @param id of the portfolio
+	 * @return list of all matrices tied to the portfolio
+	 */
 	@GetMapping("/portfolio/{id}")
 	public List<Matrix> getByPortfolio(@PathVariable("id") int id) {
 		Portfolio port = portRepo.findById(id)
