@@ -78,7 +78,7 @@ stages:
           jobName: 'Deploy'
           chartPath: './devops/helm/forgeBackend'
           releaseName: 't2backend'
-          repository: '${{ parameters.repository }}'
+          repository: 'may24devopscontainers.azurecr.io/${{ parameters.repository }}'
           secretName: '${{ parameters.secretName }}'
           imageTag: ${{ parameters.imageTag }}
   
