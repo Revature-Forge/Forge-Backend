@@ -33,8 +33,10 @@ import com.forge.revature.models.Equivalency;
 import com.forge.revature.models.FullPortfolio;
 import com.forge.revature.models.GitHub;
 import com.forge.revature.models.Honor;
+import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Project;
+import com.forge.revature.models.Skill;
 import com.forge.revature.models.User;
 import com.forge.revature.models.WorkExperience;
 import com.forge.revature.models.WorkHistory;
@@ -49,9 +51,12 @@ import com.forge.revature.repo.ProjectRepo;
 import com.forge.revature.repo.UserRepo;
 import com.forge.revature.repo.WorkExperienceRepo;
 import com.forge.revature.repo.WorkHistoryRepo;
+import com.forge.revature.repo.MatrixRepo;
+import com.forge.revature.repo.SkillRepo;
 
 @SpringBootTest
 public class PortfolioTest {
+
 	private MockMvc mvc;
 
 	@MockBean
@@ -87,11 +92,17 @@ public class PortfolioTest {
 	@MockBean
 	WorkHistoryRepo workHistoryRepo;
 
+	@MockBean
+	MatrixRepo matrixRepo;
+
+	@MockBean
+	SkillRepo skillRepo;
+
 	@BeforeEach
 	public void setup() {
-		mvc = MockMvcBuilders
-				.standaloneSetup(new PortfolioController(repo, aboutMeRepo, certificationRepo, educationRepo,
-						equivalencyRepo, gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo))
+		mvc = MockMvcBuilders.standaloneSetup(
+				new PortfolioController(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
+						gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo))
 				.build();
 	}
 
@@ -208,6 +219,14 @@ public class PortfolioTest {
 		history.add(new WorkHistory(1, "title", "employer", "responsibilities", "description", "tools", "startDate",
 				"endDate", port.get()));
 		given(workHistoryRepo.findByPortfolio(port.get())).willReturn(history);
+    
+		ArrayList<Matrix> matrices = new ArrayList<>();
+		ArrayList<Skill> skills = new ArrayList<>();
+		skills.add(new Skill("Java", 24));
+		Matrix matrix = new Matrix("Languages", skills, port.get());
+		matrices.add(matrix);
+		given(matrixRepo.findAllByPortfolio(port.get())).willReturn(matrices);
+		given(skillRepo.findAllByMatrix(matrix)).willReturn(skills);
 
 		mvc.perform(get("/portfolios/full/1")).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType("application/octet-stream")).andReturn();
@@ -257,13 +276,21 @@ public class PortfolioTest {
 				"Test description", "test tools", "StartDate test", "Enddate test");
 		List<WorkHistory> testWorkHistoriesList = new ArrayList<>();
 		testWorkHistoriesList.add(testWorkHistory);
+		// Create matrix list
+		Skill skill = new Skill("Test Skill", 24);
+		List<Skill> skills = new ArrayList<>();
+		skills.add(skill);
+		Matrix testMatrix = new Matrix("Test Header", skills);
+		List<Matrix> testMatricesList = new ArrayList<>();
+		testMatricesList.add(testMatrix);
 		// Create full portfolio
 		HashMap<String, String> map = new HashMap<>();
 		FullPortfolio testFullPortfolio = new FullPortfolio(0, "Tester", testUser, false, false, false, "Test Feedback",
 				map, testAboutMe, testCertifications, testEducationList, testEquivalenciesList, testGitHubList,
-				testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList);
+				testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList, testMatricesList);
 
-		given(repo.save(Mockito.any(Portfolio.class))).willReturn(new Portfolio(1, "test", testUser, false, false, false, "", new HashMap<>()));
+		given(repo.save(Mockito.any(Portfolio.class)))
+				.willReturn(new Portfolio(1, "test", testUser, false, false, false, "", new HashMap<>()));
 
 		ObjectMapper om = new ObjectMapper();
 		mvc.perform(post("/portfolios/full").contentType(MediaType.APPLICATION_JSON)
