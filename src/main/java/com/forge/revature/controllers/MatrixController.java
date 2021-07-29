@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.forge.revature.exception.NotFoundException;
 import com.forge.revature.models.Matrix;
+import com.forge.revature.models.MatrixDTO;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
 import com.forge.revature.repo.MatrixRepo;
@@ -23,7 +24,7 @@ import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.SkillRepo;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "localhost:3000")
 @RequestMapping("/matrix")
 public class MatrixController {
 
@@ -77,7 +78,8 @@ public class MatrixController {
 	 * @return matrix with it's updated id number
 	 */
 	@PostMapping
-	public Matrix postMatrix(@RequestBody Matrix matrix) {
+	public Matrix postMatrix(@RequestBody MatrixDTO matrixDTO) {
+		Matrix matrix = new Matrix(matrixDTO.getHeader(), matrixDTO.getSkills(), matrixDTO.getPortfolio());
 		List<Skill> skills = extractSkills(matrix);
 		matrix = matrixRepo.save(matrix);
 		if(!skills.isEmpty()) {
@@ -93,7 +95,8 @@ public class MatrixController {
 	 * @return the newly changed matrix
 	 */
 	@PutMapping
-	public Matrix putMatrix(@RequestBody Matrix matrix) {
+	public Matrix putMatrix(@RequestBody MatrixDTO matrixDTO) {
+		Matrix matrix = new Matrix(matrixDTO.getId(), matrixDTO.getHeader(), matrixDTO.getPortfolio(), matrixDTO.getSkills());
 		Optional<Matrix> update = matrixRepo.findById(matrix.getId());
 		if (update.isPresent()) {
 			Matrix newMat = update.get();
