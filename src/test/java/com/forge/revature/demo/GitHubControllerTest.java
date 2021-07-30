@@ -31,6 +31,8 @@ import static org.mockito.BDDMockito.given;
 public class GitHubControllerTest {
   @Autowired
   private MockMvc mvc;
+  
+  private static String baseUrl = "/api/github";
 
   @MockBean
   private GitHubRepo gitHubRepo;
@@ -52,7 +54,7 @@ public class GitHubControllerTest {
   
     given(gitHubRepo.findAll()).willReturn(allGitHub);
 
-    mvc.perform(get("/github")
+    mvc.perform(get(baseUrl)
       .contentType(MediaType.APPLICATION_JSON))
       .andDo(print())
       .andExpect(status().isOk())
@@ -65,14 +67,14 @@ public class GitHubControllerTest {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
     given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
-    mvc.perform(get("/github/1")
+    mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
       .andDo(print())
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.url", is(gitHub.getUrl()))); //making sure getting the right data
 
     //checking when id does not exist (findById returns empty optional)
-    mvc.perform(delete("/github/2"))
+    mvc.perform(delete(baseUrl + "/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
       .andExpect(content().string(containsString("GitHub not Found")));
@@ -82,7 +84,7 @@ public class GitHubControllerTest {
   public void testPost() throws Exception {
     given(gitHubRepo.save(Mockito.any())).willReturn(gitHub);
 
-    mvc.perform(post("/github")
+    mvc.perform(post(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
       .content(new ObjectMapper().writeValueAsString(gitHub)))
       .andDo(print())
@@ -95,12 +97,12 @@ public class GitHubControllerTest {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
     given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
-    mvc.perform(delete("/github/1"))
+    mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
 
     //checking when id does not exist (findById returns empty optional)
-    mvc.perform(delete("/github/2"))
+    mvc.perform(delete(baseUrl + "/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
       .andExpect(content().string(containsString("GitHub not Found")));
@@ -115,7 +117,7 @@ public class GitHubControllerTest {
     newGit.setId(2);
 
     //checking when id does not exist (findById returns empty optional)
-    mvc.perform(put("/github")
+    mvc.perform(put(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
       .content(new ObjectMapper().writeValueAsString(newGit)))
       .andDo(print())
@@ -126,7 +128,7 @@ public class GitHubControllerTest {
 
     given(gitHubRepo.save(Mockito.any())).willReturn(newGit);
    
-    mvc.perform(put("/github")
+    mvc.perform(put(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
       .content(new ObjectMapper().writeValueAsString(newGit)))
       .andDo(print())
@@ -145,7 +147,7 @@ public class GitHubControllerTest {
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
     given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
-    mvc.perform(get("/github/portfolio/1"))
+    mvc.perform(get(baseUrl + "/portfolio/1"))
       .andExpect(status().isOk())
       .andDo(print())
       .andExpect(content().contentType("application/json"))
@@ -154,7 +156,7 @@ public class GitHubControllerTest {
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
     
     // test for portfolio not found
-    mvc.perform(get("/github/portfolio/2"))
+    mvc.perform(get(baseUrl + "/portfolio/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
       .andExpect(content().string(containsString("Portfolio not Found")));
@@ -165,7 +167,7 @@ public class GitHubControllerTest {
     given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
 
     // test for github not found with a found portfolio
-    mvc.perform(get("/github/portfolio/3"))
+    mvc.perform(get(baseUrl + "/portfolio/3"))
       .andDo(print())
       .andExpect(content().contentType("application/json"))
       .andExpect(jsonPath("$", hasSize(0)));

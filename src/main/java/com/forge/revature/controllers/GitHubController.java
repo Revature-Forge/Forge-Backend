@@ -20,8 +20,8 @@ import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.GitHubRepo;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("github")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/github")
 public class GitHubController {
   @Autowired
   private GitHubRepo gitRepo;

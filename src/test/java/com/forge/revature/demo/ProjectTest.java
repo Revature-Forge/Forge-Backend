@@ -28,6 +28,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 public class ProjectTest {
 
     private MockMvc mock;
+    
+    private static String baseUrl = "/api/projects";
 
     @MockBean
     ProjectRepo repo;
@@ -41,7 +43,7 @@ public class ProjectTest {
     void testGetAll() throws Exception {
         given(repo.findAll()).willReturn(new ArrayList<Project>());
 
-        mock.perform(get("/projects"))
+        mock.perform(get(baseUrl))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -53,7 +55,7 @@ public class ProjectTest {
         given(repo.findById((long) 1)).willReturn(Optional.of(new Project("Project 3", "sample description",
                 "sample responsibilities", "sample technologies", "sample repository")));
 
-        mock.perform(get("/projects/1"))
+        mock.perform(get(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -69,7 +71,7 @@ public class ProjectTest {
         Project newProj = new Project("Project 3", "different description", "different responsibilities", "different technologies",
                 "new repository");
 
-        mock.perform(post("/projects/1").contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(newProj)))
+        mock.perform(post(baseUrl + "/1").contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(newProj)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andReturn();
@@ -77,7 +79,7 @@ public class ProjectTest {
 
     @Test
     void testDelete() throws Exception {
-        mock.perform(delete("/projects/1"))
+        mock.perform(delete(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andReturn();
@@ -97,7 +99,7 @@ public class ProjectTest {
         list.add(proj2);
         given(repo.findByPortfolio_Id(1)).willReturn(list);
 
-        mock.perform(get("/projects/portfolio/1"))
+        mock.perform(get(baseUrl + "/portfolio/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -109,7 +111,7 @@ public class ProjectTest {
         Project proj = new Project(1, "Project 3", "sample description", "sample responsibilities", "sample technologies",
                 "sample repository", "sample workproducts", null);
                 
-        mock.perform(post("/projects").contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(proj)))
+        mock.perform(post(baseUrl).contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(proj)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andReturn();

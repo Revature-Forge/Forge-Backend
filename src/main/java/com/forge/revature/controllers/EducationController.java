@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for Education. Has CRUD functionality described per method
  */
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("education")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/education")
 public class EducationController {
     @Autowired
     EducationRepo educationRepo;
