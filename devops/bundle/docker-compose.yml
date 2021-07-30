@@ -1,0 +1,12 @@
+version: "3"
+services:
+    bundle:
+        build:
+            context: ../../..
+            dockerfile: Forge-Backend/devops/bundle/Dockerfile
+        environment: 
+            DB_URL: "jdbc:postgresql://{IP OF DB}:5432/postgres"
+            DB_USER: "{DB USERNAME}"
+            DB_PASS: "{DB PASSWORD}"
+        ports:
+            - "8081:8081"
