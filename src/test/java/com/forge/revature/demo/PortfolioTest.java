@@ -87,6 +87,8 @@ public class PortfolioTest {
 	@MockBean
 	WorkHistoryRepo workHistoryRepo;
 
+	private static String baseUrl = "/api/portfolios";
+	
 	@BeforeEach
 	public void setup() {
 		mvc = MockMvcBuilders
@@ -100,7 +102,7 @@ public class PortfolioTest {
 		System.out.println(repo);
 		given(repo.findAll()).willReturn(new ArrayList<Portfolio>());
 
-		mvc.perform(get("/portfolios")).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		mvc.perform(get(baseUrl)).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andReturn();
 	}
 
@@ -108,7 +110,7 @@ public class PortfolioTest {
 	void testGetById() throws Exception {
 		given(repo.findById(1)).willReturn(Optional.of(new Portfolio()));
 
-		mvc.perform(get("/portfolios/1")).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		mvc.perform(get(baseUrl + "/1")).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andReturn();
 	}
 
@@ -116,7 +118,7 @@ public class PortfolioTest {
 	void testGetAllByUserId() throws Exception {
 		given(repo.findAllByUserId(1)).willReturn(new ArrayList<Portfolio>());
 
-		mvc.perform(get("/portfolios/users/all/1")).andExpect(status().isOk())
+		mvc.perform(get(baseUrl + "/users/all/1")).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andDo(MockMvcResultHandlers.print()).andReturn();
 	}
 
@@ -128,7 +130,7 @@ public class PortfolioTest {
 
 		given(repo.save(port)).willReturn(port);
 
-		mvc.perform(post("/portfolios").contentType("application/json;charset=utf-8")
+		mvc.perform(post(baseUrl).contentType("application/json;charset=utf-8")
 				.content(new ObjectMapper().writeValueAsString(port)))
 
 				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andReturn();
@@ -144,7 +146,7 @@ public class PortfolioTest {
 
 		given(repo.findById(1)).willReturn(returned);
 
-		mvc.perform(post("/portfolios/1").contentType("application/json")
+		mvc.perform(post(baseUrl + "/1").contentType("application/json")
 				.content(new ObjectMapper().writeValueAsString(port2))).andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk());
 	}
@@ -158,7 +160,7 @@ public class PortfolioTest {
 
 		given(repo.findById(1)).willReturn(returned);
 
-		mvc.perform(delete("/portfolios/1")).andExpect(status().isOk());
+		mvc.perform(delete(baseUrl + "/1")).andExpect(status().isOk());
 	}
 
 	@Test
@@ -209,7 +211,7 @@ public class PortfolioTest {
 				"endDate", port.get()));
 		given(workHistoryRepo.findByPortfolio(port.get())).willReturn(history);
 
-		mvc.perform(get("/portfolios/full/1")).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		mvc.perform(get(baseUrl + "/full/1")).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType("application/octet-stream")).andReturn();
 	}
 
@@ -266,7 +268,7 @@ public class PortfolioTest {
 		given(repo.save(Mockito.any(Portfolio.class))).willReturn(new Portfolio(1, "test", testUser, false, false, false, "", new HashMap<>()));
 
 		ObjectMapper om = new ObjectMapper();
-		mvc.perform(post("/portfolios/full").contentType(MediaType.APPLICATION_JSON)
+		mvc.perform(post(baseUrl + "/full").contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(testFullPortfolio))).andExpect(status().isOk());
 	}
 }

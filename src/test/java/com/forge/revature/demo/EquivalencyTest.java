@@ -29,7 +29,8 @@ import com.forge.revature.repo.EquivalencyRepo;
 @SpringBootTest
 public class EquivalencyTest {
     private MockMvc mvc;
-
+    static String baseUrl = "/api/equiv";
+    
     @MockBean
     EquivalencyRepo repo;
 
@@ -46,7 +47,7 @@ public class EquivalencyTest {
         given(repo.findAll())
             .willReturn(new ArrayList<Equivalency>());
 
-        mvc.perform(get("/equiv"))
+        mvc.perform(get(baseUrl))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -58,7 +59,7 @@ public class EquivalencyTest {
         given(repo.findById(1)).willReturn(Optional.of(new Equivalency()));
 
 
-        mvc.perform(get("/equiv/1"))
+        mvc.perform(get(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -69,7 +70,7 @@ public class EquivalencyTest {
     void testGetAllByPortfolioId() throws Exception{
         given(repo.findAllByPortfolioId(1)).willReturn(new ArrayList<Equivalency>());
 
-        mvc.perform(get("/equiv/portfolios/all/1"))
+        mvc.perform(get(baseUrl + "/portfolios/all/1"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andDo(MockMvcResultHandlers.print())
@@ -85,7 +86,7 @@ public class EquivalencyTest {
         
         given(repo.save(port)).willReturn(port);
 
-        mvc.perform(post("/equiv")
+        mvc.perform(post(baseUrl)
             .contentType("application/json;charset=utf-8")
             .content(new ObjectMapper().writeValueAsString(port)))
 
@@ -103,7 +104,7 @@ public class EquivalencyTest {
 
         given(repo.findById(1)).willReturn(returned);
 
-        mvc.perform(post("/equiv/1")
+        mvc.perform(post(baseUrl + "/1")
             .contentType("application/json")
             .content(new ObjectMapper().writeValueAsString(equiv2)))
         .andDo(MockMvcResultHandlers.print())
@@ -118,6 +119,6 @@ public class EquivalencyTest {
 
         given(repo.findById(1)).willReturn(returned);
 
-        mvc.perform(delete("/equiv/1")).andExpect(status().isOk());
+        mvc.perform(delete(baseUrl + "/1")).andExpect(status().isOk());
     }
 }

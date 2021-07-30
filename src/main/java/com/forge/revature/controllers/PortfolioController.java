@@ -49,8 +49,8 @@ abstract class FlagIgnoreMixin {
 }
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/portfolios")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/portfolios")
 @NoArgsConstructor
 @AllArgsConstructor
 public class PortfolioController {
