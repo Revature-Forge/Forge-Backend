@@ -9,8 +9,8 @@ import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Max Lee 
@@ -24,16 +24,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Education {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     @ManyToOne
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
+    
     private String university;
+    
     private String degree;
+    
     private String graduationDate;
+    
     private double gpa;
+    
     private String logoUrl;
 
     public Education(String university, String degree, String graduationDate, double gpa, String logoUrl) {

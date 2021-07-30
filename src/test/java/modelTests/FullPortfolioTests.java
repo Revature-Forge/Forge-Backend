@@ -16,7 +16,7 @@ class FullPortfolioTests {
 	void constructorTest() {
 
 		FullPortfolio p = new FullPortfolio(0, "test", null, true, false, false, "feedback", null, null, null, null,
-				null, null, null, null, null, null);
+				null, null, null, null, null, null, null);
 		assertSame("feedback", p.getFeedback());
 	}
 	
@@ -29,14 +29,14 @@ class FullPortfolioTests {
 	@Test
 	void constructorTest3() {
 		FullPortfolio p = new FullPortfolio("test", null, true, false, false, "feedback", null, null, null, null,
-				null, null, null, null, null, null);
+				null, null, null, null, null, null, null);
 		assertSame("feedback", p.getFeedback());
 	}
 	
 	@Test
 	void toStringTest() {
 		FullPortfolio p = new FullPortfolio(0, "test", null, true, false, false, "feedback", null, null, null, null,
-				null, null, null, null, null, null);
+				null, null, null, null, null, null, null);
 		assertNotNull(p.toString());
 		assertTrue(p.toString().length() > 0);
 	}
