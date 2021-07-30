@@ -13,6 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FullPortfolio {
+
 	private int id;
 	private String name;
 	private User user;
@@ -30,11 +31,13 @@ public class FullPortfolio {
 	private List<Project> projects;
 	private List<WorkExperience> workExperiences;
 	private List<WorkHistory> workHistories;
+	private List<Matrix> matrices;
 
 	public FullPortfolio(String name, User user, boolean submitted, boolean approved, boolean reviewed, String feedback,
 			HashMap<String, String> flags, AboutMe aboutMe, List<Certification> certifications,
 			List<Education> educations, List<Equivalency> equivalencies, List<GitHub> gitHubs, List<Honor> honors,
-			List<Project> projects, List<WorkExperience> workExperiences, List<WorkHistory> workHistories) {
+			List<Project> projects, List<WorkExperience> workExperiences, List<WorkHistory> workHistories, List<Matrix> matrices) {
+
 		super();
 		this.name = name;
 		this.user = user;
@@ -52,6 +55,6 @@ public class FullPortfolio {
 		this.projects = projects;
 		this.workExperiences = workExperiences;
 		this.workHistories = workHistories;
+		this.matrices = matrices;
 	}
-
 }

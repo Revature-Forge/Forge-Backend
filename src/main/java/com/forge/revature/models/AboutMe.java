@@ -29,12 +29,16 @@ public class AboutMe {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+	
     @OneToOne
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
+    
     @Column(length = 10000)
     private String bio;
+    
     private String email;
+    
     private String phone;
 
     public AboutMe(String bio, String email, String phone) {
