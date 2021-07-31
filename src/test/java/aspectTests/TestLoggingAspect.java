@@ -1,71 +1,54 @@
 package aspectTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.springframework.aop.framework.AopProxy;
+import org.springframework.aop.framework.DefaultAopProxyFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.forge.revature.aspects.LoggingAspect;
+import com.forge.revature.controllers.UserController;
+import com.forge.revature.models.User;
+import com.forge.revature.repo.UserRepo;
 
 class TestLoggingAspect {
-	LoggingAspect LA;
+	private final LoggingAspect LA = new LoggingAspect();
+	private UserController controllerProxy;
 	JoinPoint JP;
 	Exception e;
 	ProceedingJoinPoint PJP;
 	
 	@BeforeEach
 	void init() {
-		LA = mock(LoggingAspect.class);
-		JP = mock(JoinPoint.class);
-		e = mock(Exception.class);
-		PJP = mock(ProceedingJoinPoint.class);
-	}
-	
-	
-	@Test
-	void beanPointCutDoesNotModifyAspect() {
-		LoggingAspect LA2 = LA;
-		LA.beanPointcut();
-		assertEquals(LA,LA2);
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new UserController());
+		aspectJProxyFactory.addAspect(LA);
+		DefaultAopProxyFactory proxyFactory = new DefaultAopProxyFactory();
+        AopProxy aopProxy = proxyFactory.createAopProxy(aspectJProxyFactory);
+        
+        controllerProxy = (UserController) aopProxy.getProxy();
 	}
 	
 	@Test
-	void packagePointCutDoesNotModifyAspect() {
-		LoggingAspect LA2 = LA;
-		LA.packagePointcut();
-		assertEquals(LA,LA2);
+	void whenInvokingWithNoObjectsInUserExceptionIsThrown() {
+		try {
+			controllerProxy.getByID(-1);
+			fail("An exception should be thrown");
+		} catch (Exception e) {
+			assertEquals(e.getMessage(), "Cannot invoke \"com.forge.revature.repo.UserRepo.findById(Object)\" because \"this.userRepo\" is null");
+		}
 	}
 	
-	@Test
-	void beanPointCutReturnsNothing() {
-		LA.beanPointcut();
-		verify(LA, times(1)).beanPointcut();
-	}
 
-	@Test
-	void packagePointCutReturnsNothing() {
-		LA.packagePointcut();
-		verify(LA, times(1)).packagePointcut();
-	}
-
-	@Test
-	void logAfterThrowing() {
-		LA.logAfterThrowing(JP, e);
-		verify(LA, times(1)).logAfterThrowing(JP, e);
-	}
 	
-	@Test
-	void logAroundTest() throws Throwable {
-		LA.logAround(PJP);
-		verify(PJP, never()).proceed();
-		verify(LA, times(1)).logAround(PJP);
-	}
+	
+	
+	
 	
 	
 }
