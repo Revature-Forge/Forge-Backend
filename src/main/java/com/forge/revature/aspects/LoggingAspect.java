@@ -49,18 +49,6 @@ public class LoggingAspect {
 		// PointCuts are empty, implementation is in the advice below
 	}
 
-//	/**
-//	 * Advice that logs methods when they thrown an exception
-//	 *
-//	 * @param joinPoint join point for advice
-//	 * @param e         exception
-//	 */
-//	@AfterThrowing(pointcut = "packagePointcut() && beanPointcut()", throwing = "e")
-//	public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-//		log.error("Exception thrown in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
-//				joinPoint.getSignature().getName(), e.getMessage());
-//	}
-
 	/**
 	 * Advice that logs when around a method (when the method is entered and exited)
 	 * For now, no other information is displayed
