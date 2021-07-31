@@ -70,7 +70,8 @@ public class LoggingAspect {
 	 * @throws Throwable throws IllegalArgumentException
 	 */
 	@Around("packagePointcut() && beanPointcut()")
-	public Object logAround(ProceedingJoinPoint pjoinPoint) throws Throwable {
+	public Object logAround(ProceedingJoinPoint pJoinPoint) throws Throwable {
+
 		log.info("Enter: {}.{}()", pJoinPoint.getSignature().getDeclaringTypeName(),
 				pJoinPoint.getSignature().getName());
 
