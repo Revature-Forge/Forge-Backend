@@ -8,34 +8,44 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "github")
+@Table(name = "skills")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class GitHub{
-
+public class Skill {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	private String url;
-
-	private String image;
-
+	private String name;
+	
+	private int value;
+	
 	@ManyToOne
-	@JoinColumn
-	private Portfolio portfolio;
+    @JoinColumn(name = "matrix_id")
+	@JsonIgnore
+    private Matrix matrix;
 
-	public GitHub(String url, String image) {
-		this.url = url;
-		this.image = image;
+	public Skill(String name, int value, Matrix matrix) {
+		super();
+		this.name = name;
+		this.value = value;
+		this.matrix = matrix;
 	}
-
+	
+	public Skill(String name, int value) {
+		this.name = name;
+		this.value = value;
+	}
+	
 }

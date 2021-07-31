@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for AboutMe. Has CRUD functionality described per method
  */
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("aboutMe")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/aboutMe")
 public class AboutMeController {
     @Autowired
     AboutMeRepo aboutMeRepo;

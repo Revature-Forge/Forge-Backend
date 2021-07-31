@@ -1,12 +1,5 @@
 package com.forge.revature.demo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forge.revature.controllers.EquivalencyController;
-import com.forge.revature.models.Equivalency;
-import com.forge.revature.models.Portfolio;
-import com.forge.revature.models.User;
-import com.forge.revature.repo.EquivalencyRepo;
-
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,10 +19,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forge.revature.controllers.EquivalencyController;
+import com.forge.revature.models.Equivalency;
+import com.forge.revature.models.Portfolio;
+import com.forge.revature.models.User;
+import com.forge.revature.repo.EquivalencyRepo;
+
 @SpringBootTest
 public class EquivalencyTest {
     private MockMvc mvc;
-
+    static String baseUrl = "/api/equiv";
+    
     @MockBean
     EquivalencyRepo repo;
 
@@ -45,7 +47,7 @@ public class EquivalencyTest {
         given(repo.findAll())
             .willReturn(new ArrayList<Equivalency>());
 
-        mvc.perform(get("/equiv"))
+        mvc.perform(get(baseUrl))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -57,7 +59,7 @@ public class EquivalencyTest {
         given(repo.findById(1)).willReturn(Optional.of(new Equivalency()));
 
 
-        mvc.perform(get("/equiv/1"))
+        mvc.perform(get(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -68,7 +70,7 @@ public class EquivalencyTest {
     void testGetAllByPortfolioId() throws Exception{
         given(repo.findAllByPortfolioId(1)).willReturn(new ArrayList<Equivalency>());
 
-        mvc.perform(get("/equiv/portfolios/all/1"))
+        mvc.perform(get(baseUrl + "/portfolios/all/1"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andDo(MockMvcResultHandlers.print())
@@ -78,12 +80,13 @@ public class EquivalencyTest {
 
     @Test
     void testPost() throws Exception{
-        Equivalency port = new Equivalency(1, "testheader", 3  ,new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" ,"password", false), false, false, false, ""));
+    	HashMap<String, String> map = new HashMap<>();
+        Equivalency port = new Equivalency(1, "testheader", 3  ,new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" ,"password", false), false, false, false, "", map));
             
         
         given(repo.save(port)).willReturn(port);
 
-        mvc.perform(post("/equiv")
+        mvc.perform(post(baseUrl)
             .contentType("application/json;charset=utf-8")
             .content(new ObjectMapper().writeValueAsString(port)))
 
@@ -93,14 +96,15 @@ public class EquivalencyTest {
     }
     @Test
     void testUpdate() throws Exception{
-        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, ""));
-        Equivalency equiv2 = new Equivalency(1, "equiv renamed", 3 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "email@test.com" , "password", false), false, false, false, ""));
+    	HashMap<String, String> map = new HashMap<>();
+        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test", "user" , "test@email.com" , "password", false), false, false, false, "", map));
+        Equivalency equiv2 = new Equivalency(1, "equiv renamed", 3 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "email@test.com" , "password", false), false, false, false, "", map));
         Optional<Equivalency> returned = Optional.of(equiv);
         
 
         given(repo.findById(1)).willReturn(returned);
 
-        mvc.perform(post("/equiv/1")
+        mvc.perform(post(baseUrl + "/1")
             .contentType("application/json")
             .content(new ObjectMapper().writeValueAsString(equiv2)))
         .andDo(MockMvcResultHandlers.print())
@@ -109,11 +113,12 @@ public class EquivalencyTest {
 
     @Test
     void testdelete() throws Exception {
-        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "testemail@test.com" , "password", false), false, false, false, ""));
+    	HashMap<String, String> map = new HashMap<>();
+        Equivalency equiv = new Equivalency(1, "equiv", 1 , new Portfolio(1, "new portfilio", new User(1, "test" , "user", "testemail@test.com" , "password", false), false, false, false, "", map));
         Optional<Equivalency> returned = Optional.of(equiv);
 
         given(repo.findById(1)).willReturn(returned);
 
-        mvc.perform(delete("/equiv/1")).andExpect(status().isOk());
+        mvc.perform(delete(baseUrl + "/1")).andExpect(status().isOk());
     }
 }
