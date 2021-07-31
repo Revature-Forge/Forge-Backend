@@ -1,5 +1,6 @@
 package aspectTests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -43,6 +44,20 @@ class TestLoggingAspect {
 	}
 
 	@Test
+	void testBeanPointCutNoSideEffects() {
+		LoggingAspect LAOld = LA;
+		LA.beanPointcut();
+		assertEquals(LAOld, LA);
+	}
+	
+	@Test
+	void testPackagePointCutNoSideEffects() {
+		LoggingAspect LAOld = LA;
+		LA.packagePointcut();
+		assertEquals(LAOld, LA);
+	}
+	
+	@Test
 	void testExpectedException() {
 		Assertions.assertThrows(Exception.class, () -> {
 			controllerProxy.getByID(-1);
@@ -50,7 +65,22 @@ class TestLoggingAspect {
 	}
 	
 	@Test
+	void testIllegalArgumentException() {
+		Assertions.assertThrows(Exception.class, () -> {
+			controllerProxy.getByID(-1);
+		});
+	}
+	
+	@Test
 	void logAfterThrowing() {
+		LA = mock(LoggingAspect.class);
+		JP = mock(JoinPoint.class);
+		LA.logAfterThrowing(JP, e);
+		verify(LA, times(1)).logAfterThrowing(JP, e);
+	}
+	
+	@Test
+	void logAfterThrowingNull() {
 		LA = mock(LoggingAspect.class);
 		JP = mock(JoinPoint.class);
 		LA.logAfterThrowing(JP, e);

@@ -57,8 +57,8 @@ public class LoggingAspect {
 	 */
 	@AfterThrowing(pointcut = "packagePointcut() && beanPointcut()", throwing = "e")
 	public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-		log.error("Exception in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
-				joinPoint.getSignature().getName(), e.getMessage() != null ? e.getMessage() : "login");
+		log.error("Exception thrown in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
+				joinPoint.getSignature().getName(), e.getMessage() != null ? e.getMessage() : "unknown");
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class LoggingAspect {
 
 			return result;
 		} catch (IllegalArgumentException e) {
-			log.error("Illegal argument: {} in {}.{}()", Arrays.toString(pJoinPoint.getArgs()),
+			log.error("Illegal Argument Exception Thrown: {} in {}.{}()", Arrays.toString(pJoinPoint.getArgs()),
 					pJoinPoint.getSignature().getDeclaringTypeName(), pJoinPoint.getSignature().getName());
 			throw e;
 		}
