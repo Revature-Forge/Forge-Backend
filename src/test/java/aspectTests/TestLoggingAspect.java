@@ -22,8 +22,8 @@ import com.forge.revature.repo.UserRepo;
 
 /**
  * 
- * Basic testing for Logging Aspect. Used to make sure that exceptions are
- * thrown
+ * Basic testing for Logging Aspect. Tests for no side effects, and exceptions
+ * are thrown
  * 
  * @author Aron Jang
  *
@@ -94,5 +94,5 @@ class TestLoggingAspect {
 		verify(PJP, never()).proceed();
 		verify(LA, times(1)).logAround(PJP);
 	}
-
+	
 }

@@ -82,7 +82,7 @@ public class LoggingAspect {
 					pJoinPoint.getSignature().getName());
 
 			return result;
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			log.error("Illegal Argument Exception Thrown: {} in {}.{}()", Arrays.toString(pJoinPoint.getArgs()),
 					pJoinPoint.getSignature().getDeclaringTypeName(), pJoinPoint.getSignature().getName());
 			throw e;
