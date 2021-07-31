@@ -2,6 +2,7 @@ package aspectTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -17,7 +18,7 @@ class TestLoggingAspect {
 	JoinPoint JP;
 	Exception e;
 	ProceedingJoinPoint PJP;
-
+	
 	@BeforeEach
 	void init() {
 		LA = mock(LoggingAspect.class);
@@ -25,18 +26,22 @@ class TestLoggingAspect {
 		e = mock(Exception.class);
 		PJP = mock(ProceedingJoinPoint.class);
 	}
-
+	
+	
 	@Test
 	void beanPointCutDoesNotModifyAspect() {
+		LoggingAspect LA2 = LA;
 		LA.beanPointcut();
-
+		assertEquals(LA,LA2);
 	}
-
+	
 	@Test
 	void packagePointCutDoesNotModifyAspect() {
+		LoggingAspect LA2 = LA;
 		LA.packagePointcut();
+		assertEquals(LA,LA2);
 	}
-
+	
 	@Test
 	void beanPointCutReturnsNothing() {
 		LA.beanPointcut();
@@ -54,10 +59,13 @@ class TestLoggingAspect {
 		LA.logAfterThrowing(JP, e);
 		verify(LA, times(1)).logAfterThrowing(JP, e);
 	}
-
+	
 	@Test
 	void logAroundTest() throws Throwable {
 		LA.logAround(PJP);
+		verify(PJP, never()).proceed();
 		verify(LA, times(1)).logAround(PJP);
 	}
+	
+	
 }
