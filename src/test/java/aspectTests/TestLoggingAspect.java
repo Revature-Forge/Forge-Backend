@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
@@ -30,7 +31,8 @@ class TestLoggingAspect {
 
 		controllerProxy = (UserController) aopProxy.getProxy();
 	}
-
+	
+	@Ignore
 	@Test
 	void whenInvokingWithNoObjectsInUserExceptionIsThrown() {
 		try {
