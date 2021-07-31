@@ -9,6 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import com.forge.revature.converter.HashMapConverter;
 
+/**
+ * 
+ * Tests for converting Map to JsonString and back
+ * 
+ * @author Aron Jang
+ *
+ */
 public class converterTest {
 
 	HashMapConverter HMC = new HashMapConverter();

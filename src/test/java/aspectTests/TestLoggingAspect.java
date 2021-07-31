@@ -94,5 +94,5 @@ class TestLoggingAspect {
 		verify(PJP, never()).proceed();
 		verify(LA, times(1)).logAround(PJP);
 	}
-	
+
 }

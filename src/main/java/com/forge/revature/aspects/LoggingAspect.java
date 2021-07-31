@@ -18,10 +18,10 @@ import org.springframework.stereotype.Component;
  * and Controller Components. Logs are currently at the info level, however, for
  * production, it is recommended to change logging methods at INFO to DEBUG.
  * 
- * beanPointcut() - Pointcut that matches all components
- * packagePointcut() - Pointcut that matches all beans in listed packages
- * logAfterThrowing() - Advice that logs after a method throws an exception
- * logAround() - Advice that logs when entering and exiting method 
+ * beanPointcut() - Pointcut that matches all components packagePointcut() -
+ * Pointcut that matches all beans in listed packages logAfterThrowing() -
+ * Advice that logs after a method throws an exception logAround() - Advice that
+ * logs when entering and exiting method
  * 
  * @author Aron Jang
  *
