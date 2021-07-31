@@ -1,11 +1,28 @@
 # Getting Started
-To edit the code start by doing a `git clone https://github.com/javatures/Forge-Backend.git` in gitbash inside the folder or directory you want the project to appear in on your local machine.
+### Cloning the repo
+- Create a new folder
+- Within the new folder
+    - Clone Forge-Backend
+    - Clone Porfolio-Frontend
 
-- Open VS Code and open the folder
-- The following commands should be available provided you have gradle properly installed
-    - `gradle bootrun` runs the backend on your local machine
-        - Keep in mind that a running instance of the frontend will not be abe to communicate with the locally running instance of the backend.
-    - `gradle test` runs the tests that have been written 
-    - `gradle clean` cleans the workspace
-    - `gradle build` builds the project 
+<b>Have these projects within the same directory for the docker-compose to work.</b>
 
+### Development
+- `mvn clean install` to install the nessicary dependencies for the project.
+- `mvn spring-boot:run` to run the Spring Boot application.
+    - Access the REST API via `http://localhost:8081/api`
+    - In development an h2 database is used.
+- To run the frontend see `Portfolio-Frontend/STARTUP.md#Development`
+
+### Deployment
+- Setup your `docker-compose.yml` located in `Forge-Backend/devops/bundle/docker-compose.yml`
+    - Change each of the fields contained within {curly braces} with your PostgreSQL credentials.
+        - `{IP OF DB}`
+        - `{DB USERNAME}`
+        - `{DB PASSWORD}`
+- Run the `docker-compose.yml`
+    - This will build the image using the `Dockerfile` in the same location and then begin running the container.
+    - The docker image will have the compiled Spring Boot application and host the static React site.
+        - <b>If both projects are not in the same directory the image will not compile</b>
+    - The database the REST API will connect to is the one specified within the `docker-compose.yml`
+- Access the Front End via `http://localhost:8081` 
