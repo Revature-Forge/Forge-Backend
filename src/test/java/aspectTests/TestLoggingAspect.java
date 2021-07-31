@@ -10,12 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.DefaultAopProxyFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.forge.revature.aspects.LoggingAspect;
 import com.forge.revature.controllers.UserController;
-import com.forge.revature.models.User;
-import com.forge.revature.repo.UserRepo;
 
 class TestLoggingAspect {
 	private final LoggingAspect LA = new LoggingAspect();
