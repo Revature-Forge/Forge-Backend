@@ -37,7 +37,7 @@ class TestLoggingAspect {
 			controllerProxy.getByID(-1);
 			fail("An exception should be thrown");
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Cannot invoke \"com.forge.revature.repo.UserRepo.findById(Object)\" because \"this.userRepo\" is null");
+			assertEquals(e.getMessage(), "null");
 		}
 	}
 	
