@@ -58,7 +58,7 @@ public class LoggingAspect {
 	@AfterThrowing(pointcut = "packagePointcut() && beanPointcut()", throwing = "e")
 	public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
 		log.error("Exception thrown in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
-				joinPoint.getSignature().getName(), e.getMessage() != null ? e.getMessage() : "unknown");
+				joinPoint.getSignature().getName(), e.getMessage());
 	}
 
 	/**

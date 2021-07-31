@@ -14,9 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.DefaultAopProxyFactory;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.forge.revature.aspects.LoggingAspect;
 import com.forge.revature.controllers.UserController;
+import com.forge.revature.repo.UserRepo;
 
 /**
  * 
@@ -26,6 +28,7 @@ import com.forge.revature.controllers.UserController;
  * @author Aron Jang
  *
  */
+
 class TestLoggingAspect {
 	private LoggingAspect LA = new LoggingAspect();
 	private UserController controllerProxy;
@@ -33,9 +36,12 @@ class TestLoggingAspect {
 	Exception e;
 	ProceedingJoinPoint PJP;
 
+	@MockBean
+	UserRepo repo;
+
 	@BeforeEach
 	void init() {
-		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new UserController());
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new UserController(repo));
 		aspectJProxyFactory.addAspect(LA);
 		DefaultAopProxyFactory proxyFactory = new DefaultAopProxyFactory();
 		AopProxy aopProxy = proxyFactory.createAopProxy(aspectJProxyFactory);
@@ -49,28 +55,21 @@ class TestLoggingAspect {
 		LA.beanPointcut();
 		assertEquals(LAOld, LA);
 	}
-	
+
 	@Test
 	void testPackagePointCutNoSideEffects() {
 		LoggingAspect LAOld = LA;
 		LA.packagePointcut();
 		assertEquals(LAOld, LA);
 	}
-	
+
 	@Test
 	void testExpectedException() {
 		Assertions.assertThrows(Exception.class, () -> {
 			controllerProxy.getByID(-1);
 		});
 	}
-	
-	@Test
-	void testIllegalArgumentException() {
-		Assertions.assertThrows(Exception.class, () -> {
-			controllerProxy.getByID(-1);
-		});
-	}
-	
+
 	@Test
 	void logAfterThrowing() {
 		LA = mock(LoggingAspect.class);
@@ -78,7 +77,7 @@ class TestLoggingAspect {
 		LA.logAfterThrowing(JP, e);
 		verify(LA, times(1)).logAfterThrowing(JP, e);
 	}
-	
+
 	@Test
 	void logAfterThrowingNull() {
 		LA = mock(LoggingAspect.class);
@@ -86,7 +85,7 @@ class TestLoggingAspect {
 		LA.logAfterThrowing(JP, e);
 		verify(LA, times(1)).logAfterThrowing(JP, e);
 	}
-	
+
 	@Test
 	void logAroundTest() throws Throwable {
 		LA = mock(LoggingAspect.class);
@@ -95,7 +94,5 @@ class TestLoggingAspect {
 		verify(PJP, never()).proceed();
 		verify(LA, times(1)).logAround(PJP);
 	}
-	
-	
-	
+
 }
