@@ -1,5 +1,6 @@
 package aspectTests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -24,7 +25,22 @@ class TestLoggingAspect {
 		e = mock(Exception.class);
 		PJP = mock(ProceedingJoinPoint.class);
 	}
-
+	
+	
+	@Test
+	void beanPointCutDoesNotModifyAspect() {
+		LoggingAspect LA2 = LA;
+		LA.beanPointcut();
+		assertEquals(LA,LA2);
+	}
+	
+	@Test
+	void packagePointCutDoesNotModifyAspect() {
+		LoggingAspect LA2 = LA;
+		LA.packagePointcut();
+		assertEquals(LA,LA2);
+	}
+	
 	@Test
 	void beanPointCutReturnsNothing() {
 		LA.beanPointcut();
