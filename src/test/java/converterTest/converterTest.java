@@ -9,16 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import com.forge.revature.converter.HashMapConverter;
 
-/**
- * @author Aron Jang
- * @version 1.0
- * 
- *          Tests for the converting Map to JsonString
- */
-public class converterTest{
-	
+public class converterTest {
+
 	HashMapConverter HMC = new HashMapConverter();
-	
+
 	@Test
 	void testConverttoString() {
 		Map<String, String> flag = new HashMap<>();
@@ -27,7 +21,7 @@ public class converterTest{
 		String expectedResponse = "{\"Key\":\"Value\"}";
 		assertEquals(response, expectedResponse);
 	}
-	
+
 	@Test
 	void testConverttoMap() {
 		String JSON = "{\"Key\":\"Value\"}";
@@ -36,6 +30,5 @@ public class converterTest{
 		expectedFlag.put("Key", "Value");
 		assertEquals(flag, expectedFlag);
 	}
-	
 
 }

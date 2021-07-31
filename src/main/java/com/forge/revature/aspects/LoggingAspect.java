@@ -70,21 +70,20 @@ public class LoggingAspect {
 	 * @throws Throwable throws IllegalArgumentException
 	 */
 	@Around("packagePointcut() && beanPointcut()")
-	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-
-		log.info("Enter: {}.{}()", joinPoint.getSignature().getDeclaringTypeName(),
-				joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
+	public Object logAround(ProceedingJoinPoint pjoinPoint) throws Throwable {
+		log.info("Enter: {}.{}()", pJoinPoint.getSignature().getDeclaringTypeName(),
+				pJoinPoint.getSignature().getName());
 
 		try {
-			Object result = joinPoint.proceed();
+			Object result = pJoinPoint.proceed();
 
-			log.info("Exit: {}.{}()", joinPoint.getSignature().getDeclaringTypeName(),
-					joinPoint.getSignature().getName());
+			log.info("Exit: {}.{}()", pJoinPoint.getSignature().getDeclaringTypeName(),
+					pJoinPoint.getSignature().getName());
 
 			return result;
 		} catch (IllegalArgumentException e) {
-			log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
-					joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
+			log.error("Illegal argument: {} in {}.{}()", Arrays.toString(pJoinPoint.getArgs()),
+					pJoinPoint.getSignature().getDeclaringTypeName(), pJoinPoint.getSignature().getName());
 			throw e;
 		}
 	}
