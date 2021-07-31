@@ -1,11 +1,11 @@
 package aspectTests;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
@@ -31,16 +31,13 @@ class TestLoggingAspect {
 
 		controllerProxy = (UserController) aopProxy.getProxy();
 	}
+
 	
-	@Ignore
 	@Test
-	void whenInvokingWithNoObjectsInUserExceptionIsThrown() {
-		try {
+	void testExpectedException() {
+		Assertions.assertThrows(Exception.class, () -> {
 			controllerProxy.getByID(-1);
-			fail("An exception should be thrown");
-		} catch (Exception e) {
-			assertTrue(e.getLocalizedMessage().contains("null"));
-		}
+		});
 	}
 
 }
