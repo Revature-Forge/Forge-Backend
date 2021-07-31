@@ -17,7 +17,7 @@ class TestLoggingAspect {
 	JoinPoint JP;
 	Exception e;
 	ProceedingJoinPoint PJP;
-	
+
 	@BeforeEach
 	void init() {
 		LA = mock(LoggingAspect.class);
@@ -25,22 +25,18 @@ class TestLoggingAspect {
 		e = mock(Exception.class);
 		PJP = mock(ProceedingJoinPoint.class);
 	}
-	
-	
+
 	@Test
 	void beanPointCutDoesNotModifyAspect() {
-		LoggingAspect LA2 = LA;
 		LA.beanPointcut();
-		assertEquals(LA,LA2);
+
 	}
-	
+
 	@Test
 	void packagePointCutDoesNotModifyAspect() {
-		LoggingAspect LA2 = LA;
 		LA.packagePointcut();
-		assertEquals(LA,LA2);
 	}
-	
+
 	@Test
 	void beanPointCutReturnsNothing() {
 		LA.beanPointcut();
@@ -58,11 +54,10 @@ class TestLoggingAspect {
 		LA.logAfterThrowing(JP, e);
 		verify(LA, times(1)).logAfterThrowing(JP, e);
 	}
-	
+
 	@Test
 	void logAroundTest() throws Throwable {
 		LA.logAround(PJP);
 		verify(LA, times(1)).logAround(PJP);
 	}
-
 }
