@@ -49,17 +49,17 @@ public class LoggingAspect {
 		// PointCuts are empty, implementation is in the advice below
 	}
 
-	/**
-	 * Advice that logs methods when they thrown an exception
-	 *
-	 * @param joinPoint join point for advice
-	 * @param e         exception
-	 */
-	@AfterThrowing(pointcut = "packagePointcut() && beanPointcut()", throwing = "e")
-	public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-		log.error("Exception thrown in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
-				joinPoint.getSignature().getName(), e.getMessage());
-	}
+//	/**
+//	 * Advice that logs methods when they thrown an exception
+//	 *
+//	 * @param joinPoint join point for advice
+//	 * @param e         exception
+//	 */
+//	@AfterThrowing(pointcut = "packagePointcut() && beanPointcut()", throwing = "e")
+//	public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
+//		log.error("Exception thrown in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
+//				joinPoint.getSignature().getName(), e.getMessage());
+//	}
 
 	/**
 	 * Advice that logs when around a method (when the method is entered and exited)
@@ -83,8 +83,8 @@ public class LoggingAspect {
 
 			return result;
 		} catch (Exception e) {
-			log.error("Illegal Argument Exception Thrown: {} in {}.{}()", Arrays.toString(pJoinPoint.getArgs()),
-					pJoinPoint.getSignature().getDeclaringTypeName(), pJoinPoint.getSignature().getName());
+			log.error("Exception thrown in {}.{}() with cause = {}", pJoinPoint.getSignature().getDeclaringTypeName(),
+					pJoinPoint.getSignature().getName(), e.getMessage());
 			throw e;
 		}
 	}
