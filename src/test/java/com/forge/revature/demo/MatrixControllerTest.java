@@ -131,8 +131,11 @@ class MatrixControllerTest {
 	
 	@Test
 	void testUpdate() throws Exception {
-
+		Matrix matrix2 = new Matrix("Languages");
+		matrix2.setPortfolio(portfolio);
+		given(matrixRepo.save(matrix2)).willReturn(matrix2);
 		given(matrixRepo.save(matrix)).willReturn(matrix);
+		given(matrixRepo.findById(0)).willReturn(Optional.empty());
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 		given(skillRepo.saveAll(skills)).willReturn(skills);
 		given(skillRepo.findAllByMatrix(matrix)).willReturn(skills);
@@ -143,14 +146,29 @@ class MatrixControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 		
+		mvc.perform(put("/api/matrix")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(matrix2)))
+				.andDo(print())
+				.andExpect(status().isOk());
+		
 	  }
+	
+	@Test
+	void testDelete() throws Exception {
+		given(matrixRepo.findById(6)).willReturn(Optional.of(matrix));
+		mvc.perform(delete("/api/matrix/6"))
+			.andExpect(status().isOk());
+	}
 	
 	@Test
 	void testUpdateSkill() throws Exception {
 		SkillDTO sd = new SkillDTO(0, "SQL", 6);
-		Skill skill = new Skill("SQL", 6, matrix);
+		SkillDTO sd1 = new SkillDTO(1, "SQL", 6);
+		Skill skill = new Skill(1, "SQL", 6, matrix);
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 		given(skillRepo.saveAndFlush(skill)).willReturn(skill);
+		given(skillRepo.findById(1)).willReturn(Optional.of(skill));
 		given(skillRepo.findAllByMatrix(matrix)).willReturn(skills);
 
 		mvc.perform(put("/api/matrix/1/skill")
@@ -159,6 +177,11 @@ class MatrixControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 		
+		mvc.perform(put("/api/matrix/1/skill")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(sd1)))
+				.andDo(print())
+				.andExpect(status().isOk());
 	  }
 	
 	@Test

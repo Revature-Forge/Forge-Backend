@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.forge.revature.models.SkillDTO;
 
-public class SkillDTOTests {
+class SkillDTOTests {
 	
 	SkillDTO fullSkill = new SkillDTO(1, "Java", 24);
 	
