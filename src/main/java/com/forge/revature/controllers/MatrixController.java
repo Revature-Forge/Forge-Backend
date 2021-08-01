@@ -19,13 +19,14 @@ import com.forge.revature.models.Matrix;
 import com.forge.revature.models.MatrixDTO;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
+import com.forge.revature.models.SkillDTO;
 import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.SkillRepo;
 
 @RestController
-@CrossOrigin(origins = "localhost:3000")
-@RequestMapping("/matrix")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/matrix")
 public class MatrixController {
 
 	MatrixRepo matrixRepo;
@@ -49,6 +50,7 @@ public class MatrixController {
 	public List<Matrix> getAll() {
 		return insertSkills(matrixRepo.findAll());
 	}
+
 	/**
 	 * 
 	 * @param id of the matrix
@@ -59,7 +61,7 @@ public class MatrixController {
 		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
 		return insertSkills(m);
 	}
-	
+
 	/**
 	 * 
 	 * @param id of the portfolio to fetch by
@@ -71,7 +73,7 @@ public class MatrixController {
 				.orElseThrow(() -> new NotFoundException("Portfolio Not Found for ID: " + id));
 		return insertSkills(matrixRepo.findAllByPortfolio(port));
 	}
-	
+
 	/**
 	 * 
 	 * @param matrix that is a new matrix
@@ -80,23 +82,35 @@ public class MatrixController {
 	@PostMapping
 	public Matrix postMatrix(@RequestBody MatrixDTO matrixDTO) {
 		Matrix matrix = new Matrix(matrixDTO.getHeader(), matrixDTO.getSkills(), matrixDTO.getPortfolio());
-		List<Skill> skills = extractSkills(matrix);
+		List<Skill> skills;
+		try {
+			skills = extractSkills(matrix);
+		} catch (NullPointerException e) {
+			return matrixRepo.save(matrix);
+		}
 		matrix = matrixRepo.save(matrix);
-		if(!skills.isEmpty()) {
+		if (!skills.isEmpty()) {
 			skillRepo.saveAll(skills);
 		}
 		return matrix;
 	}
-	
+
 	/**
 	 * 
-	 * @param id of already existing matrix
+	 * @param id     of already existing matrix
 	 * @param matrix with changes to update
 	 * @return the newly changed matrix
 	 */
 	@PutMapping
 	public Matrix putMatrix(@RequestBody MatrixDTO matrixDTO) {
-		Matrix matrix = new Matrix(matrixDTO.getId(), matrixDTO.getHeader(), matrixDTO.getPortfolio(), matrixDTO.getSkills());
+		Matrix matrix;
+		try {
+			matrix = new Matrix(matrixDTO.getId(), matrixDTO.getHeader(), matrixDTO.getPortfolio(),
+					matrixDTO.getSkills());
+		} catch (NullPointerException e) {
+			matrix = new Matrix(matrixDTO.getHeader(), matrixDTO.getPortfolio());
+			matrix.setId(matrixDTO.getId());
+		}
 		Optional<Matrix> update = matrixRepo.findById(matrix.getId());
 		if (update.isPresent()) {
 			Matrix newMat = update.get();
@@ -110,13 +124,18 @@ public class MatrixController {
 		} else {
 			matrix = matrixRepo.save(matrix);
 		}
-		List<Skill> newSkills = extractSkills(matrix);
+		List<Skill> newSkills;
+		try {
+			newSkills = extractSkills(matrix);
+		} catch (NullPointerException e) {
+			return matrix;
+		}
 		if (!newSkills.isEmpty()) {
 			skillRepo.saveAll(newSkills);
 		}
 		return matrix;
 	}
-	
+
 	/**
 	 * 
 	 * @param id of the matrix to be deleted
@@ -132,6 +151,41 @@ public class MatrixController {
 			matrixRepo.delete(m.get());
 		}
 	}
+
+	/**
+	 * 
+	 * @param id    of the matrix
+	 * @param skill to be inserted or updated
+	 * @return changed matrix with skills inside
+	 */
+	@PutMapping("/{id}/skill")
+	public Matrix putSkill(@PathVariable("id") int id, @RequestBody SkillDTO skillDTO) {
+		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
+		if (skillDTO.getId() == 0) {
+			skillRepo.saveAndFlush(new Skill(skillDTO.getName(), skillDTO.getValue(), m));
+			return insertSkills(m);
+		} else {
+			Skill skill = skillRepo.findById(skillDTO.getId())
+					.orElseThrow(() -> new NotFoundException("Skill Not Found for ID: " + skillDTO.getId()));
+			skill.setName(skillDTO.getName());
+			skill.setValue(skillDTO.getValue());
+			skillRepo.saveAndFlush(skill);
+			return insertSkills(m);
+		}
+	}
+
+	/**
+	 * 
+	 * @param id of the skill to be deleted
+	 */
+	@DeleteMapping("/skill/{id}")
+	public Matrix deleteSkill(@PathVariable("id") int id) {
+		Skill s = skillRepo.findById(id).orElseThrow(() -> new NotFoundException("Skill Not Found for ID: " + id));
+		Matrix m = s.getMatrix();
+		skillRepo.delete(s);
+		return insertSkills(m);
+	}
+
 	/**
 	 * 
 	 * @param m is the matrix to insert the skills into for serialization
@@ -142,7 +196,7 @@ public class MatrixController {
 		m.setSkills(skills);
 		return m;
 	}
-	
+
 	/**
 	 * 
 	 * @param max is the list of matrices to be serialized
@@ -155,7 +209,7 @@ public class MatrixController {
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 
 	 * @param m is the deserialized matrix
@@ -163,7 +217,7 @@ public class MatrixController {
 	 */
 	private List<Skill> extractSkills(Matrix m) {
 		List<Skill> skills = m.getSkills();
-		for(Skill s : skills) {
+		for (Skill s : skills) {
 			s.setMatrix(m);
 		}
 		return skills;
