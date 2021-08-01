@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -32,6 +33,7 @@ import com.forge.revature.controllers.MatrixController;
 import com.forge.revature.models.Matrix;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
+import com.forge.revature.models.SkillDTO;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.PortfolioRepo;
@@ -142,4 +144,28 @@ class MatrixControllerTest {
 			.andExpect(status().isOk());
 		
 	  }
+	
+	@Test
+	void testUpdateSkill() throws Exception {
+		SkillDTO sd = new SkillDTO(0, "SQL", 6);
+		Skill skill = new Skill("SQL", 6, matrix);
+		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
+		given(skillRepo.saveAndFlush(skill)).willReturn(skill);
+		given(skillRepo.findAllByMatrix(matrix)).willReturn(skills);
+
+		mvc.perform(put("/api/matrix/1/skill")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(new ObjectMapper().writeValueAsString(sd)))
+			.andDo(print())
+			.andExpect(status().isOk());
+		
+	  }
+	
+	@Test
+	void testDeleteSkill() throws Exception {
+		Skill skill = new Skill(6, "SQL", 6, matrix);
+		given(skillRepo.findById(6)).willReturn(Optional.of(skill));
+		mvc.perform(delete("/api/matrix/skill/6"))
+			.andExpect(status().isOk());
+	}
 }
