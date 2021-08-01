@@ -78,7 +78,7 @@ class MatrixControllerTest {
 
 		given(matrixRepo.findAll()).willReturn(allMatrices);
 
-		mvc.perform(get("api/matrix").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/matrix").contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$", hasSize(1)))
 			.andExpect(jsonPath("$[0].header", is(matrix.getHeader())));
@@ -89,12 +89,12 @@ class MatrixControllerTest {
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 		given(matrixRepo.findById(2)).willReturn(Optional.empty());
 
-		mvc.perform(get("api/matrix/1").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/matrix/1").contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
 
 		// test if getting a matrix that doesn't exist
-		mvc.perform(get("api/matrix/2"))
+		mvc.perform(get("/api/matrix/2"))
 			.andDo(print())
 			.andExpect(status().isNotFound())
 			.andExpect(content().string(containsString("Matrix Not Found")));
@@ -108,7 +108,7 @@ class MatrixControllerTest {
 		given(matrixRepo.findAllByPortfolio(portfolio)).willReturn(allMatrices);
 		given(portRepo.findById(1)).willReturn(Optional.of(portfolio));
 
-		mvc.perform(get("api/matrix/portfolio/1").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/matrix/portfolio/1").contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$", hasSize(1)))
 			.andExpect(jsonPath("$[0].header", is(matrix.getHeader())));
@@ -120,7 +120,7 @@ class MatrixControllerTest {
 		given(matrixRepo.save(matrix)).willReturn(matrix);
 		given(skillRepo.saveAll(skills)).willReturn(skills);
 		
-		mvc.perform(post("api/matrix")
+		mvc.perform(post("/api/matrix")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new ObjectMapper().writeValueAsString(matrix)))
 			.andDo(print())
@@ -135,7 +135,7 @@ class MatrixControllerTest {
 		given(skillRepo.saveAll(skills)).willReturn(skills);
 		given(skillRepo.findAllByMatrix(matrix)).willReturn(skills);
 
-		mvc.perform(put("api/matrix")
+		mvc.perform(put("/api/matrix")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new ObjectMapper().writeValueAsString(matrix)))
 			.andDo(print())

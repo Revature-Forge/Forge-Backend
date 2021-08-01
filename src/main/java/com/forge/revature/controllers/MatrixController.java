@@ -140,7 +140,7 @@ public class MatrixController {
 	 * @param skill to be inserted or updated
 	 * @return changed matrix with skills inside
 	 */
-	@PutMapping("{id}/skill")
+	@PutMapping("/{id}/skill")
 	public Matrix putSkill(@PathVariable("id") int id, @RequestBody SkillDTO skillDTO) {
 		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
 		if(skillDTO.getId() == 0) {
