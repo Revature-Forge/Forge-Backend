@@ -19,13 +19,14 @@ import com.forge.revature.models.Matrix;
 import com.forge.revature.models.MatrixDTO;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Skill;
+import com.forge.revature.models.SkillDTO;
 import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.SkillRepo;
 
 @RestController
-@CrossOrigin(origins = "localhost:3000")
-@RequestMapping("/matrix")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/matrix")
 public class MatrixController {
 
 	MatrixRepo matrixRepo;
@@ -132,6 +133,40 @@ public class MatrixController {
 			matrixRepo.delete(m.get());
 		}
 	}
+	
+	/**
+	 * 
+	 * @param id of the matrix
+	 * @param skill to be inserted or updated
+	 * @return changed matrix with skills inside
+	 */
+	@PutMapping("{id}/skill")
+	public Matrix putSkill(@PathVariable("id") int id, @RequestBody SkillDTO skillDTO) {
+		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
+		if(skillDTO.getId() == 0) {
+			skillRepo.saveAndFlush(new Skill(skillDTO.getName(), skillDTO.getValue(), m));
+			return insertSkills(m);
+		} else {
+			Skill skill = skillRepo.findById(skillDTO.getId()).orElseThrow(() -> new NotFoundException("Skill Not Found for ID: " + skillDTO.getId()));
+			skill.setName(skillDTO.getName());
+			skill.setValue(skillDTO.getValue());
+			skillRepo.saveAndFlush(skill);
+			return insertSkills(m);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param id of the skill to be deleted
+	 */
+	@DeleteMapping("/skill/{id}")
+	public Matrix deleteSkill(@PathVariable("id") int id) {
+		Skill s = skillRepo.findById(id).orElseThrow(() -> new NotFoundException("Skill Not Found for ID: " + id));
+		Matrix m = s.getMatrix();
+		skillRepo.delete(s);
+		return insertSkills(m);
+	}
+	
 	/**
 	 * 
 	 * @param m is the matrix to insert the skills into for serialization
