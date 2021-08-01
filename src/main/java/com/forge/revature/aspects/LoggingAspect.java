@@ -1,7 +1,5 @@
 package com.forge.revature.aspects;
 
-import java.util.Arrays;
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -83,6 +81,7 @@ public class LoggingAspect {
 
 			return result;
 		} catch (Exception e) {
+			log.error("An exception has been thrown");
 			throw e;
 		}
 	}
