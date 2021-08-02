@@ -1,14 +1,11 @@
 package com.forge.revature.controllers;
 
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import com.forge.revature.models.User;
-import com.forge.revature.repo.UserRepo;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -24,13 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.forge.revature.models.User;
+import com.forge.revature.repo.UserRepo;
+
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/users")
 public class UserController {
     @Autowired
     UserRepo userRepo;
-
+    
     public UserController(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
@@ -47,12 +47,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getByID(@PathVariable(name = "id") int id){
-        return userRepo.findById(id).get();
+    	return userRepo.findById(id).get();
     }
 
     @PostMapping("/login")
     public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
-        Optional<User> user = userRepo.findByEmail(email);
+    	Optional<User> user = userRepo.findByEmail(email);
         if(user.isPresent()){
             if(password.equals(user.get().getPassword())){
                 return user.get();
@@ -69,7 +69,6 @@ public class UserController {
     @PostMapping("user/{id}")
     public void updateUser(@PathVariable int id , @RequestBody User newU){
         Optional<User> old = userRepo.findById(id);
-
         if(old.isPresent()){
             old.get().setFName(newU.getFName());
             old.get().setAdmin(newU.isAdmin());

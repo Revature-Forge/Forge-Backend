@@ -20,8 +20,8 @@ import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.exception.NotFoundException;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("honor")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/honor")
 public class HonorController {
   @Autowired
   private HonorRepo honorRepo;

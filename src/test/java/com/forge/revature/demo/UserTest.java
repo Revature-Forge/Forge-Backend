@@ -26,9 +26,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @SpringBootTest
 public class UserTest {
     
-
     private MockMvc mvc;
 
+    private static String baseUrl = "/api/users";
+    
     @MockBean
     UserRepo repo;
 
@@ -45,7 +46,7 @@ public class UserTest {
         given(repo.findAll())
             .willReturn(new ArrayList<User>());
 
-        mvc.perform(get("/users"))
+        mvc.perform(get(baseUrl))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -56,7 +57,7 @@ public class UserTest {
         User user = new User(1, "John", "Doe", "test@test.com", "password", false);
         given(repo.findByEmail("test@test.com")).willReturn(Optional.of(user));
 
-        mvc.perform(post("/users/login")
+        mvc.perform(post(baseUrl + "/login")
             .header("email" ,"test@test.com")
             .header("password", "password"))
             
@@ -70,7 +71,7 @@ public class UserTest {
         User user = new User(1, "John", "Doe", "test@test.com", "password", false);
         given(repo.findByEmail("test@test.com")).willReturn(Optional.of(user));
 
-        mvc.perform(post("/users/login")
+        mvc.perform(post(baseUrl + "/login")
             .header("email" ,"test1@test.com")
             .header("password", "password"))
             
@@ -83,7 +84,7 @@ public class UserTest {
         User user = new User(1, "John", "Doe", "test@test.com", "password", false);
         given(repo.findByEmail("test@test.com")).willReturn(Optional.of(user));
 
-        mvc.perform(post("/users/login")
+        mvc.perform(post(baseUrl + "/login")
         .header("email" ,"test@test.com")
         .header("password", "password1"))
             
@@ -97,7 +98,7 @@ public class UserTest {
         given(repo.findById(1)).willReturn(Optional.of(new User()));
 
 
-        mvc.perform(get("/users/1"))
+        mvc.perform(get(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -111,7 +112,7 @@ public class UserTest {
         
         given(repo.save(user)).willReturn(user);
 
-        mvc.perform(post("/users")
+        mvc.perform(post(baseUrl)
             .contentType("application/json;charset=utf-8")
             .content(new ObjectMapper().writeValueAsString(user)))
 
@@ -128,7 +129,7 @@ public class UserTest {
 
         given(repo.findById(1)).willReturn(returned);
 
-        mvc.perform(post("/users/1")
+        mvc.perform(post(baseUrl + "/1")
             .contentType("application/json")
             .content(new ObjectMapper().writeValueAsString(user2)))
         .andDo(MockMvcResultHandlers.print())
@@ -141,7 +142,7 @@ public class UserTest {
 
         given(repo.findById(1)).willReturn(returned);
 
-        mvc.perform(delete("/users/1"))
+        mvc.perform(delete(baseUrl + "/1"))
             .andExpect(status().isOk());
     }
 

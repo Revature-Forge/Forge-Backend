@@ -3,22 +3,24 @@ package com.forge.revature.controllers;
 import java.util.List;
 import java.util.Optional;
 
-import com.forge.revature.models.WorkExperience;
-import com.forge.revature.repo.WorkExperienceRepo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "*")
+import com.forge.revature.models.WorkExperience;
+import com.forge.revature.repo.WorkExperienceRepo;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@RequestMapping("api/workexperience")
 public class WorkExperienceController {
     @Autowired
     WorkExperienceRepo repo;
@@ -30,27 +32,27 @@ public class WorkExperienceController {
         this.repo = repo;
     }
 
-    @RequestMapping(value = "/workexperience", produces = "application/json", method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<List<WorkExperience>> allExperience() {
         return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/workexperience/{id}", produces = "application/json", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<WorkExperience>> getExperience(@PathVariable(name = "id") long id) {
         return new ResponseEntity<>(repo.findById(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/workexperience/portfolio/{id}", produces = "application/json", method = RequestMethod.GET)
+    @GetMapping("/portfolio/{id}")
     public ResponseEntity<List<WorkExperience>> getPortfolio(@PathVariable(name = "id") int id) {
         return new ResponseEntity<>(repo.findByPortfolio_Id(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/workexperience", consumes = "application/json", method = RequestMethod.POST)
+    @PostMapping
     public void createExperience(@RequestBody WorkExperience work) {
         repo.save(work);
     }
 
-    @RequestMapping(value = "/workexperience/{id}", consumes = "application/json", method = RequestMethod.POST)
+    @PostMapping("/{id}")
     public void updateExperience(@PathVariable(name = "id") long id, @RequestBody WorkExperience work) {
         Optional<WorkExperience> update = repo.findById(id);
 
@@ -69,12 +71,12 @@ public class WorkExperienceController {
         }
     }
 
-    @RequestMapping(value = "/workexperience/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public void deleteExperience(@PathVariable(name = "id") long id) {
         repo.deleteById(id);
     }
 
-    @GetMapping("workexperience/portfolio/all/{id}")
+    @GetMapping("/portfolio/all/{id}")
     public List<WorkExperience> getPortfolioWorkExperiences(@PathVariable(name = "id") int portfolioId) {
         List<WorkExperience> retrievedWorkExperiences = repo.findAllByPortfolioId(portfolioId);
 
