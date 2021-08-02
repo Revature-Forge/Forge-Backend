@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -18,7 +18,7 @@ import com.forge.revature.CorsFilter;
 
 
 @SpringBootTest
-public class CorsFilterTest {
+class CorsFilterTest {
 	private CorsFilter cf = new CorsFilter();
 
 	@Mock
@@ -28,13 +28,13 @@ public class CorsFilterTest {
 	@Mock
 	private FilterChain filterChain;
 	
-    @Before
+    @BeforeEach
     public void setUp() throws ServletException {
         MockitoAnnotations.initMocks(this);
     }
 	
 	@Test
-	public void testDoFilterInternal() throws ServletException, IOException {
+	protected void testDoFilterInternal() throws ServletException, IOException {
 		Mockito.when(request.getHeader("Access-Control-Request-Method")).thenReturn("GET");
 		this.cf.doFilter(request, response, filterChain);
 		Mockito.verify(response).setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
