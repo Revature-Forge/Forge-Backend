@@ -24,5 +24,5 @@
     - This will build the image using the `Dockerfile` in the same location then begin running the container connecting to the specified database.
     - The docker image will have the compiled Spring Boot application and host the static React site.
         - <b>If both projects are not in the same directory the image will not compile</b>
-    - The database the REST API will connect to is the one specified within the `docker-compose.yml`
-- Access the Front End via `http://localhost:8081` 
+    - The REST API will connect to the database specified within the `docker-compose.yml`
+- Access the Front End via `http://{IP OF HOST}:8081` 
