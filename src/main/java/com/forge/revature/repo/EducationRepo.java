@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EducationRepo extends JpaRepository<Education, Integer>{
     Optional<Education> findByPortfolioId(Integer portfolioId);
     Optional<Education> findByPortfolioUserId(Integer userId);
+    Optional<Education> deleteByPortfolioId(Integer portfolioID);
 
     List<Education> findAllByPortfolioId(Integer portfolioId);
     List<Education> findAllByPortfolioUserId(Integer userId);
