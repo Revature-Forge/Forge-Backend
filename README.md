@@ -1,10 +1,10 @@
 # Forge Portfolio Rework-Backend
 ## What is the Forge Portfolio Rework?
-The Forge Portfolio Rework is an overhaul of Revature's portfolio system on their website. This rework is based on refactoring code that a previous batch had created. 
+The Forge Portfolio Rework is an overhaul of Revature's portfolio system on their website. This rework is based on refactoring code that a previous batch created. 
 
 # Features
 ## Test Driven Development
-Test Driven Development was achieved with the use of SonarCloud. SonarCloud is an application that can be attached to a Git repository, and will check all of the code from a push before it is allowed to be merged with the main branch. 
+Test Driven Development was achieved with the use of SonarCloud. SonarCloud is an application that can be attached to a Git Repository and ensures that the code can build without errors. SonarCloud also check for code smells and test coverage to check the code quality and test coverage has met the given standards.
 
 ## Data Tables, Models, and Controllers
 Each Model has its own respective Table and Controller as follows:
@@ -34,7 +34,7 @@ Each Model has its own respective Table and Controller as follows:
     - This model stores all of the information dedicated for the creation of the skill matrix on the front end. 
 
 ## JSON Upload/Download
-Forge allows for the uploading and downloading of JSON objects, which allows the system to store data about an individual form front-end to back-end.  
+Forge allows for the uploading and downloading of profiles as JSON objects.
 
 # Technologies Used
 - Java
