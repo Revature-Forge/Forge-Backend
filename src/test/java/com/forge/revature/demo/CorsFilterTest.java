@@ -34,7 +34,7 @@ class CorsFilterTest {
     }
 	
 	@Test
-	protected void testDoFilterInternal() throws ServletException, IOException {
+	void testDoFilterInternal() throws ServletException, IOException {
 		Mockito.when(request.getHeader("Access-Control-Request-Method")).thenReturn("GET");
 		this.cf.doFilter(request, response, filterChain);
 		Mockito.verify(response).setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
