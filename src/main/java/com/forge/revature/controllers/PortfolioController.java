@@ -136,7 +136,6 @@ public class PortfolioController {
     @Transactional
     public Map<String, Boolean> deletePortfolio(@PathVariable int id) throws ResourceNotFoundException{
         Optional<Portfolio> port = portRepo.findById(id);
-        List<Matrix> m = matrixRepo.findAllByPortfolio(port.get());
 
         if(port.isPresent()){
         	aboutMeRepo.deleteByPortfolioId(id);
@@ -149,11 +148,11 @@ public class PortfolioController {
         	workExperienceRepo.deleteByPortfolioId(id);
         	workHistoryRepo.deleteByPortfolioId(id);
         	
-        	m.forEach((s) -> {
-        		skillRepo.deleteByMatrix(s);
-        	});
+        	List<Matrix> m = matrixRepo.findAllByPortfolio(port.get());
+        	m.forEach(s -> skillRepo.deleteByMatrix(s));
         	matrixRepo.deleteByPortfolioId(id);
-            portRepo.delete(port.get());
+            
+        	portRepo.delete(port.get());
             
         }else{
             throw new ResourceNotFoundException("The Portfolio to be deleted could not be found");
