@@ -2,7 +2,9 @@ package com.forge.revature.exception;
 
 public class NotFoundException extends RuntimeException {
 
-  public NotFoundException() {
+	private static final long serialVersionUID = -5217635051556565163L;
+
+public NotFoundException() {
   }
 
   public NotFoundException(String message) {
