@@ -1,6 +1,6 @@
 # Forge Portfolio Rework-Backend
 ## What is the Forge Portfolio Rework?
-The Forge Portfolio Rework is an overhaul of Revature's portfolio system on their website. This rework is based on refactoring code that a previous batch created. 
+The Forge Portfolio Rework is an overhaul of Revature's Portfolio system that aims to create a new and intuitive way for the users and admins to interact with the portfolio creation process to ensure that all portfolios are quickly created up to Revature's standard. On the user side, the user now has a better understanding of what the requirements are for each phase. Feedback from an admin is now displayed in an clear way so the user can quickly make changes to flagged sections.
 
 # Features
 ## Test Driven Development
@@ -44,3 +44,21 @@ Forge allows for the uploading and downloading of profiles as JSON objects.
 - AWS EC2 / Postgres (production)
 - SonarCloud
 - Azure Pipelines
+
+# Contributors 
+- Andre Goulbourne
+- Aron Jang
+- Derek Dinhphan
+- Frank Aurori
+- Frederick Thornton (POC)
+- Jack Welsh
+- Jake Geiser
+- James Butler
+- Kyle Castillo
+- Mollie Morrow
+- Nathan Opsal
+- Nick Gianino
+- Nse Obot
+- Richie Marier
+- Tom Ceci
+- Vince De Guzman
