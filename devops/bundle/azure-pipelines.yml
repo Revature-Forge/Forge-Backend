@@ -56,11 +56,8 @@ stages:
               cd Portfolio-Frontend
               npm install
               npm run-script build
-              cd .. 
-              TARGET="./Forge-Backend/src/main/resources/static"
-              mkdir $TARGET
-              cp -r ./Portfolio-Frontend/build $TARGET
-              find
+              cd ..
+              cp -r ./Portfolio-Frontend/build ./Forge-Backend/src/main/resources/static
             displayName: prepare for maven
           
           - task: SonarCloudPrepare@1
@@ -68,8 +65,8 @@ stages:
               SonarCloud: 'Forge-SonarCloud'
               organization: '1058-sophia-gavrila-forge'
               scannerMode: 'Other'
-              extraProperties: 
-                sonar.projectKey="1058-Sophia-Gavrila-Forge_Forge-Backend"
+              extraProperties: |
+                sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
                 sonar.projectName=Forge-Backend
             displayName: Configure Sonar Analysis Parameters
 
