@@ -33,11 +33,14 @@ parameters:
     default: 'p3-team2-acr'
 
 resources:
- repositories:
-   - repository: forgeFrontend
-     type: github
-     endpoint: 1058-Sophia-Gavrila-Forge
-     name: 1058-Sophia-Gavrila-Forge/Portfolio-Frontend
+  pipelines:
+    - pipeline: pipe_bundle-front
+      source: Bundle-front
+      trigger:
+        branches:
+          include: 
+            - main
+            - dev
 
 stages:
   - stage: Build_and_Test
@@ -45,20 +48,21 @@ stages:
       - job: makeJar
         steps:
           - checkout: self
-          - checkout: forgeFrontend
           
-          - task: NodeTool@0
+          - task: DownloadPipelineArtifact@2
             inputs:
-              versionSpec: '14.x'
-            displayName: 'Install Node.js'
+              buildType: 'specific'
+              project: 'eb90657a-0d4f-4efc-ab88-854ac581c5a8'
+              definition: '191'
+              specificBuildWithTriggering: true
+              buildVersionToDownload: 'latestFromBranch'
+              branchName: 'refs/heads/dev'
+              artifactName: 'static'
+              targetPath: '$(Build.Repository.LocalPath)/src/main/resources/'
 
           - script: |
-              cd Portfolio-Frontend
-              npm install
-              npm run-script build
-              cd ..
-              cp -r ./Portfolio-Frontend/build ./Forge-Backend/src/main/resources/static
-            displayName: prepare for maven
+              find
+            displayName: debug
           
           - task: SonarCloudPrepare@1
             inputs:
