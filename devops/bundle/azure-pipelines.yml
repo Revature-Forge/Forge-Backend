@@ -1,0 +1,144 @@
+trigger:
+  - main
+  - dev
+
+pr:
+  - main
+  - dev
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: 'branchMain'
+    type: string
+    default: 'refs/heads/main'
+  - name: 'branchDev'
+    type: string
+    default: 'refs/heads/dev'
+  - name: 'mainCluster' 
+    type: string
+    default: 'may24-devops-team2-main-cluster'
+  - name: 'devCluster' 
+    type: string
+    default: 'may24-devops-team2-dev-cluster'
+  - name: 'containerRegistry'
+    type: string
+    default: 'acr-team2'
+  - name: 'repository'
+    type: string
+    default: 'forge-bundle'
+  - name: 'secretName'
+    type: string
+    default: 'p3-team2-acr'
+
+resources:
+ repositories:
+   - repository: forgeFrontend
+     type: github
+     endpoint: 1058-Sophia-Gavrila-Forge
+     name: 1058-Sophia-Gavrila-Forge/Portfolio-Frontend
+
+stages:
+  - stage: Build_and_Test
+    jobs:
+      - job: makeJar
+        steps:
+          - checkout: self
+          - checkout: forgeFrontend
+          
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '14.x'
+            displayName: 'Install Node.js'
+
+          - script: |
+              cd Portfolio-Frontend
+              npm install
+              npm run-script build
+              cd ..
+              cp -r ./Portfolio-Frontend/build ./Forge-Backend/src/main/resources/static
+            displayName: prepare for maven
+          
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'Forge-SonarCloud'
+              organization: '1058-sophia-gavrila-forge'
+              scannerMode: 'Other'
+              extraProperties: |
+                sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
+                sonar.projectName=Forge-Backend
+            displayName: Configure Sonar Analysis Parameters
+
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'Forge-Backend/pom.xml'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              codeCoverageToolOption: 'JaCoCo'
+              codeCoverageRestoreOriginalPomXml: true
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: true
+              sqMavenPluginVersionChoice: 'pom'
+
+            displayName: Maven package, JUnit test, Sonar, JaCoCo
+            
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: '$(Build.Repository.LocalPath)/Forge-Backend/target/demo-0.0.1-SNAPSHOT.war'
+              artifact: 'bundle-jar'
+              publishLocation: 'pipeline'
+            displayName: Publish Maven output as artifact
+        displayName: Maven Build, Test, Analyze
+          
+  - stage: Dockerize
+    jobs:
+      - template: ./templates/dockerize-template.yml
+        parameters:
+          jobName: 'Dockerize'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          imageTag: ${{ variables['Build.SourceVersion'] }}
+          dockerPath: '**/devops/docker/mavenpipe.dockerfile'
+
+  - stage: Deploy
+    condition: >
+      and( succeeded(), 
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      in(variables['Build.SourceBranch'], '${{ parameters.branchMain }}', '${{ parameters.branchDev }}' ) )
+    jobs:
+      - template: ./templates/kubernetes-secret.yml
+        parameters:
+          jobName: 'Secret_Creation'
+          ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.mainCluster }}'
+          ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.devCluster }}'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          namespace: 'team2'
+          secretName: '${{ parameters.secretName }}'
+      - template: ./templates/helm-template.yml
+        parameters:
+          jobName: 'Deploy'
+          chartPath: './devops/helm/forge-cors'
+          releaseName: 't2bundle'
+          repository: 'may24devopscontainers.azurecr.io/${{ parameters.repository }}'
+          secretName: '${{ parameters.secretName }}'
+          imageTag: ${{ variables['Build.SourceVersion'] }}
+  
+  - stage: Notify
+    condition: always()
+    jobs:
+      - template: ./templates/discord-job-template.yml
+        parameters:
+          name: 'Team2-P3-Bundle'
+          title: 'Forge Portfolio Management System DevOps'
+          discordVarGroup: Discord-Webhook-Info
+            # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
+            # the variable group contains two variables: discordid and discordkey
+            # currently, the discordVarGroup is named Discord-Webhook-Info, 
+            # but can be swapped out if you want to notify to multiple Discord webhooks.
