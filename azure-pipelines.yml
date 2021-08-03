@@ -32,10 +32,6 @@ parameters:
     type: string
     default: 'p3-team2-acr'
 
-
-pool:
-  vmImage: ubuntu-latest
-
 resources:
  repositories:
    - repository: forgeFrontend
