@@ -39,12 +39,10 @@ abstract class PortfolioIgnoreMixin {
     Portfolio portfolio;
 }
 
-abstract class UserIgnoreMixin {
+abstract class FullPortfolioIgnoreMixin {
     @JsonIgnore
     User user;
-}
 
-abstract class FlagIgnoreMixin {
     @JsonIgnore
     HashMap<String, String> flags;
 }
@@ -189,8 +187,7 @@ public class PortfolioController {
         );
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.addMixIn(FullPortfolio.class, UserIgnoreMixin.class);
-        mapper.addMixIn(FullPortfolio.class, FlagIgnoreMixin.class);
+        mapper.addMixIn(FullPortfolio.class, FullPortfolioIgnoreMixin.class);
         mapper.addMixIn(AboutMe.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Certification.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Education.class, PortfolioIgnoreMixin.class);
