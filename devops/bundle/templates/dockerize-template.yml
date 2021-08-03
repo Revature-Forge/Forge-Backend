@@ -1,0 +1,41 @@
+parameters:
+  - name: 'jobName'
+    type: string
+  - name: 'containerRegistry' #service connection name
+    type: string
+  - name: 'repository' #dockerhub repository name
+    type: string
+  - name: 'imageTag' #docker image tag
+    type: string
+  - name: 'dockerPath' #docker file path
+    type: string
+jobs:
+  - job:
+    steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'maven-output' # has to match the publish step in the maven template
+          targetPath: '$(Pipeline.Workspace)'
+          publishLocation: 'pipeline'
+        displayName: Download maven output
+
+      - task: Docker@2
+        inputs:
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          command: 'build'
+          Dockerfile: '${{ parameters.dockerPath }}'
+          tags: '${{ parameters.imageTag }}'
+          buildContext: $(Pipeline.Workspace)
+          arguments: '--build-arg JAR_FILE=demo-0.0.1-SNAPSHOT.war'
+        displayName: 'Docker Build'
+
+      - task: Docker@2
+        inputs:
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          command: 'push'
+          tags: '${{ parameters.imageTag }}'
+        displayName: 'Docker Push'
+    displayName: ${{ parameters.jobName }}
