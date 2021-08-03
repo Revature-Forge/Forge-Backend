@@ -42,15 +42,46 @@ resources:
 stages:
   - stage: Build_and_Test
     jobs:
-      - template: ./templates/maven-build-test-job-template.yml
-        parameters:
-          jobName: 'Build_and_Test'
-          sonarServiceConnection: 'Forge-SonarCloud'
-          sonarOrganization: '1058-sophia-gavrila-forge'
-          sonarProjectKey: '1058-Sophia-Gavrila-Forge_Forge-Backend'
-          sonarProjectName: 'Forge-Backend'
-          testPath: '**/surefire-reports/TEST-*.xml'
-          mavenOutput: demo-0.0.1-SNAPSHOT.war
+      - job: makeJar
+        steps:
+          - checkout: self
+          - checkout: forgeFrontend
+          - script: find
+          
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'Forge-SonarCloud'
+              organization: '1058-sophia-gavrila-forge'
+              scannerMode: 'Other'
+              extraProperties: 
+                sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
+                sonar.projectName=Forge-Backend
+            displayName: Configure Sonar Analysis Parameters
+
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              codeCoverageToolOption: 'JaCoCo'
+              codeCoverageRestoreOriginalPomXml: true
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: true
+              sqMavenPluginVersionChoice: 'pom'
+
+            displayName: Maven package, JUnit test, Sonar, JaCoCo
+            
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: '$(Build.Repository.LocalPath)/target/demo-0.0.1-SNAPSHOT.war'
+              artifact: 'bundle-jar'
+              publishLocation: 'pipeline'
+            displayName: Publish Maven output as artifact
+        displayName: Maven Build, Test, Analyze
           
   - stage: Dockerize
     jobs:
@@ -60,7 +91,7 @@ stages:
           containerRegistry: '${{ parameters.containerRegistry }}'
           repository: '${{ parameters.repository }}'
           imageTag: ${{ variables['Build.SourceVersion'] }}
-          dockerPath: '**/mavenpipe.dockerfile'
+          dockerPath: '**/devops/bundle/Dockerfile'
 
   - stage: Deploy
     condition: >
@@ -92,7 +123,7 @@ stages:
     jobs:
       - template: ./templates/discord-job-template.yml
         parameters:
-          name: 'Team2-P3-Backend'
+          name: 'Team2-P3-Bundle'
           title: 'Forge Portfolio Management System DevOps'
           discordVarGroup: Discord-Webhook-Info
             # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
