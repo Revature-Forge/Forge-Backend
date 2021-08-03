@@ -31,13 +31,20 @@ parameters:
   - name: 'secretName'
     type: string
     default: 'p3-team2-acr'
+  - name: frontendBranchDefault
+    type: string
+    default: 'refs/heads/main'
+    # references the names of branches on another repo
 
 resources:
- repositories:
-   - repository: forgeFrontend
-     type: github
-     endpoint: 1058-Sophia-Gavrila-Forge
-     name: 1058-Sophia-Gavrila-Forge/Portfolio-Frontend
+  pipelines:
+    - pipeline: pipe_bundle-front
+      source: Bundle-front
+      trigger:
+        branches:
+          include: 
+            - main
+            - dev
 
 stages:
   - stage: Build_and_Test
@@ -45,20 +52,22 @@ stages:
       - job: makeJar
         steps:
           - checkout: self
-          - checkout: forgeFrontend
-          
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '14.x'
-            displayName: 'Install Node.js'
 
-          - script: |
-              cd Portfolio-Frontend
-              npm install
-              npm run-script build
-              cd ..
-              cp -r ./Portfolio-Frontend/build ./Forge-Backend/src/main/resources/static
-            displayName: prepare for maven
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'specific'
+              project: 'eb90657a-0d4f-4efc-ab88-854ac581c5a8'
+              definition: '191'
+              specificBuildWithTriggering: true
+              buildVersionToDownload: 'latestFromBranch'
+              ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
+                branchName: 'refs/heads/main' #hardcoded reference to frontend branches
+              ${{ if eq(variables['Build.SourceBranch'], parameters.branchDev) }}:
+                branchName: 'refs/heads/dev'  #hardcoded reference to frontend branches
+              ${{ if not(in( variables['Build.SourceBranch'], parameters.branchMain, parameters.branchDev )) }}:
+                branchName: ${{ parameters.frontendBranchDefault }}
+              artifactName: 'static'
+              targetPath: '$(Build.Repository.LocalPath)/src/main/resources/static'
           
           - task: SonarCloudPrepare@1
             inputs:
@@ -72,7 +81,7 @@ stages:
 
           - task: Maven@3
             inputs:
-              mavenPomFile: 'Forge-Backend/pom.xml'
+              mavenPomFile: 'pom.xml'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               codeCoverageToolOption: 'JaCoCo'
@@ -82,14 +91,17 @@ stages:
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
               effectivePomSkip: false
-              sonarQubeRunAnalysis: true
-              sqMavenPluginVersionChoice: 'pom'
-
+              ${{ if eq( variables['Build.Reason'], 'ResourceTrigger' )}}:
+                sonarQubeRunAnalysis: false
+              ${{ if ne( variables['Build.Reason'], 'ResourceTrigger' )}}:
+                sonarQubeRunAnalysis: true
+                sqMavenPluginVersionChoice: 'pom'
+              
             displayName: Maven package, JUnit test, Sonar, JaCoCo
             
           - task: PublishPipelineArtifact@1
             inputs:
-              targetPath: '$(Build.Repository.LocalPath)/Forge-Backend/target/demo-0.0.1-SNAPSHOT.war'
+              targetPath: '$(Build.Repository.LocalPath)/target/demo-0.0.1-SNAPSHOT.war'
               artifact: 'bundle-jar'
               publishLocation: 'pipeline'
             displayName: Publish Maven output as artifact
