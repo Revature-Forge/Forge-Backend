@@ -59,7 +59,7 @@ stages:
               cd .. 
               TARGET="./Forge-Backend/src/main/resources/static"
               mkdir $TARGET
-              cp ./Portfolio-Frontend/build $TARGET
+              cp -r ./Portfolio-Frontend/build $TARGET
               find
             displayName: prepare for maven
           
