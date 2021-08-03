@@ -110,7 +110,7 @@ stages:
           containerRegistry: '${{ parameters.containerRegistry }}'
           repository: '${{ parameters.repository }}'
           imageTag: ${{ variables['Build.SourceVersion'] }}
-          dockerPath: '**/devops/bundle/Dockerfile'
+          dockerPath: '**/devops/docker/pipe.Dockerfile'
 
   - stage: Deploy
     condition: >
