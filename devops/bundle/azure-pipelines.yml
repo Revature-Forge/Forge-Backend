@@ -31,9 +31,6 @@ parameters:
   - name: 'secretName'
     type: string
     default: 'p3-team2-acr'
-  - name: frontendRef
-    type: string
-    default: main
 
 resources:
  repositories:
@@ -41,7 +38,6 @@ resources:
      type: github
      endpoint: 1058-Sophia-Gavrila-Forge
      name: 1058-Sophia-Gavrila-Forge/Portfolio-Frontend
-     ref: ${{ parameters.frontendRef }}
 
 stages:
   - stage: Build_and_Test
@@ -63,7 +59,7 @@ stages:
               cd .. 
               TARGET="./Forge-Backend/src/main/resources/static"
               mkdir $TARGET
-              cp ./Portfolio-Frontend/build $TARGET
+              cp -r ./Portfolio-Frontend/build $TARGET
               find
             displayName: prepare for maven
           
