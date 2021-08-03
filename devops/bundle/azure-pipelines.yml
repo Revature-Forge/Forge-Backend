@@ -31,6 +31,9 @@ parameters:
   - name: 'secretName'
     type: string
     default: 'p3-team2-acr'
+  - name: frontendRef
+    type: string
+    default: main
 
 resources:
  repositories:
@@ -38,6 +41,7 @@ resources:
      type: github
      endpoint: 1058-Sophia-Gavrila-Forge
      name: 1058-Sophia-Gavrila-Forge/Portfolio-Frontend
+     ref: ${{ parameters.frontendRef }}
 
 stages:
   - stage: Build_and_Test
@@ -46,7 +50,22 @@ stages:
         steps:
           - checkout: self
           - checkout: forgeFrontend
-          - script: find
+          
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '14.x'
+            displayName: 'Install Node.js'
+
+          - script: |
+              cd Portfolio-Frontend
+              npm install
+              npm run-script build
+              cd .. 
+              TARGET="./Forge-Backend/src/main/resources/static"
+              mkdir $TARGET
+              cp ./Portfolio-Frontend/build $TARGET
+              find
+            displayName: prepare for maven
           
           - task: SonarCloudPrepare@1
             inputs:
@@ -60,7 +79,7 @@ stages:
 
           - task: Maven@3
             inputs:
-              mavenPomFile: 'pom.xml'
+              mavenPomFile: 'Forge-Backend/pom.xml'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               codeCoverageToolOption: 'JaCoCo'
@@ -77,7 +96,7 @@ stages:
             
           - task: PublishPipelineArtifact@1
             inputs:
-              targetPath: '$(Build.Repository.LocalPath)/target/demo-0.0.1-SNAPSHOT.war'
+              targetPath: '$(Build.Repository.LocalPath)/Forge-Backend/target/demo-0.0.1-SNAPSHOT.war'
               artifact: 'bundle-jar'
               publishLocation: 'pipeline'
             displayName: Publish Maven output as artifact
