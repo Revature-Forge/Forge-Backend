@@ -40,11 +40,93 @@ resources:
      name: 1058-Sophia-Gavrila-Forge/Portfolio-Frontend
 
 stages:
-  - stage:
+  - stage: Build_and_Test
     jobs:
-
-      - job:
+      - job: makeJar
         steps:
-          - checkout: none
-          - script: echo hi
+          - checkout: self
+          - checkout: forgeFrontend
+          - script: find
+          
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'Forge-SonarCloud'
+              organization: '1058-sophia-gavrila-forge'
+              scannerMode: 'Other'
+              extraProperties: 
+                sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
+                sonar.projectName=Forge-Backend
+            displayName: Configure Sonar Analysis Parameters
 
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              codeCoverageToolOption: 'JaCoCo'
+              codeCoverageRestoreOriginalPomXml: true
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: true
+              sqMavenPluginVersionChoice: 'pom'
+
+            displayName: Maven package, JUnit test, Sonar, JaCoCo
+            
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: '$(Build.Repository.LocalPath)/target/demo-0.0.1-SNAPSHOT.war'
+              artifact: 'bundle-jar'
+              publishLocation: 'pipeline'
+            displayName: Publish Maven output as artifact
+        displayName: Maven Build, Test, Analyze
+          
+  - stage: Dockerize
+    jobs:
+      - template: ./templates/dockerize-template.yml
+        parameters:
+          jobName: 'Dockerize'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          repository: '${{ parameters.repository }}'
+          imageTag: ${{ variables['Build.SourceVersion'] }}
+          dockerPath: '**/devops/bundle/Dockerfile'
+
+  - stage: Deploy
+    condition: >
+      and( succeeded(), 
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      in(variables['Build.SourceBranch'], '${{ parameters.branchMain }}', '${{ parameters.branchDev }}' ) )
+    jobs:
+      - template: ./templates/kubernetes-secret.yml
+        parameters:
+          jobName: 'Secret_Creation'
+          ${{ if eq(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.mainCluster }}'
+          ${{ if ne(variables['Build.SourceBranch'], parameters.branchMain) }}:
+            clusterServiceConnection: '${{ parameters.devCluster }}'
+          containerRegistry: '${{ parameters.containerRegistry }}'
+          namespace: 'team2'
+          secretName: '${{ parameters.secretName }}'
+      - template: ./templates/helm-template.yml
+        parameters:
+          jobName: 'Deploy'
+          chartPath: './devops/helm/forgeBackend'
+          releaseName: 't2backend'
+          repository: 'may24devopscontainers.azurecr.io/${{ parameters.repository }}'
+          secretName: '${{ parameters.secretName }}'
+          imageTag: ${{ variables['Build.SourceVersion'] }}
+  
+  - stage: Notify
+    condition: always()
+    jobs:
+      - template: ./templates/discord-job-template.yml
+        parameters:
+          name: 'Team2-P3-Bundle'
+          title: 'Forge Portfolio Management System DevOps'
+          discordVarGroup: Discord-Webhook-Info
+            # parameters.discordVarGroup contains the name of a variable group set in Azure Pipelines > Library
+            # the variable group contains two variables: discordid and discordkey
+            # currently, the discordVarGroup is named Discord-Webhook-Info, 
+            # but can be swapped out if you want to notify to multiple Discord webhooks.
