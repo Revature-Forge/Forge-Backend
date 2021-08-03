@@ -20,8 +20,8 @@ import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.exception.NotFoundException;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("workhistory")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/workhistory")
 public class WorkHistoryController {
   @Autowired
   private WorkHistoryRepo workHistoryRepo;

@@ -31,9 +31,11 @@ import org.springframework.web.context.WebApplicationContext;
 public class CertificationControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
-    
+  
     private MockMvc mockMvc;
 
+    private static String baseUrl = "/api/certifications";
+    
     @MockBean
     CertificationRepo certificationRepo;
 
@@ -45,7 +47,7 @@ public class CertificationControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        mockMvc.perform(get("/certifications"))
+        mockMvc.perform(get(baseUrl))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"));
     }
@@ -58,7 +60,7 @@ public class CertificationControllerTest {
 
         given(certificationRepo.findById(1L)).willReturn(cert);
 
-        mockMvc.perform(get("/certifications/1"))
+        mockMvc.perform(get(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"));
@@ -68,7 +70,7 @@ public class CertificationControllerTest {
     void testGetAllByPortfolioId() throws Exception {
         given(this.certificationRepo.findAllByPortfolioId(1)).willReturn(new ArrayList<Certification>());
 
-        mockMvc.perform(get("/certifications/portfolio/all/1"))
+        mockMvc.perform(get(baseUrl + "/portfolio/all/1"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andDo(MockMvcResultHandlers.print())
@@ -84,7 +86,7 @@ public class CertificationControllerTest {
         String cert = objectMapper.writeValueAsString(certForTest);
 
         mockMvc.perform(
-            post("/certifications")
+            post(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(cert))
             .andExpect(status().isOk());
@@ -102,7 +104,7 @@ public class CertificationControllerTest {
         given(certificationRepo.findById(1L)).willReturn(cert);
 
         mockMvc.perform(
-            post("/certifications/1")
+            post(baseUrl + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(certForUpdate))
             .andDo(MockMvcResultHandlers.print())
@@ -117,7 +119,7 @@ public class CertificationControllerTest {
 
         given(certificationRepo.findById(1L)).willReturn(cert);
 
-        mockMvc.perform(delete("/certifications/1"))
+        mockMvc.perform(delete(baseUrl + "/1"))
             .andExpect(status().isOk());
     }
 }

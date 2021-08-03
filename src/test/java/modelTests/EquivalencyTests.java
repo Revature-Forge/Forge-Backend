@@ -15,7 +15,7 @@ class EquivalencyTests {
 void constructorsTest() {
 	Equivalency e1 = new Equivalency("Java", 16);
 	
-	Portfolio p = new Portfolio(1, "test", null, false, false, false, null);
+	Portfolio p = new Portfolio(1, "test", null, false, false, false, null, null);
 	Equivalency e2 = new Equivalency("SQL", 7, p);
 	
 	assertEquals(16, e1.getValue());
@@ -24,7 +24,7 @@ void constructorsTest() {
 
 @Test
 void toStringTest() {
-	Portfolio p = new Portfolio(1, "test", null, false, false, false, null);
+	Portfolio p = new Portfolio(1, "test", null, false, false, false, null, null);
 	Equivalency e = new Equivalency(1, "SQL", 7, p);
 	assertNotNull(e.toString());
 	assertTrue(e.toString().length() > 0);
