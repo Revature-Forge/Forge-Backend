@@ -91,9 +91,9 @@ stages:
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
               effectivePomSkip: false
-              ${{ if eq( variables['Build.Reason'], "ResourceTrigger" )}}:
+              ${{ if eq( variables['Build.Reason'], 'ResourceTrigger' )}}:
                 sonarQubeRunAnalysis: false
-              ${{ if ne( variables['Build.Reason'], "ResourceTrigger" )}}:
+              ${{ if ne( variables['Build.Reason'], 'ResourceTrigger' )}}:
                 sonarQubeRunAnalysis: true
                 sqMavenPluginVersionChoice: 'pom'
               
