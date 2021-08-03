@@ -58,11 +58,7 @@ stages:
               buildVersionToDownload: 'latestFromBranch'
               branchName: 'refs/heads/bundle'
               artifactName: 'static'
-              targetPath: '$(Build.Repository.LocalPath)/src/main/resources/'
-
-          - script: |
-              find
-            displayName: debug
+              targetPath: '$(Build.Repository.LocalPath)/src/main/resources/static'
           
           - task: SonarCloudPrepare@1
             inputs:
@@ -76,7 +72,7 @@ stages:
 
           - task: Maven@3
             inputs:
-              mavenPomFile: 'Forge-Backend/pom.xml'
+              mavenPomFile: 'pom.xml'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               codeCoverageToolOption: 'JaCoCo'
@@ -93,7 +89,7 @@ stages:
             
           - task: PublishPipelineArtifact@1
             inputs:
-              targetPath: '$(Build.Repository.LocalPath)/Forge-Backend/target/demo-0.0.1-SNAPSHOT.war'
+              targetPath: '$(Build.Repository.LocalPath)/target/demo-0.0.1-SNAPSHOT.war'
               artifact: 'bundle-jar'
               publishLocation: 'pipeline'
             displayName: Publish Maven output as artifact
