@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "forge-cors.fullname" . }}
+  labels:
+    {{- include "forge-cors.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 80
+      targetPort: {{ .Values.image.portName }}
+      protocol: TCP
+      name: entry
+  selector:
+    {{- include "forge-cors.selectorLabels" . | nindent 4 }}

@@ -127,8 +127,8 @@ stages:
       - template: ./templates/helm-template.yml
         parameters:
           jobName: 'Deploy'
-          chartPath: './devops/helm/forgeBackend'
-          releaseName: 't2backend'
+          chartPath: './devops/helm/forge-cors'
+          releaseName: 't2bundle'
           repository: 'may24devopscontainers.azurecr.io/${{ parameters.repository }}'
           secretName: '${{ parameters.secretName }}'
           imageTag: ${{ variables['Build.SourceVersion'] }}

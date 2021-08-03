@@ -1,0 +1,71 @@
+{{- if .Values.db.persist }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.db.service.name }}
+  labels:
+    {{- include "forge-cors.labels" . | nindent 4 }}
+spec:
+  ports:
+  - port: {{ .Values.db.service.port }}
+    name: {{ .Values.db.service.portName }}
+  clusterIP: None
+  selector:
+    part: db
+{{- end }}
+---
+{{- if .Values.db.persist }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.db.deploy.name }}
+  labels:
+    part: db
+spec:
+  selector:
+    matchLabels:
+      part: db
+  serviceName: {{ .Values.db.service.name }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        part: db
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: db
+        image: {{ .Values.db.image }}
+        ports:
+        - containerPort: {{ .Values.db.deploy.port }}
+          name: {{ .Values.db.deploy.portName }}
+        volumeMounts:
+        - name: {{ .Values.db.pvc.claimName }}
+          mountPath: {{ .Values.db.pvc.mountPath }}
+        {{- with .Values.db.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef: 
+                name: {{ .Release.Name }}-{{ .Values.dbconfig.secretName }}
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef: 
+                name: {{ .Release.Name }}-{{ .Values.dbconfig.secretName }}
+                key: password
+
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.db.pvc.claimName }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: {{ .Values.db.pvc.storageClassName }}
+      {{- with .Values.db.pvc.resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
