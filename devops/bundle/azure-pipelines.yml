@@ -56,7 +56,7 @@ stages:
               definition: '191'
               specificBuildWithTriggering: true
               buildVersionToDownload: 'latestFromBranch'
-              branchName: 'refs/heads/dev'
+              branchName: 'refs/heads/bundle'
               artifactName: 'static'
               targetPath: '$(Build.Repository.LocalPath)/src/main/resources/'
 
