@@ -69,7 +69,7 @@ stages:
               organization: '1058-sophia-gavrila-forge'
               scannerMode: 'Other'
               extraProperties: 
-                sonar.projectKey=1058-Sophia-Gavrila-Forge_Forge-Backend
+                sonar.projectKey="1058-Sophia-Gavrila-Forge_Forge-Backend"
                 sonar.projectName=Forge-Backend
             displayName: Configure Sonar Analysis Parameters
 
