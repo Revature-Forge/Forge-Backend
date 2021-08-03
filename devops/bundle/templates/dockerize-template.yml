@@ -15,7 +15,7 @@ jobs:
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
-          artifactName: 'maven-output' # has to match the publish step in the maven template
+          artifactName: 'bundle-jar' # has to match the publish step in the maven template
           targetPath: '$(Pipeline.Workspace)'
           publishLocation: 'pipeline'
         displayName: Download maven output
