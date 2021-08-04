@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.models.*;

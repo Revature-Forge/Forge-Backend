@@ -309,7 +309,7 @@ public class PortfolioTest {
         }
 
         FullPortfolioIgnoreMixinImpl fp = new FullPortfolioIgnoreMixinImpl();
-	    assertEquals(fp.portfolio, null);
+	    assertEquals(null, fp.portfolio);
     }
 
     @Test
@@ -319,7 +319,7 @@ public class PortfolioTest {
         }
 
         PortfolioIgnoreMixinImpl fp = new PortfolioIgnoreMixinImpl();
-        assertEquals(fp.portfolio, null);
+        assertEquals(null, fp.portfolio);
     }
 
 }
