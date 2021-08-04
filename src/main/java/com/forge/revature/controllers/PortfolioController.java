@@ -34,19 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-abstract class PortfolioIgnoreMixin {
-    @JsonIgnore
-    Portfolio portfolio;
-}
-
-abstract class FullPortfolioIgnoreMixin {
-    @JsonIgnore
-    User user;
-
-    @JsonIgnore
-    HashMap<String, String> flags;
-}
-
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/portfolios")
