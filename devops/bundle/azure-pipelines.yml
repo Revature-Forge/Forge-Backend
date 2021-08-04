@@ -33,7 +33,7 @@ parameters:
     default: 'p3-team2-acr'
   - name: frontendBranchDefault
     type: string
-    default: 'refs/heads/main'
+    default: 'refs/heads/dev'
     # references the names of branches on another repo
 
 resources:
