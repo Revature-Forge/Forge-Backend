@@ -1,5 +1,6 @@
 package com.forge.revature.demo;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.forge.revature.controllers.FullPortfolioIgnoreMixin;
+import com.forge.revature.controllers.PortfolioIgnoreMixin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -298,4 +301,25 @@ public class PortfolioTest {
 		mvc.perform(post(baseUrl + "/full").contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(testFullPortfolio))).andExpect(status().isOk());
 	}
+
+	@Test
+    void testFullPortfolioMixinIgnore() {
+	    class FullPortfolioIgnoreMixinImpl extends FullPortfolioIgnoreMixin {
+	        Portfolio portfolio;
+        }
+
+        FullPortfolioIgnoreMixinImpl fp = new FullPortfolioIgnoreMixinImpl();
+	    assertEquals(null, fp.portfolio);
+    }
+
+    @Test
+    void testPortfolioIgnoreMixin() {
+        class PortfolioIgnoreMixinImpl extends PortfolioIgnoreMixin {
+            Portfolio portfolio;
+        }
+
+        PortfolioIgnoreMixinImpl fp = new PortfolioIgnoreMixinImpl();
+        assertEquals(null, fp.portfolio);
+    }
+
 }

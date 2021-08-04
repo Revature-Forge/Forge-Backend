@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.models.*;
@@ -33,21 +32,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-abstract class PortfolioIgnoreMixin {
-    @JsonIgnore
-    Portfolio portfolio;
-}
-
-abstract class UserIgnoreMixin {
-    @JsonIgnore
-    User user;
-}
-
-abstract class FlagIgnoreMixin {
-    @JsonIgnore
-    HashMap<String, String> flags;
-}
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -189,8 +173,7 @@ public class PortfolioController {
         );
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.addMixIn(FullPortfolio.class, UserIgnoreMixin.class);
-        mapper.addMixIn(FullPortfolio.class, FlagIgnoreMixin.class);
+        mapper.addMixIn(FullPortfolio.class, FullPortfolioIgnoreMixin.class);
         mapper.addMixIn(AboutMe.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Certification.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Education.class, PortfolioIgnoreMixin.class);
