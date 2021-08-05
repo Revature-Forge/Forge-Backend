@@ -1,0 +1,42 @@
+parameters:
+  - name: 'jobName'
+    type: string
+  - name: 'chartPath'
+    type: string 
+  - name: 'releaseName'
+    type: string 
+  - name: 'repository'
+    type: string
+  - name: 'secretName'
+    type: string
+  - name: 'imageTag'
+    type: string 
+
+jobs:
+  - job: ${{ parameters.jobName }}
+    dependsOn: 'Secret_Creation'
+    steps:
+      - task: HelmInstaller@0
+        inputs:
+          helmVersion: '3'
+          installKubectl: true
+        displayName: 'Helm Install'
+      - task: HelmDeploy@0
+        inputs:
+          connectionType: 'Azure Resource Manager'
+          azureSubscription: 'RevatureProject3ARMSubscription'
+          azureResourceGroup: 'may24_devops_dev'
+          kubernetesCluster: 'may24_devops_aks_dev'
+          namespace: 'team2'
+          command: 'upgrade'
+          chartType: 'FilePath'
+          chartPath: '${{ parameters.chartPath }}'
+          releaseName: '${{ parameters.releaseName }}'
+          overrideValues: |
+            image.repository=${{ parameters.repository }}
+            imagePullSecrets[0].name=${{ parameters.secretName }}
+            image.tag=${{ parameters.imageTag }}
+            db.persist=true
+          arguments: |
+            --atomic 
+        displayName: 'Helm Deploy'

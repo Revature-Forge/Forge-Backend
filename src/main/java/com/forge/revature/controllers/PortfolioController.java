@@ -1,5 +1,6 @@
 package com.forge.revature.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.models.*;
@@ -33,19 +33,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-abstract class PortfolioIgnoreMixin {
-    @JsonIgnore
-    Portfolio portfolio;
-}
-
-abstract class UserIgnoreMixin {
-    @JsonIgnore
-    User user;
-}
-
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/portfolios")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/portfolios")
 @NoArgsConstructor
 @AllArgsConstructor
 public class PortfolioController {
@@ -78,6 +68,12 @@ public class PortfolioController {
 
     @Autowired
     WorkHistoryRepo workHistoryRepo;
+    
+    @Autowired
+    MatrixRepo matrixRepo;
+    
+    @Autowired
+    SkillRepo skillRepo;
 
     public PortfolioController(PortfolioRepo portRepo) {
         this.portRepo = portRepo;
@@ -115,18 +111,33 @@ public class PortfolioController {
             old.get().setName(updated.getName());
             old.get().setReviewed(updated.isReviewed());
             old.get().setSubmitted(updated.isSubmitted());
-            old.get().setUser(updated.getUser());
-        
+            old.get().setFlags(updated.getFlags());
             portRepo.save(old.get());
         }
     }
     
     @DeleteMapping("/{id}")
+    @Transactional
     public Map<String, Boolean> deletePortfolio(@PathVariable int id) throws ResourceNotFoundException{
         Optional<Portfolio> port = portRepo.findById(id);
 
         if(port.isPresent()){
-            portRepo.delete(port.get());
+        	aboutMeRepo.deleteByPortfolioId(id);
+        	certificationRepo.deleteByPortfolioId(id);
+        	educationRepo.deleteByPortfolioId(id);
+        	equivalencyRepo.deleteByPortfolioId(id);
+        	gitHubRepo.deleteByPortfolioId(id);
+        	honorRepo.deleteByPortfolioId(id);
+        	projectRepo.deleteByPortfolioId(id);
+        	workExperienceRepo.deleteByPortfolioId(id);
+        	workHistoryRepo.deleteByPortfolioId(id);
+        	
+        	List<Matrix> m = matrixRepo.findAllByPortfolio(port.get());
+        	m.forEach(s -> skillRepo.deleteByMatrix(s));
+        	matrixRepo.deleteByPortfolioId(id);
+            
+        	portRepo.delete(port.get());
+            
         }else{
             throw new ResourceNotFoundException("The Portfolio to be deleted could not be found");
         }
@@ -148,6 +159,7 @@ public class PortfolioController {
             port.isApproved(),
             port.isReviewed(),
             port.getFeedback(),
+            port.getFlags(),
             aboutMeRepo.findByPortfolioId(id).get(),
             certificationRepo.findAllByPortfolioId(id),
             educationRepo.findAllByPortfolioId(id),
@@ -156,11 +168,12 @@ public class PortfolioController {
             honorRepo.findByPortfolio(port),
             projectRepo.findByPortfolio_Id(id),
             workExperienceRepo.findByPortfolio_Id(id),
-            workHistoryRepo.findByPortfolio(port)
+            workHistoryRepo.findByPortfolio(port),
+            insertSkills(matrixRepo.findAllByPortfolio(port))
         );
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.addMixIn(FullPortfolio.class, UserIgnoreMixin.class);
+        mapper.addMixIn(FullPortfolio.class, FullPortfolioIgnoreMixin.class);
         mapper.addMixIn(AboutMe.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Certification.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(Education.class, PortfolioIgnoreMixin.class);
@@ -170,6 +183,7 @@ public class PortfolioController {
         mapper.addMixIn(Project.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(WorkExperience.class, PortfolioIgnoreMixin.class);
         mapper.addMixIn(WorkHistory.class, PortfolioIgnoreMixin.class);
+        mapper.addMixIn(Matrix.class, PortfolioIgnoreMixin.class);
 
         response.setHeader("Content-Disposition", "attachment; filename=Portfolio-" + id + ".json");
         return new ResponseEntity<>(new ByteArrayResource(mapper.writeValueAsString(full).getBytes()), HttpStatus.OK);
@@ -178,54 +192,90 @@ public class PortfolioController {
     @Transactional
     @PostMapping(value = "/full", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio){
-    	Portfolio pf = new Portfolio();
-    	pf.setName(fullPortfolio.getName());
-    	pf.setUser(fullPortfolio.getUser());
-    	pf.setSubmitted(fullPortfolio.isSubmitted());
-    	pf.setApproved(fullPortfolio.isApproved());
-    	pf.setReviewed(fullPortfolio.isReviewed());
-    	pf.setFeedback(fullPortfolio.getFeedback());
 
-    	int pfid = portRepo.save(pf).getId();
-    	pf.setId(pfid);
+        Portfolio pf = new Portfolio();
+        pf.setName(fullPortfolio.getName());
+        pf.setUser(fullPortfolio.getUser());
+        pf.setSubmitted(fullPortfolio.isSubmitted());
+        pf.setApproved(fullPortfolio.isApproved());
+        pf.setReviewed(fullPortfolio.isReviewed());
+        pf.setFeedback(fullPortfolio.getFeedback());
 
-    	AboutMe newMe = new AboutMe();
-    	newMe.setPortfolio(pf);
-    	newMe.setBio(fullPortfolio.getAboutMe().getBio());
-    	newMe.setEmail(fullPortfolio.getAboutMe().getEmail());
-    	newMe.setPhone(fullPortfolio.getAboutMe().getPhone());
-    	
-    	List<Certification> certs = fullPortfolio.getCertifications();
-    	certs.forEach(cert -> cert.setPortfolio(pf));
-    	
-    	List<Education> ed = fullPortfolio.getEducations();
-    	ed.forEach(e -> e.setPortfolio(pf));
-    	
-    	List<Equivalency> equivs = fullPortfolio.getEquivalencies();
-    	equivs.forEach(e -> e.setPortfolio(pf));
-    	
-    	List<GitHub> git = fullPortfolio.getGitHubs();
-    	
-    	List<Honor> honors = fullPortfolio.getHonors();
-    	honors.forEach(honor -> honor.setPortfolio(pf));
+        int pfid = portRepo.save(pf).getId();
+        pf.setId(pfid);
 
-    	List<Project> projects = fullPortfolio.getProjects();
-    	projects.forEach(project -> project.setPortfolio(pf));
-    	
-    	List<WorkExperience> workExp = fullPortfolio.getWorkExperiences();
-    	workExp.forEach(exp -> exp.setPortfolio(pf));
-    	
-    	List<WorkHistory> workHist = fullPortfolio.getWorkHistories();
-    	workHist.forEach(hist -> hist.setPortfolio(pf));
-    	
-    	aboutMeRepo.save(newMe);
-    	certificationRepo.saveAll(certs);
-    	educationRepo.saveAll(ed);
-    	equivalencyRepo.saveAll(equivs);
-    	gitHubRepo.saveAll(git);
-    	honorRepo.saveAll(honors);
-    	projectRepo.saveAll(projects);
-    	workExperienceRepo.saveAll(workExp);
-    	workHistoryRepo.saveAll(workHist);
+        AboutMe newMe = new AboutMe();
+        newMe.setPortfolio(pf);
+        newMe.setBio(fullPortfolio.getAboutMe().getBio());
+        newMe.setEmail(fullPortfolio.getAboutMe().getEmail());
+        newMe.setPhone(fullPortfolio.getAboutMe().getPhone());
+
+        List<Certification> certs = fullPortfolio.getCertifications();
+        certs.forEach(cert -> cert.setPortfolio(pf));
+
+        List<Education> ed = fullPortfolio.getEducations();
+        ed.forEach(e -> e.setPortfolio(pf));
+
+        List<Equivalency> equivs = fullPortfolio.getEquivalencies();
+        equivs.forEach(e -> e.setPortfolio(pf));
+
+        List<GitHub> git = fullPortfolio.getGitHubs();
+
+        List<Honor> honors = fullPortfolio.getHonors();
+        honors.forEach(honor -> honor.setPortfolio(pf));
+
+        List<Project> projects = fullPortfolio.getProjects();
+        projects.forEach(project -> project.setPortfolio(pf));
+
+        List<WorkExperience> workExp = fullPortfolio.getWorkExperiences();
+        workExp.forEach(exp -> exp.setPortfolio(pf));
+
+        List<WorkHistory> workHist = fullPortfolio.getWorkHistories();
+        workHist.forEach(hist -> hist.setPortfolio(pf));
+         	
+    	  List<Matrix> matrices = fullPortfolio.getMatrices();
+    	  matrices.forEach(mat -> mat.setPortfolio(pf));
+
+        aboutMeRepo.save(newMe);
+        certificationRepo.saveAll(certs);
+        educationRepo.saveAll(ed);
+        equivalencyRepo.saveAll(equivs);
+        gitHubRepo.saveAll(git);
+        honorRepo.saveAll(honors);
+        projectRepo.saveAll(projects);
+        workExperienceRepo.saveAll(workExp);
+        workHistoryRepo.saveAll(workHist);
+        matrixRepo.saveAll(matrices);
+    	  skillRepo.saveAll(extractSkills(matrices));
+
     }
+	
+	/**
+	 * 
+	 * @param max is the list of matrices to be serialized
+	 * @return the list with each matrix having its list of skills inserted
+	 */
+	private List<Matrix> insertSkills(List<Matrix> max) {
+		for (Matrix m : max) {
+			List<Skill> skills = skillRepo.findAllByMatrix(m);
+			m.setSkills(skills);
+		}
+		return max;
+	}
+
+	/**
+	 * 
+	 * @param listMax is the list of deserialized matrices
+	 * @return the list of all the matrices' skills with each Matrix field set for SQL storage
+	 */
+	private List<Skill> extractSkills(List<Matrix> listMax) {
+		List<Skill> allSkills = new ArrayList<>();
+		for(Matrix m : listMax) {
+			for(Skill s : m.getSkills()) {
+				s.setMatrix(m);
+				allSkills.add(s);
+			}
+		}
+		return allSkills;
+	}
 }

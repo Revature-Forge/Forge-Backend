@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "forge-cors.fullname" . }}
+  labels:
+    {{- include "forge-cors.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "forge-cors.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "forge-cors.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "forge-cors.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: bundle
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: {{ .Values.image.portName }}
+              containerPort: {{ .Values.image.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-{{ .Values.dbconfig.name }}
+          env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-{{ .Values.dbconfig.secretName }}
+                key: username
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-{{ .Values.dbconfig.secretName }}
+                key: password
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -30,6 +30,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 public class WorkExperienceTest {
 
     private MockMvc mock;
+    
+    private static String baseUrl = "/api/workexperience";
 
     @MockBean
     WorkExperienceRepo repo;
@@ -45,7 +47,7 @@ public class WorkExperienceTest {
     void testGetAll() throws Exception {
         given(repo.findAll()).willReturn(new ArrayList<WorkExperience>());
 
-        mock.perform(get("/workexperience"))
+        mock.perform(get(baseUrl))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -58,7 +60,7 @@ public class WorkExperienceTest {
                 "sample responsibilities", "sample description", "sample technologies", format.parse("2017-08-28"),
                 format.parse("2020-02-07"))));
 
-        mock.perform(get("/workexperience/1"))
+        mock.perform(get(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -73,7 +75,7 @@ public class WorkExperienceTest {
         work.setId(1);
         given(repo.save(work)).willReturn(work);
 
-        mock.perform(post("/workexperience").contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(work)))
+        mock.perform(post(baseUrl).contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(work)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andReturn();
@@ -90,7 +92,7 @@ public class WorkExperienceTest {
                 "different responsibilities", "different description", "new technologies", format.parse("2017-08-28"),
                 format.parse("2020-02-07"));
 
-        mock.perform(post("/workexperience/1").contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(newWork)))
+        mock.perform(post(baseUrl + "/1").contentType("application/json;charset=utf-8").content(new ObjectMapper().writeValueAsString(newWork)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andReturn();
@@ -98,7 +100,7 @@ public class WorkExperienceTest {
 
     @Test
     void testDelete() throws Exception {
-        mock.perform(delete("/workexperience/1"))
+        mock.perform(delete(baseUrl + "/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andReturn();
@@ -120,7 +122,7 @@ public class WorkExperienceTest {
         list.add(newWork);
         given(repo.findByPortfolio_Id(1)).willReturn(list);
 
-        mock.perform(get("/workexperience/portfolio/1"))
+        mock.perform(get(baseUrl + "/portfolio/1"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))

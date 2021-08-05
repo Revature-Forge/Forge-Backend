@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/equiv")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/equiv")
 public class EquivalencyController {
     @Autowired
     EquivalencyRepo eqRepo;

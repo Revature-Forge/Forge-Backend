@@ -32,6 +32,8 @@ public class WorkHistoryControllerTest {
   @Autowired
   private MockMvc mvc;
 
+  private static String baseUrl = "/api/workhistory";
+  
   @MockBean
   private WorkHistoryRepo workHistoryRepo;
 
@@ -52,7 +54,7 @@ public class WorkHistoryControllerTest {
   
     given(workHistoryRepo.findAll()).willReturn(allWorkHistory);
 
-    mvc.perform(get("/workhistory")
+    mvc.perform(get(baseUrl)
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", hasSize(1)))
@@ -64,13 +66,13 @@ public class WorkHistoryControllerTest {
     given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
     given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
 
-    mvc.perform(get("/workhistory/1")
+    mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.title", is(workHistory.getTitle()))); //making sure getting the right data
 
     //checking when id does not exist (findById returns empty optional)
-    mvc.perform(get("/workhistory/2"))
+    mvc.perform(get(baseUrl + "/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
       .andExpect(content().string(containsString("WorkHistory not Found")));
@@ -80,7 +82,7 @@ public class WorkHistoryControllerTest {
   public void testPost() throws Exception {
     given(workHistoryRepo.save(Mockito.any())).willReturn(workHistory);
 
-    mvc.perform(post("/workhistory")
+    mvc.perform(post(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
       .content(new ObjectMapper().writeValueAsString(workHistory)))
       .andExpect(status().isOk())
@@ -92,12 +94,12 @@ public class WorkHistoryControllerTest {
     given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
     given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
 
-    mvc.perform(delete("/workhistory/1"))
+    mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
 
     //checking when id does not exist (findById returns empty optional)
-    mvc.perform(delete("/workhistory/2"))
+    mvc.perform(delete(baseUrl + "/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
       .andExpect(content().string(containsString("WorkHistory not Found")));
@@ -112,7 +114,7 @@ public class WorkHistoryControllerTest {
     newGit.setId(2);
 
     //checking when id does not exist (findById returns empty optional)
-    mvc.perform(put("/workhistory")
+    mvc.perform(put(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
       .content(new ObjectMapper().writeValueAsString(newGit)))
       .andDo(print())
@@ -123,7 +125,7 @@ public class WorkHistoryControllerTest {
 
     given(workHistoryRepo.save(Mockito.any())).willReturn(newGit);
 
-    mvc.perform(put("/workhistory")
+    mvc.perform(put(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
       .content(new ObjectMapper().writeValueAsString(newGit)))
       .andDo(print())
@@ -133,7 +135,8 @@ public class WorkHistoryControllerTest {
 
   @Test
   void testGetByPortfolioId() throws Exception {
-    Portfolio portfolio = new Portfolio(1, "new portfolio", new User(1, "test" , "user", "test@email.com" , "password", false), false, false, false, "");
+	  HashMap<String, String> map = new HashMap<>();
+    Portfolio portfolio = new Portfolio(1, "new portfolio", new User(1, "test" , "user", "test@email.com" , "password", false), false, false, false, "", map);
     workHistory.setPortfolio(portfolio);
     List<WorkHistory> allWorkHistory = Arrays.asList(workHistory);
   
@@ -142,7 +145,7 @@ public class WorkHistoryControllerTest {
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
     given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
-    mvc.perform(get("/workhistory/portfolio/1"))
+    mvc.perform(get(baseUrl + "/portfolio/1"))
       .andExpect(status().isOk())
       .andDo(print())
       .andExpect(content().contentType("application/json"))
@@ -151,7 +154,7 @@ public class WorkHistoryControllerTest {
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
     
     // test for workhistory not found
-    mvc.perform(get("/workhistory/portfolio/2"))
+    mvc.perform(get(baseUrl + "/portfolio/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
       .andExpect(content().string(containsString("Portfolio not Found")));
@@ -162,7 +165,7 @@ public class WorkHistoryControllerTest {
     given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
 
     // test for workhistory not found with a found portfolio
-    mvc.perform(get("/workhistory/portfolio/3"))
+    mvc.perform(get(baseUrl + "/portfolio/3"))
       .andDo(print())
       .andExpect(content().contentType("application/json"))
       .andExpect(jsonPath("$", hasSize(0)));
