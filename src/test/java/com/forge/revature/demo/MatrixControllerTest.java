@@ -63,7 +63,7 @@ class MatrixControllerTest {
 
 	@BeforeEach
 	void setup() {
-		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.", null);
+		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.", null, null);
 		matrix = new Matrix("Languages");
 		matrix.setPortfolio(portfolio);
 		skills = new ArrayList<>();

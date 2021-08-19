@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface PortfolioRepo extends JpaRepository<Portfolio, Integer>{
     List<Portfolio> findAllByUserId(Integer userId);
     
+    
 }

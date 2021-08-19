@@ -136,7 +136,7 @@ public class WorkHistoryControllerTest {
   @Test
   void testGetByPortfolioId() throws Exception {
 	  HashMap<String, String> map = new HashMap<>();
-    Portfolio portfolio = new Portfolio(1, "new portfolio", new User(1, "test" , "user", "test@email.com" , "password", false), false, false, false, "", map);
+    Portfolio portfolio = new Portfolio(1, "new portfolio", new User(1, "test" , "user", "test@email.com" , "password", false), false, false, false, "", null, map);
     workHistory.setPortfolio(portfolio);
     List<WorkHistory> allWorkHistory = Arrays.asList(workHistory);
   

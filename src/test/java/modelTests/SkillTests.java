@@ -23,7 +23,7 @@ class SkillTests {
 		
 	@BeforeEach
 	void setup() {
-		pf = new Portfolio(1, "Test", null, false, false, false, "", null);
+		pf = new Portfolio(1, "Test", null, false, false, false, "", null, null);
 		fullMatrix = new Matrix("Languages", pf);
 		fullMatrix.setId(1);
 		skill = new Skill();

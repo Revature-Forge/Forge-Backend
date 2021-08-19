@@ -140,7 +140,7 @@ public class PortfolioTest {
 	void testPost() throws Exception {
 		HashMap<String, String> map = new HashMap<>();
 		Portfolio port = new Portfolio(1, "new portfilio",
-				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", map);
+				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", null, map);
 
 		given(repo.save(port)).willReturn(port);
 
@@ -153,9 +153,9 @@ public class PortfolioTest {
 	void testUpdate() throws Exception {
 		HashMap<String, String> map = new HashMap<>();
 		Portfolio port = new Portfolio(1, "new portfilio",
-				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", map);
+				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", null, map);
 		Portfolio port2 = new Portfolio(1, "new portfilio name",
-				new User(1, "test", "user", "test@email.com", "password", false), true, true, true, "feedback", map);
+				new User(1, "test", "user", "test@email.com", "password", false), true, true, true, "feedback", null, map);
 		Optional<Portfolio> returned = Optional.of(port);
 
 		given(repo.findById(1)).willReturn(returned);
@@ -169,7 +169,7 @@ public class PortfolioTest {
 	void testdelete() throws Exception {
 		HashMap<String, String> map = new HashMap<>();
 		Portfolio port = new Portfolio(1, "new portfilio",
-				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", map);
+				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", null, map);
 		Optional<Portfolio> returned = Optional.of(port);
 
 		given(repo.findById(1)).willReturn(returned);
@@ -181,7 +181,7 @@ public class PortfolioTest {
 	void testGetFullPortfolio() throws Exception {
 		HashMap<String, String> map = new HashMap<>();
 		Optional<Portfolio> port = Optional.of(new Portfolio(1, "new portfolio",
-				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", map));
+				new User(1, "test", "user", "test@email.com", "password", false), false, false, false, "", null, map));
 		given(repo.findById(1)).willReturn(port);
 		given(repo.existsById(1)).willReturn(true);
 
@@ -295,7 +295,7 @@ public class PortfolioTest {
 				testHonorList, testProjectsList, testWorkExperiences, testWorkHistoriesList, testMatricesList);
 
 		given(repo.save(Mockito.any(Portfolio.class)))
-				.willReturn(new Portfolio(1, "test", testUser, false, false, false, "", new HashMap<>()));
+				.willReturn(new Portfolio(1, "test", testUser, false, false, false, "", null, new HashMap<>()));
 
 		ObjectMapper om = new ObjectMapper();
 		mvc.perform(post(baseUrl + "/full").contentType(MediaType.APPLICATION_JSON)

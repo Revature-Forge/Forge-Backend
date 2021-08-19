@@ -15,7 +15,7 @@ import com.forge.revature.models.Portfolio;
 @SpringBootTest(classes = AboutMe.class)
 class AboutMeTests {
 
-	Portfolio pf = new Portfolio(1, "Test", null, false, false, false, "", null);
+	Portfolio pf = new Portfolio(1, "Test", null, false, false, false, "", null, null);
 	AboutMe me = new AboutMe();
 	AboutMe fullMe = new AboutMe(1, pf, "bio", "test@test.com", "1234567890");
 

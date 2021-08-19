@@ -127,7 +127,7 @@ class WorkHistoryTests {
 	
 	@Test
 	void setPortfolioTest() {
-		Portfolio pf = new Portfolio(1, "Test", null, false, false, false, "", null);
+		Portfolio pf = new Portfolio(1, "Test", null, false, false, false, "", null, null);
 		empty.setPortfolio(pf);
 		assertNotNull(empty.getPortfolio());
 	}

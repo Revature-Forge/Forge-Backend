@@ -56,7 +56,7 @@ public class EducationTests {
         this.mockMvc = MockMvcBuilders.standaloneSetup(new EducationController(educationRepo)).build();
         User user = new User(1, "Max", "Lee" , "max.lee@email.com" , "password", true);
         HashMap<String, String> map = new HashMap<>();
-        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "", map);
+        Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "", null, map);
         this.testEducation = new Education(1, portfolio, "university", "degree", "graduationDate", 3.5, "");
         this.testEducation2 = new Education(2, portfolio, "uni", "deg", "2021", 2.0, "");
         this.testEducation3 = new Education(3, portfolio, "uni2", "deg2", "2021", 2.0, "");

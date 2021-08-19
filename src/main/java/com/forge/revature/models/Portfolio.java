@@ -47,6 +47,10 @@ public class Portfolio {
 	private boolean reviewed;
 
 	private String feedback;
+	
+	@ManyToOne
+	@JoinColumn(name="id")
+	private User approver; 
 
 	@Column
 	@Convert(converter = HashMapConverter.class)
