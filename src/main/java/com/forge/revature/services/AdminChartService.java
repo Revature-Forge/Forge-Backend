@@ -23,12 +23,27 @@ public class AdminChartService {
 	
 	@Autowired
 	PortfolioRepo portfolioRepo;
-	
+	/**
+	 * getCount --- program to get the count of approved or denied portfolios by one admin.
+	 * @author	Hong Wu
+	 * @param	a boolean, true for counting approved cases
+	 *	                   false for counting denied cases
+	 *	        an int, the admin's user id
+	 * @return	the count result
+	 */
 	public Integer getCount(boolean approveState, int admin_id) {
 		if (approveState) return portfolioRepo.getApproveCount(admin_id);
 		return portfolioRepo.getDeniedCount(admin_id);
 	}
-	
+
+
+
+	/**
+	 * getAdminList --- program to get all the admin user accounts.
+	 * @author	Hong Wu
+	 * @param	none
+	 * @return	a list of objects, containing all the user accounts sorted by user id
+	 */
 	public List<User> getAdminList() {
 		List<User> adminList = userRepo.findAllAdmin();
 		Collections.sort(adminList, new Comparator<User>() { 
