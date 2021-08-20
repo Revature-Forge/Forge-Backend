@@ -56,7 +56,7 @@ public class Portfolio {
 	@JoinColumn(name="approver_id")
 	private User approver; 
 	
-	private int adminId;
+	private int adId;
 
 	@Column
 	@Convert(converter = HashMapConverter.class)
@@ -69,5 +69,22 @@ public class Portfolio {
 		this.reviewed = reviewed;
 		this.feedback = feedback;
 	}
+
+	public Portfolio(int id, String name, User user, boolean submitted, boolean approved, boolean reviewed,
+			String feedback, User approver, HashMap<String, String> flags) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.user = user;
+		this.submitted = submitted;
+		this.approved = approved;
+		this.reviewed = reviewed;
+		this.feedback = feedback;
+		this.approver = approver;
+		this.flags = flags;
+		adId = -1;
+	}
+	
+	
 
 }
