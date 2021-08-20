@@ -40,6 +40,7 @@ public class UserController {
 
     @GetMapping
     public List<User> getAll() {
+    	System.out.println("Getting Get request");
         List<User> users = StreamSupport.stream(userRepo.findAll().spliterator(), false)
             .collect(Collectors.toList());
         return users;
@@ -52,6 +53,7 @@ public class UserController {
 
     @PostMapping("/login")
     public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
+    	System.out.println("Getting login request");
     	Optional<User> user = userRepo.findByEmail(email);
         if(user.isPresent()){
             if(password.equals(user.get().getPassword())){
@@ -61,6 +63,19 @@ public class UserController {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED , "Either Email or Password is incorrect");
         
     }
+    
+    @PostMapping("/loginAuth0")
+    public User login(@RequestBody User user){
+    	
+    	Optional<User> foundUser = userRepo.findByEmail(user.getEmail());
+        if(foundUser.isPresent()){  
+            return foundUser.get();
+        } 
+        userRepo.save(user);
+        return foundUser.get();
+        
+    }
+    
     @PostMapping
     public User postUser(@RequestBody User user){
         return userRepo.save(user);
