@@ -9,13 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forge.revature.models.*;
-import com.forge.revature.repo.*;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -32,6 +25,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forge.revature.models.AboutMe;
+import com.forge.revature.models.Certification;
+import com.forge.revature.models.Education;
+import com.forge.revature.models.Equivalency;
+import com.forge.revature.models.FullPortfolio;
+import com.forge.revature.models.GitHub;
+import com.forge.revature.models.Honor;
+import com.forge.revature.models.Matrix;
+import com.forge.revature.models.Portfolio;
+import com.forge.revature.models.Project;
+import com.forge.revature.models.Skill;
+import com.forge.revature.models.User;
+import com.forge.revature.models.WorkExperience;
+import com.forge.revature.models.WorkHistory;
+import com.forge.revature.repo.AboutMeRepo;
+import com.forge.revature.repo.CertificationRepo;
+import com.forge.revature.repo.EducationRepo;
+import com.forge.revature.repo.EquivalencyRepo;
+import com.forge.revature.repo.GitHubRepo;
+import com.forge.revature.repo.HonorRepo;
+import com.forge.revature.repo.MatrixRepo;
+import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.repo.ProjectRepo;
+import com.forge.revature.repo.SkillRepo;
+import com.forge.revature.repo.UserRepo;
+import com.forge.revature.repo.WorkExperienceRepo;
+import com.forge.revature.repo.WorkHistoryRepo;
+import com.forge.revature.services.EmailSenderService;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -74,6 +101,10 @@ public class PortfolioController {
     
     @Autowired
     SkillRepo skillRepo;
+    
+    @Autowired
+    EmailSenderService emailSenderService;
+   
 
     public PortfolioController(PortfolioRepo portRepo) {
         this.portRepo = portRepo;
@@ -103,8 +134,9 @@ public class PortfolioController {
     }
     @PostMapping("/{id}")
     public void updateUser(@PathVariable int id , @RequestBody Portfolio updated){
+    	
         Optional<Portfolio> old = portRepo.findById(id);
-
+        
         if(old.isPresent()){
             old.get().setApproved(updated.isApproved());
             old.get().setFeedback(updated.getFeedback());
@@ -113,7 +145,10 @@ public class PortfolioController {
             old.get().setSubmitted(updated.isSubmitted());
             old.get().setFlags(updated.getFlags());
             portRepo.save(old.get());
+            
+            emailSenderService.sendStatusEmail(old.get().getUser(),old.get().isReviewed(), old.get().isSubmitted(), old.get().isApproved());
         }
+        
     }
     
     @DeleteMapping("/{id}")
