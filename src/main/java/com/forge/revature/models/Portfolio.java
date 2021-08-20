@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.forge.revature.converter.HashMapConverter;
@@ -45,6 +46,10 @@ public class Portfolio {
 
 	@Column(columnDefinition = "boolean default false")
 	private boolean reviewed;
+	
+	@OneToMany
+	@JoinColumn(name = "admin_id")
+	private User admin;
 
 	private String feedback;
 
@@ -58,6 +63,19 @@ public class Portfolio {
 		this.approved = approved;
 		this.reviewed = reviewed;
 		this.feedback = feedback;
+	}
+
+	public Portfolio(int id, String name, User user, boolean submitted, boolean approved, boolean reviewed,
+			String feedback, HashMap<String, String> flags) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.user = user;
+		this.submitted = submitted;
+		this.approved = approved;
+		this.reviewed = reviewed;
+		this.feedback = feedback;
+		this.flags = flags;
 	}
 
 }
