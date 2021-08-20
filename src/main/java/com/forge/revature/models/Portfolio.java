@@ -55,6 +55,8 @@ public class Portfolio {
 	@ManyToOne
 	@JoinColumn(name="approver_id")
 	private User approver; 
+	
+	private int adminId;
 
 	@Column
 	@Convert(converter = HashMapConverter.class)
