@@ -96,14 +96,17 @@ public class PortfolioController {
         List<Portfolio> portfolios = portRepo.findAllByUserId(id);
         return portfolios;
     }
-
+    
     @PostMapping
     public Portfolio postPort(@RequestBody Portfolio port){
         return portRepo.save(port);
     }
+    
     @PostMapping("/{id}")
     public void updateUser(@PathVariable int id , @RequestBody Portfolio updated){
         Optional<Portfolio> old = portRepo.findById(id);
+        System.out.println("Did a regular updateUser");
+        System.out.println(updated.toString());
 
         if(old.isPresent()){
             old.get().setApproved(updated.isApproved());
@@ -115,6 +118,8 @@ public class PortfolioController {
             portRepo.save(old.get());
         }
     }
+    
+
     
     @DeleteMapping("/{id}")
     @Transactional

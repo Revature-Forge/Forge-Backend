@@ -2,9 +2,11 @@ package com.forge.revature.models;
 
 import java.util.HashMap;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "portfolios")
@@ -25,6 +28,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Portfolio {
 
 	@Id
@@ -49,7 +53,7 @@ public class Portfolio {
 	private String feedback;
 	
 	@ManyToOne
-	@JoinColumn(name="id")
+	@JoinColumn(name="approver_id")
 	private User approver; 
 
 	@Column
