@@ -24,11 +24,6 @@ public class AdminChartService {
 	@Autowired
 	PortfolioRepo portfolioRepo;
 	
-	//this method returns the count of approved or denied portfolios
-	//done by admin user with id same as passed in parameter admin_id
-
-
-
 	/*************************************
 	public Integer getCount
 
