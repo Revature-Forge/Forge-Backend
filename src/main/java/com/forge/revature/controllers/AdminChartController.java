@@ -29,19 +29,43 @@ public class AdminChartController {
 	@Autowired
 	AdminChartService adminChartService;
 	
+	/*************************************
+	public ResponseEntity<List<AdminChart>> getAdminWorkReport
+
+	Auth:  Hong Wu 08/20/2021
+
+	use:  get a report in json object containing all the admin's approved or denied counts 
+
+	parameter:  none
+	
+	access URI:	 http://localhost:3000/api/adminChart
+	    method:  post
+
+	return: when search failed, return a response entity with status code 400
+	        when search success, return a response entity with status code 200
+	                             and a body containing the json object
+	************************************/
     @PostMapping
     public ResponseEntity<List<AdminChart>> getAdminWorkReport() {
     	ArrayList<AdminChart> chartData = new ArrayList<AdminChart>();
 
+    	//get all the admin user accounts
     	List<User> adminList = adminChartService.getAdminList();
-    	
+
+    	//return failure if database request fail
 		if(adminList.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		
+
+		//format the list of reports into AdminChart model
     	for (int i=0; i<adminList.size(); i++) {
+    		
+    		//get approved count by admin id
     		Integer approveCount = adminChartService.getCount(true, adminList.get(i).getId());
+    		
+    		//get denied count by admin id
     		Integer deniedCount = adminChartService.getCount(false, adminList.get(i).getId());
+
     		chartData.add(new AdminChart(adminList.get(i).getFName()+ ' ' + adminList.get(i).getLName(), (approveCount==null? 0: approveCount), (deniedCount==null? 0: deniedCount)));
     	}
     	
