@@ -10,8 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminChart {
-	String fName;
-	String lName;
+	String name;
 	int approved;
 	int denied;
 }

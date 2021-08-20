@@ -47,7 +47,7 @@ public class Portfolio {
 	@Column(columnDefinition = "boolean default false")
 	private boolean reviewed;
 	
-	@OneToMany
+	@ManyToOne
 	@JoinColumn(name = "admin_id")
 	private User admin;
 
