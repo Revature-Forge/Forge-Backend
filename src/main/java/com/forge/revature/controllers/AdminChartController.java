@@ -29,22 +29,14 @@ public class AdminChartController {
 	@Autowired
 	AdminChartService adminChartService;
 	
-	/*************************************
-	public ResponseEntity<List<AdminChart>> getAdminWorkReport
-
-	Auth:  Hong Wu 08/20/2021
-
-	use:  get a report in json object containing all the admin's approved or denied counts 
-
-	parameter:  none
-	
-	access URI:	 http://localhost:3000/api/adminChart
-	    method:  post
-
-	return: when search failed, return a response entity with status code 400
-	        when search success, return a response entity with status code 200
-	                             and a body containing the json object
-	************************************/
+	/**
+	 * getAdminWorkReport --- get a report in json object containing all the admin's approved or denied counts.
+	 * @author	Hong Wu
+	 * @param	none
+	 * @return	when search failed, return a response entity with status code 400
+	 *		    when search success, return a response entity with status code 200
+     *	                             and a body containing the json object
+	 */
     @PostMapping
     public ResponseEntity<List<AdminChart>> getAdminWorkReport() {
     	ArrayList<AdminChart> chartData = new ArrayList<AdminChart>();

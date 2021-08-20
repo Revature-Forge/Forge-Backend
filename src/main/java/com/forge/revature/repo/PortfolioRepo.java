@@ -13,9 +13,9 @@ import com.forge.revature.models.Portfolio;
 public interface PortfolioRepo extends JpaRepository<Portfolio, Integer>{
     List<Portfolio> findAllByUserId(Integer userId);
     
-    @Query(value = "SELECT COUNT(APPROVED) FROM portfolios WHERE APPROVED = true AND admin_id = ?1 GROUP BY admin_id", nativeQuery = true)
+    @Query("SELECT COUNT(approved) FROM Portfolio WHERE approved = true AND admin_id = ?1 GROUP BY admin_id")
     Integer getApproveCount(int admin_id);
     
-    @Query(value = "SELECT COUNT(APPROVED) FROM portfolios WHERE APPROVED = false AND REVIEWED = true AND admin_id = ?1 GROUP BY admin_id", nativeQuery = true)
+    @Query("SELECT COUNT(approved) FROM Portfolio WHERE approved = false AND reviewed = true AND admin_id = ?1 GROUP BY admin_id")
     Integer getDeniedCount(int admin_id);
 }

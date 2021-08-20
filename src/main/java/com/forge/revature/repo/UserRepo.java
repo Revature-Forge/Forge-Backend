@@ -13,6 +13,5 @@ import com.forge.revature.models.User;
 public interface UserRepo extends JpaRepository<User, Integer>{
     public Optional<User> findByEmail(String email);
     
-    @Query(value = "SELECT * FROM USERS WHERE admin = true", nativeQuery = true)
-    public List<User> findAllAdmin();
+    public List<User> findAllByAdmin(boolean admin);
 }
