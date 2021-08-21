@@ -146,7 +146,7 @@ public class PortfolioController {
             old.get().setFlags(updated.getFlags());
             portRepo.save(old.get());
             
-            emailSenderService.sendStatusEmail(old.get().getUser(),old.get().isReviewed(), old.get().isSubmitted(), old.get().isApproved());
+            emailSenderService.sendStatusEmail(old.get().getUser(),old.get());
         }
         
     }
