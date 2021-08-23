@@ -1,5 +1,10 @@
 package com.forge.revature.controllers;
 
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,11 +106,162 @@ public class PortfolioController {
     public Portfolio postPort(@RequestBody Portfolio port){
         return portRepo.save(port);
     }
+    
+	double calculateAverageResponseTime()
+	{
+		List<Portfolio> portfolios =  getAll();
+		if(portfolios.size() == 0)
+		{
+			return -1.0;
+		}
+		
+		double average = 0;
+		for(int i = 0; i < portfolios.size(); ++i)
+		{
+			average += portfolios.get(i).getResponseTime();
+		}
+		average /= portfolios.size();
+		return average;
+	}
+    
+    
+    
+    Long calculateResponseTime(ZonedDateTime modifiedSubmissionTime, ZonedDateTime modifiedReviewTime)
+    {
+	
+	
+		Instant timeCounter = Instant.ofEpochMilli(0);
+	
+		//if outside work hours move the modifiedReviewTime forward to the nearest work time
+		//if inside work hours move it forward to the nearest hour and subtract that time from
+		//the counter
+		if(modifiedSubmissionTime.toEpochSecond() > modifiedReviewTime.toEpochSecond())
+		{
+			// in case of invalid inputs (where review time is after submission time)
+			return -1L;
+		}
+		
+		if(modifiedReviewTime.getHour() > 17)
+		{
+			modifiedReviewTime = modifiedReviewTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedReviewTime = modifiedReviewTime.plusDays(1);
+		}
+		if(modifiedReviewTime.getDayOfWeek() == DayOfWeek.SATURDAY)
+		{
+			modifiedReviewTime = modifiedReviewTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedReviewTime = modifiedReviewTime.plusDays(2);	
+		}    		
+		if(modifiedReviewTime.getDayOfWeek() == DayOfWeek.SUNDAY)
+		{
+			modifiedReviewTime = modifiedReviewTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedReviewTime = modifiedReviewTime.plusDays(1);	
+		}
+		if(modifiedReviewTime.getHour() < 10)
+		{
+			modifiedReviewTime = modifiedReviewTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedReviewTime = modifiedReviewTime.plusHours(10);
+		}else{
+	    ZonedDateTime roundedReviewTime = modifiedReviewTime.truncatedTo(ChronoUnit.HOURS);
+	    roundedReviewTime = roundedReviewTime.plusHours(1);
+		timeCounter = timeCounter.minusSeconds(roundedReviewTime.toEpochSecond() - modifiedReviewTime.toEpochSecond());
+		modifiedReviewTime = roundedReviewTime;
+		}    	
+		
+		//if outside work hours move the modifiedSubmissionTime forward to the nearest work time
+		//if inside work hours move it forward to the nearest hour and add that time to the counter
+		if(modifiedSubmissionTime.getHour() > 17)
+		{
+			modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedSubmissionTime = modifiedSubmissionTime.plusDays(1);
+		}
+		if(modifiedSubmissionTime.getDayOfWeek() == DayOfWeek.SATURDAY)
+		{
+			modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedSubmissionTime = modifiedSubmissionTime.plusDays(1);	
+		}    		
+		if(modifiedSubmissionTime.getDayOfWeek() == DayOfWeek.SUNDAY)
+		{
+			modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedSubmissionTime = modifiedSubmissionTime.plusDays(1);	
+		}
+		if(modifiedSubmissionTime.getHour() < 10)
+		{
+			modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+			modifiedSubmissionTime = modifiedSubmissionTime.plusHours(10);
+		}else{
+	    	ZonedDateTime roundedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.HOURS);
+	    	roundedSubmissionTime = roundedSubmissionTime.plusHours(1);
+			timeCounter = timeCounter.plusSeconds(roundedSubmissionTime.toEpochSecond() - modifiedSubmissionTime.toEpochSecond());
+			modifiedSubmissionTime = roundedSubmissionTime;
+		}
+	
+	
+		//while modifiedSubmissionTime time is less than modifiedReviewTime increment modifiedSubmissionTime time by one hour
+		//adding to the count if the time added is within work hours until it equals the modifiedReviewTime 
+		while(modifiedSubmissionTime.toEpochSecond() < modifiedReviewTime.toEpochSecond())
+		{
+			//skipping time outside of work hours which is okay because we made sure both are in work hours
+	    	if(modifiedSubmissionTime.getHour() > 17)
+	    	{
+	    		modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+	    		modifiedSubmissionTime = modifiedSubmissionTime.plusDays(1);
+	    	}
+	    	if(modifiedSubmissionTime.getDayOfWeek() == DayOfWeek.SATURDAY)
+	    	{
+	    		modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+	    		modifiedSubmissionTime = modifiedSubmissionTime.plusDays(1);	
+	    	}    		
+	    	if(modifiedSubmissionTime.getDayOfWeek() == DayOfWeek.SUNDAY)
+	    	{
+	    		modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+	    		modifiedSubmissionTime = modifiedSubmissionTime.plusDays(1);	
+	    	}
+	    	if(modifiedSubmissionTime.getHour() < 10)
+	    	{
+	    		modifiedSubmissionTime = modifiedSubmissionTime.truncatedTo(ChronoUnit.DAYS);
+	    		modifiedSubmissionTime = modifiedSubmissionTime.plusHours(10);
+	    	}
+			//incrementing
+	    	while((modifiedSubmissionTime.toEpochSecond() < modifiedReviewTime.toEpochSecond())&&
+	    	(modifiedSubmissionTime.getHour() < 18))
+	    	{
+	    		timeCounter = timeCounter.plusSeconds(3600);
+	    		modifiedSubmissionTime = modifiedSubmissionTime.plusHours(1);
+	    	}
+		}
+		return timeCounter.getEpochSecond();
+    }
+
+	
+    
     @PostMapping("/{id}")
     public void updateUser(@PathVariable int id , @RequestBody Portfolio updated){
-        Optional<Portfolio> old = portRepo.findById(id);
-
+    	Optional<Portfolio> old = portRepo.findById(id);
+        
         if(old.isPresent()){
+            if(updated.isSubmissionTrigger() == true)
+            {
+            	Instant currentTime = Instant.now();
+            	ZoneId eastern = ZoneId.of("US/Eastern");
+            	ZonedDateTime submissionTime = ZonedDateTime.ofInstant(currentTime, eastern);
+            	submissionTime = submissionTime.truncatedTo(ChronoUnit.SECONDS);
+            	old.get().setSubmissionTime(submissionTime.toString());
+            }
+            
+            if( updated.isReviewTrigger() == true)
+            {
+            	
+            	Instant nowUtc = Instant.now();
+            	ZoneId eastern = ZoneId.of("US/Eastern");
+            	ZonedDateTime reviewTime = ZonedDateTime.ofInstant(nowUtc, eastern);
+            	reviewTime = reviewTime.truncatedTo(ChronoUnit.SECONDS);
+            	old.get().setReviewTime(reviewTime.toString());
+            	// do responseTime calculation
+            	ZonedDateTime modifiedReviewTime = reviewTime;
+            	ZonedDateTime modifiedSubmissionTime = ZonedDateTime.parse(old.get().getSubmissionTime());
+            	long responseTime = calculateResponseTime(modifiedSubmissionTime, modifiedReviewTime);
+            	old.get().setResponseTime(responseTime);
+            }
             old.get().setApproved(updated.isApproved());
             old.get().setFeedback(updated.getFeedback());
             old.get().setName(updated.getName());
