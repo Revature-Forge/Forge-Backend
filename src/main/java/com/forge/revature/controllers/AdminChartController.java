@@ -23,11 +23,15 @@ import lombok.NoArgsConstructor;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/adminChart")
 @NoArgsConstructor
-@AllArgsConstructor
 public class AdminChartController {
+
+	AdminChartService adminChartService;
 	
 	@Autowired
-	AdminChartService adminChartService;
+	public AdminChartController(AdminChartService adminChartService) {
+		super();
+		this.adminChartService = adminChartService;
+	}
 	
 	/**
 	 * getAdminWorkReport --- get a report in json object containing all the admin's approved or denied counts.

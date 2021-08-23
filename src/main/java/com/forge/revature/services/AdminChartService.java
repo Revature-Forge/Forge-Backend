@@ -16,14 +16,17 @@ import lombok.NoArgsConstructor;
 
 @Service
 @NoArgsConstructor
-@AllArgsConstructor
 public class AdminChartService {
-	@Autowired
+
 	UserRepo userRepo;
-	
-	@Autowired
 	PortfolioRepo portfolioRepo;
-	
+
+	@Autowired
+	public AdminChartService(UserRepo userRepo, PortfolioRepo portfolioRepo) {
+		super();
+		this.userRepo = userRepo;
+		this.portfolioRepo = portfolioRepo;
+	}
 	/**
 	 * getCount --- program to get the count of approved or denied portfolios by one admin.
 	 * @author	Hong Wu
