@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminChartController {
 
-	AdminChartService adminChartService;
+	private AdminChartService adminChartService;
 	
 	@Autowired
 	public AdminChartController(AdminChartService adminChartService) {
