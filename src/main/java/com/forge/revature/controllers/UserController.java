@@ -72,38 +72,16 @@ public class UserController {
     	//If user is found, find the User
     	if (foundUser.isPresent()) {
     		User existingUser = foundUser.get();
-    		Boolean isAdmin = existingUser.isAdmin();
-    		
-    		//if user found is admin, then
-    		if (isAdmin) {
-    			//check if entered user from Auth0 is admin.
-    			if (!user.isAdmin()) {
-    				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED , "This account is not valid");
-    			}
-    			return existingUser;
-    		}
-    		
-    		//else
-    		return foundUser.get();
+
+    		return existingUser;
     	}
     	
         //if user does not exist, save, then do another query then return that user 2nd time.
         userRepo.save(user);
         Optional<User> foundUserRetry = userRepo.findByEmail(user.getEmail());
         User existingUser = foundUserRetry.get();
-        Boolean isAdmin = existingUser.isAdmin();
-        
-   		//if user found is admin, then
-		if (isAdmin) {
-			//check if entered user from Auth0 is admin.
-			if (!user.isAdmin()) {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED , "This account is not valid");
-			}
-			return existingUser;
-		}
-		
-		//else
-		return existingUser.get();
+
+		return existingUser;
         
     }
     
