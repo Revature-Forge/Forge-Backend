@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/portfolios")
 @NoArgsConstructor
 public class PortfolioController {
+	
     PortfolioRepo portRepo;
     AboutMeRepo aboutMeRepo;
     CertificationRepo certificationRepo;
@@ -51,12 +52,12 @@ public class PortfolioController {
     MatrixRepo matrixRepo;
     SkillRepo skillRepo;
 
-    public PortfolioController(PortfolioRepo portRepo) {
+	public PortfolioController(PortfolioRepo portRepo) {
         this.portRepo = portRepo;
     }
     
     @Autowired
-	public PortfolioController(PortfolioRepo portRepo, AboutMeRepo aboutMeRepo, CertificationRepo certificationRepo,
+    public PortfolioController(PortfolioRepo portRepo, AboutMeRepo aboutMeRepo, CertificationRepo certificationRepo,
 			EducationRepo educationRepo, EquivalencyRepo equivalencyRepo, GitHubRepo gitHubRepo, HonorRepo honorRepo,
 			ProjectRepo projectRepo, WorkExperienceRepo workExperienceRepo, WorkHistoryRepo workHistoryRepo,
 			MatrixRepo matrixRepo, SkillRepo skillRepo) {
@@ -101,8 +102,6 @@ public class PortfolioController {
     @PostMapping("/{id}")
     public void updateUser(@PathVariable int id , @RequestBody Portfolio updated){
         Optional<Portfolio> old = portRepo.findById(id);
-        System.out.println("Did a regular updateUser");
-        System.out.println(updated.toString());
 
         if(old.isPresent()){
             old.get().setApproved(updated.isApproved());
