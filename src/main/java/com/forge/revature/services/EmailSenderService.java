@@ -1,10 +1,7 @@
 package com.forge.revature.services;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -86,6 +83,7 @@ public class EmailSenderService {
 				DataSource fds = new FileDataSource("./src/main/resources/images/rev-logo.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<logo>");
+				messageBodyPart.setFileName("rev-logo.png");
 				// add image to multipart
 				multipart.addBodyPart(messageBodyPart);
 				// Facebook logo
@@ -93,48 +91,57 @@ public class EmailSenderService {
 				fds = new FileDataSource("./src/main/resources/images/facebook-logo.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<facebook-logo>");
+				messageBodyPart.setFileName("facebook-logo.png");
+
 				multipart.addBodyPart(messageBodyPart);
 				// Twitter logo
 				messageBodyPart = new MimeBodyPart();
 				fds = new FileDataSource("./src/main/resources/images/twitter-logo.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<twitter-logo>");
+				messageBodyPart.setFileName("twitter-logo.png");
 				multipart.addBodyPart(messageBodyPart);
 				// LinkedIn logo
 				messageBodyPart = new MimeBodyPart();
 				fds = new FileDataSource("./src/main/resources/images/linkedin-logo.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<linkedin-logo>");
+				messageBodyPart.setFileName("linkedin-logo.png");
 				multipart.addBodyPart(messageBodyPart);
 				// Instagram logo
 				messageBodyPart = new MimeBodyPart();
 				fds = new FileDataSource("./src/main/resources/images/instagram-logo.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<instagram-logo>");
+				messageBodyPart.setFileName("instagram-logo.png");
 				multipart.addBodyPart(messageBodyPart);
 				// Youtube logo
 				messageBodyPart = new MimeBodyPart();
 				fds = new FileDataSource("./src/main/resources/images/youtube-logo.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<youtube-logo>");
+				messageBodyPart.setFileName("youtube-logo.png");
 				multipart.addBodyPart(messageBodyPart);
 				// Facebook logo
 				messageBodyPart = new MimeBodyPart();
 				fds = new FileDataSource("./src/main/resources/images/tiktok-logo.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<tiktok-logo>");
+				messageBodyPart.setFileName("tiktok-logo.png");
 				multipart.addBodyPart(messageBodyPart);
 				// Linkto icon
 				messageBodyPart = new MimeBodyPart();
 				fds = new FileDataSource("./src/main/resources/images/linkto-icon.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<linkto-icon>");
+				messageBodyPart.setFileName("linkto-icon.png");
 				multipart.addBodyPart(messageBodyPart);
 				// Mailto icon
 				messageBodyPart = new MimeBodyPart();
 				fds = new FileDataSource("./src/main/resources/images/mailto-icon.png");
 				messageBodyPart.setDataHandler(new DataHandler(fds));
 				messageBodyPart.setHeader("Content-ID", "<mailto-icon>");
+				messageBodyPart.setFileName("mailto-icon.png");
 				multipart.addBodyPart(messageBodyPart);
 
 				// put everything together
@@ -142,6 +149,7 @@ public class EmailSenderService {
 
 				mailSender.send(message);
 				System.out.println("Mail Sent");
+
 			}
 
 		} catch (MessagingException e) {
