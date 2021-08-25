@@ -37,47 +37,44 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/portfolios")
 @NoArgsConstructor
-@AllArgsConstructor
 public class PortfolioController {
-    @Autowired
+	
     PortfolioRepo portRepo;
-
-    @Autowired
     AboutMeRepo aboutMeRepo;
-
-    @Autowired
     CertificationRepo certificationRepo;
-
-    @Autowired
     EducationRepo educationRepo;
-
-    @Autowired
     EquivalencyRepo equivalencyRepo;
-
-    @Autowired
     GitHubRepo gitHubRepo;
-
-    @Autowired
     HonorRepo honorRepo;
-
-    @Autowired
     ProjectRepo projectRepo;
-
-    @Autowired
     WorkExperienceRepo workExperienceRepo;
-
-    @Autowired
     WorkHistoryRepo workHistoryRepo;
-    
-    @Autowired
     MatrixRepo matrixRepo;
-    
-    @Autowired
     SkillRepo skillRepo;
 
-    public PortfolioController(PortfolioRepo portRepo) {
+	public PortfolioController(PortfolioRepo portRepo) {
         this.portRepo = portRepo;
     }
+    
+    @Autowired
+    public PortfolioController(PortfolioRepo portRepo, AboutMeRepo aboutMeRepo, CertificationRepo certificationRepo,
+			EducationRepo educationRepo, EquivalencyRepo equivalencyRepo, GitHubRepo gitHubRepo, HonorRepo honorRepo,
+			ProjectRepo projectRepo, WorkExperienceRepo workExperienceRepo, WorkHistoryRepo workHistoryRepo,
+			MatrixRepo matrixRepo, SkillRepo skillRepo) {
+		super();
+		this.portRepo = portRepo;
+		this.aboutMeRepo = aboutMeRepo;
+		this.certificationRepo = certificationRepo;
+		this.educationRepo = educationRepo;
+		this.equivalencyRepo = equivalencyRepo;
+		this.gitHubRepo = gitHubRepo;
+		this.honorRepo = honorRepo;
+		this.projectRepo = projectRepo;
+		this.workExperienceRepo = workExperienceRepo;
+		this.workHistoryRepo = workHistoryRepo;
+		this.matrixRepo = matrixRepo;
+		this.skillRepo = skillRepo;
+	}
 
     @GetMapping
     public List<Portfolio> getAll(){
@@ -96,11 +93,12 @@ public class PortfolioController {
         List<Portfolio> portfolios = portRepo.findAllByUserId(id);
         return portfolios;
     }
-
+    
     @PostMapping
     public Portfolio postPort(@RequestBody Portfolio port){
         return portRepo.save(port);
     }
+    
     @PostMapping("/{id}")
     public void updateUser(@PathVariable int id , @RequestBody Portfolio updated){
         Optional<Portfolio> old = portRepo.findById(id);
@@ -112,9 +110,12 @@ public class PortfolioController {
             old.get().setReviewed(updated.isReviewed());
             old.get().setSubmitted(updated.isSubmitted());
             old.get().setFlags(updated.getFlags());
+            old.get().setAdmin(updated.getAdmin());
             portRepo.save(old.get());
         }
     }
+    
+
     
     @DeleteMapping("/{id}")
     @Transactional
