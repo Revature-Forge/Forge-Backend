@@ -1,21 +1,12 @@
 package com.forge.revature.controllers;
 
-
 import java.util.List;
 import java.util.Map;
-
-
 import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import com.forge.revature.models.*;
-import com.forge.revature.repo.*;
 import com.forge.revature.services.PortfolioService;
-
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
@@ -33,52 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/portfolios")
-@NoArgsConstructor
 @AllArgsConstructor
 public class PortfolioController {
 	
-	@Autowired
 	PortfolioService portfolioService;
-	
-    @Autowired
-    PortfolioRepo portRepo;
-
-    @Autowired
-    AboutMeRepo aboutMeRepo;
-
-    @Autowired
-    CertificationRepo certificationRepo;
-
-    @Autowired
-    EducationRepo educationRepo;
-
-    @Autowired
-    EquivalencyRepo equivalencyRepo;
-
-    @Autowired
-    GitHubRepo gitHubRepo;
-
-    @Autowired
-    HonorRepo honorRepo;
-
-    @Autowired
-    ProjectRepo projectRepo;
-
-    @Autowired
-    WorkExperienceRepo workExperienceRepo;
-
-    @Autowired
-    WorkHistoryRepo workHistoryRepo;
-    
-    @Autowired
-    MatrixRepo matrixRepo;
-    
-    @Autowired
-    SkillRepo skillRepo;
-
-    public PortfolioController(PortfolioRepo portRepo) {
-        this.portRepo = portRepo;
-    }
 
     @GetMapping
     public List<Portfolio> getAll(){

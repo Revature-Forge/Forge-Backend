@@ -7,16 +7,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.FullPortfolioIgnoreMixin;
@@ -44,62 +40,26 @@ import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.ProjectRepo;
 import com.forge.revature.repo.SkillRepo;
-import com.forge.revature.repo.UserRepo;
 import com.forge.revature.repo.WorkExperienceRepo;
 import com.forge.revature.repo.WorkHistoryRepo;
+import lombok.AllArgsConstructor;
 
-import lombok.NoArgsConstructor;
 @Service
-@NoArgsConstructor
+@AllArgsConstructor
 public class PortfolioService {
 
-
-
-	@Autowired
-	public PortfolioService(UserRepo userRepo, PortfolioRepo portfolioRepo) {
-		super();
-	}
-	
-	
-	
-	
-	
-    @Autowired
     PortfolioRepo portRepo;
-
-    @Autowired
     AboutMeRepo aboutMeRepo;
-
-    @Autowired
     CertificationRepo certificationRepo;
-
-    @Autowired
     EducationRepo educationRepo;
-
-    @Autowired
     EquivalencyRepo equivalencyRepo;
-
-    @Autowired
     GitHubRepo gitHubRepo;
-
-    @Autowired
     HonorRepo honorRepo;
-
-    @Autowired
     ProjectRepo projectRepo;
-
-    @Autowired
     WorkExperienceRepo workExperienceRepo;
-
-    @Autowired
     WorkHistoryRepo workHistoryRepo;
-    
-    @Autowired
     MatrixRepo matrixRepo;
-    
-    @Autowired
     SkillRepo skillRepo;
-
 
   
     public List<Portfolio> getAll(){
@@ -290,12 +250,6 @@ public class PortfolioService {
 		}
 		return allSkills;
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 }
