@@ -1,5 +1,6 @@
 package com.forge.revature.services;
 
+
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -89,6 +90,7 @@ public class PortfolioService {
 		return portRepo.save(port);
 	}
 	
+
 	//returns days, hours, minutes.
 	String calculateAverageResponseTimeString(){
 		List<Portfolio> portfolios =  getAll();
@@ -271,6 +273,7 @@ public class PortfolioService {
             portRepo.save(old.get());
         }
     }
+
 	
 	public Map<String, Boolean> deletePortfolio(int id) throws ResourceNotFoundException{
 		Optional<Portfolio> port = portRepo.findById(id);
