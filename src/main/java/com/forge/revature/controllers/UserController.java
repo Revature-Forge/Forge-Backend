@@ -40,7 +40,6 @@ public class UserController {
 
     @GetMapping
     public List<User> getAll() {
-    	System.out.println("Getting Get request");
         List<User> users = StreamSupport.stream(userRepo.findAll().spliterator(), false)
             .collect(Collectors.toList());
         return users;
@@ -53,7 +52,6 @@ public class UserController {
 
     @PostMapping("/login")
     public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
-    	System.out.println("Getting login request");
     	Optional<User> user = userRepo.findByEmail(email);
         if(user.isPresent()){
             if(password.equals(user.get().getPassword())){
