@@ -1,12 +1,9 @@
 package com.forge.revature.controllers;
 
 import java.util.List;
-import java.util.Optional;
-
 import com.forge.revature.models.Education;
-import com.forge.revature.repo.EducationRepo;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.forge.revature.services.EducationService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,29 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * 
  * Controller for Education. Has CRUD functionality described per method
+ * Code moved to Service Layer from Controller Layer by Aaron Killeen
  */
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/education")
+@AllArgsConstructor
 public class EducationController {
-    @Autowired
-    EducationRepo educationRepo;
-
-    public EducationController() {
-    }
-
-    public EducationController(EducationRepo educationRepo) {
-        this.educationRepo = educationRepo;
-    }
-
+	
+	private EducationService educationService;
     /**
      * Retrieves all educations stored in the database
      * @return List of all Educations in the database in JSON format
      */
     @GetMapping
     public List<Education> getAll() {
-        List<Education> educations = educationRepo.findAll();
-        return educations;
+    	return educationService.getAll();
     }
 
     /**
@@ -53,7 +43,7 @@ public class EducationController {
      */
     @GetMapping("/{id}")
     public Education getEducation(@PathVariable int id) {
-        return educationRepo.findById(id).get();
+        return educationService.getEducation(id);
     }
 
     /**
@@ -63,7 +53,7 @@ public class EducationController {
      */
     @PostMapping
     public Education postEducation(@RequestBody Education education) {
-        return educationRepo.save(education);
+    	return educationService.postEducation(education);
     }
 
     /**
@@ -73,17 +63,7 @@ public class EducationController {
      */
     @PostMapping("/{id}")
     public void updateEducation(@RequestBody Education newEducation, @PathVariable(name = "id") int educationId) {
-        Optional<Education> oldEducation = educationRepo.findById(educationId);
-
-        if (oldEducation.isPresent()) {
-            oldEducation.get().setUniversity(newEducation.getUniversity());
-            oldEducation.get().setDegree(newEducation.getDegree());
-            oldEducation.get().setGraduationDate(newEducation.getGraduationDate());
-            oldEducation.get().setGpa(newEducation.getGpa());
-            oldEducation.get().setLogoUrl(newEducation.getLogoUrl());
-
-            educationRepo.save(oldEducation.get());
-        }
+    	educationService.updateEducation(newEducation, educationId);
     }
 
     /**
@@ -92,7 +72,7 @@ public class EducationController {
      */
     @DeleteMapping("/{id}")
     public void deleteEducation(@PathVariable(name = "id") int educationId) {
-        educationRepo.deleteById(educationId);
+        educationService.deleteEducation(educationId);
     }
 
     /**
@@ -102,13 +82,7 @@ public class EducationController {
      */
     @GetMapping("/user/{id}")
     public Education getUserEducation(@PathVariable(name = "id") int userId) {
-        Optional<Education> retrievedEducation = educationRepo.findByPortfolioUserId(userId);
-
-        if (retrievedEducation.isPresent()) {
-            return retrievedEducation.get();
-        }
-
-        return null;
+    	return educationService.getUserEducation(userId);
     }
 
     /**
@@ -118,13 +92,7 @@ public class EducationController {
      */
     @GetMapping("/portfolio/{id}")
     public Education getPortfolioEducation(@PathVariable(name = "id") int portfolioId) {
-        Optional<Education> retrievedEducation = educationRepo.findByPortfolioId(portfolioId);
-
-        if (retrievedEducation.isPresent()) {
-            return retrievedEducation.get();
-        }
-
-        return null;
+    	return educationService.getPortfolioEducation(portfolioId);
     }
 
     /**
@@ -134,9 +102,7 @@ public class EducationController {
      */
     @GetMapping("/user/all/{id}")
     public List<Education> getUserEducations(@PathVariable(name = "id") int userId) {
-        List<Education> retrievedEducations = educationRepo.findAllByPortfolioUserId(userId);
-
-        return retrievedEducations;
+    	return educationService.getUserEducations(userId);
     }
 
     /**
@@ -146,8 +112,6 @@ public class EducationController {
      */
     @GetMapping("/portfolio/all/{id}")
     public List<Education> getPortfolioEducations(@PathVariable(name = "id") int portfolioId) {
-        List<Education> retrievedEducations = educationRepo.findAllByPortfolioId(portfolioId);
-
-        return retrievedEducations;
+    	return educationService.getPortfolioEducations(portfolioId);
     }
 }

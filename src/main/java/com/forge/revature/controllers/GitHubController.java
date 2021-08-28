@@ -1,8 +1,6 @@
 package com.forge.revature.controllers;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,67 +10,50 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.forge.revature.exception.NotFoundException;
 import com.forge.revature.models.GitHub;
-import com.forge.revature.models.Portfolio;
-import com.forge.revature.repo.PortfolioRepo;
-import com.forge.revature.repo.GitHubRepo;
+import com.forge.revature.services.GitHubService;
+import lombok.AllArgsConstructor;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/github")
+@AllArgsConstructor
 public class GitHubController {
-  @Autowired
-  private GitHubRepo gitRepo;
-  
-  @Autowired
-  private PortfolioRepo portfolioRepo;
+
+  private GitHubService gitHubService;
 
   @GetMapping
   public List<GitHub> getAll() {
-    List<GitHub> git = gitRepo.findAll();
-    return git;
+    return gitHubService.getAll();
   }
 
   @GetMapping("/{id}")
   public GitHub getGitHub(@PathVariable int id) {
-    return gitRepo.findById(id).orElseThrow(() -> new NotFoundException("GitHub not Found for ID: " + id));
+	  return gitHubService.getGitHub(id);
   }
 
   @PostMapping
   public GitHub postGitHub(@RequestBody GitHub gitHub) {
-    return gitRepo.save(gitHub);
+	  return gitHubService.postGitHub(gitHub);
   }
 
   @PutMapping
   public GitHub updateGitHub(@RequestBody GitHub updateGit) {
-    GitHub prevGit = gitRepo.findById(updateGit.getId())
-      .orElseThrow(() -> new NotFoundException("GitHub not Found for ID: " + updateGit.getId()));
-
-    prevGit.setUrl(updateGit.getUrl());
-    prevGit.setImage(updateGit.getImage());
-
-    return gitRepo.save(prevGit);
+	  return gitHubService.updateGitHub(updateGit);
   }
 
   @DeleteMapping("/{id}")
   public void deleteGitHub(@PathVariable int id) {
-    GitHub exist = gitRepo.findById(id).orElseThrow(() -> new NotFoundException("GitHub not Found for ID: " + id));
-    gitRepo.deleteById(exist.getId());
+	  gitHubService.deleteGitHub(id);
   }
 
   @GetMapping("/portfolio/{id}")
   public List<GitHub> getByPortfolioId(@PathVariable int id) {
-    Portfolio portfolio = portfolioRepo.findById(id)
-      .orElseThrow(() -> new NotFoundException("Portfolio not Found for ID: " + id));
-    return gitRepo.findByPortfolio(portfolio);
+	  return gitHubService.getByPortfolioId(id);
   }
 
   @GetMapping("/portfolio/all/{id}")
   public List<GitHub> getPortfolioGitHubs(@PathVariable(name = "id") int id) {
-    List<GitHub> retrievedGitHubs = gitRepo.findAllByPortfolioId(id);
-
-    return retrievedGitHubs;
+	  return gitHubService.getPortfolioGitHubs(id);
   }
 }
