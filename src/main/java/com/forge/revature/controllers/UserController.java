@@ -21,36 +21,36 @@ import lombok.AllArgsConstructor;
 @RequestMapping("api/users")
 @AllArgsConstructor
 public class UserController {
-    
+	
 	private UserService userService;
-
-    @GetMapping
-    public List<User> getAll() {
-        return userService.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public User getByID(@PathVariable(name = "id") int id){
-    	return userService.getByID(id);
-    }
-
-    @PostMapping("/login")
-    public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
-    	return userService.login(email, password);
-    }
-    @PostMapping
-    public User postUser(@RequestBody User user){
-    	return userService.postUser(user);
-    }
-
-    @PostMapping("user/{id}")
-    public void updateUser(@PathVariable int id , @RequestBody User newU){
-    	userService.updateUser(id, newU);
-    }
-
-    @DeleteMapping("/{id}")
-    public Map<String, Boolean> deleteEquiv(@PathVariable int id) throws ResourceNotFoundException{
-    	return userService.deleteEquiv(id);
-    }
+	
+	@GetMapping
+	public List<User> getAll() {
+		return userService.getAll();
+	}
+	
+	@GetMapping("/{id}")
+	public User getByID(@PathVariable(name = "id") int id){
+		return userService.getByID(id);
+	}
+	
+	@PostMapping("/login")
+	public User login(@RequestHeader(name = "email") String email , @RequestHeader(name = "password") String password){
+		return userService.login(email, password);
+	}
+	@PostMapping
+	public User postUser(@RequestBody User user){
+		return userService.postUser(user);
+	}
+	
+	@PostMapping("user/{id}")
+	public void updateUser(@PathVariable int id , @RequestBody User newU){
+		userService.updateUser(id, newU);
+	}
+	
+	@DeleteMapping("/{id}")
+	public Map<String, Boolean> deleteEquiv(@PathVariable int id) throws ResourceNotFoundException{
+		return userService.deleteEquiv(id);
+	}
 
 }

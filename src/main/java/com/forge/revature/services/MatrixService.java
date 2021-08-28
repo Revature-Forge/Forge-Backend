@@ -17,45 +17,45 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class MatrixService {
-
+	
 	MatrixRepo matrixRepo;
 	SkillRepo skillRepo;
 	PortfolioRepo portRepo;
-
+	
 	/**
-	 * 
-	 * @return a list of all matrices in the DB
-	 */
+	* 
+	* @return a list of all matrices in the DB
+	*/
 	public List<Matrix> getAll() {
 		return insertSkills(matrixRepo.findAll());
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the matrix
-	 * @return the matrix with it
-	 */
+	* 
+	* @param id of the matrix
+	* @return the matrix with it
+	*/
 	public Matrix getById(int id) {
 		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
 		return insertSkills(m);
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the portfolio to fetch by
-	 * @return list of all matrices tied to the portfolio
-	 */
+	* 
+	* @param id of the portfolio to fetch by
+	* @return list of all matrices tied to the portfolio
+	*/
 	public List<Matrix> getByPortfolio(int id) {
 		Portfolio port = portRepo.findById(id)
 				.orElseThrow(() -> new NotFoundException("Portfolio Not Found for ID: " + id));
 		return insertSkills(matrixRepo.findAllByPortfolio(port));
 	}
-
+	
 	/**
-	 * 
-	 * @param matrix that is a new matrix
-	 * @return matrix with it's updated id number
-	 */
+	* 
+	* @param matrix that is a new matrix
+	* @return matrix with it's updated id number
+	*/
 	public Matrix postMatrix(MatrixDTO matrixDTO) {
 		Matrix matrix = new Matrix(matrixDTO.getHeader(), matrixDTO.getSkills(), matrixDTO.getPortfolio());
 		List<Skill> skills;
@@ -70,13 +70,13 @@ public class MatrixService {
 		}
 		return matrix;
 	}
-
+	
 	/**
-	 * 
-	 * @param id     of already existing matrix
-	 * @param matrix with changes to update
-	 * @return the newly changed matrix
-	 */
+	* 
+	* @param id     of already existing matrix
+	* @param matrix with changes to update
+	* @return the newly changed matrix
+	*/
 	public Matrix putMatrix(MatrixDTO matrixDTO) {
 		Matrix matrix;
 		try {
@@ -110,11 +110,11 @@ public class MatrixService {
 		}
 		return matrix;
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the matrix to be deleted
-	 */
+	* 
+	* @param id of the matrix to be deleted
+	*/
 	public void delete(int id) {
 		Optional<Matrix> m = matrixRepo.findById(id);
 		if (m.isPresent()) {
@@ -125,13 +125,13 @@ public class MatrixService {
 			matrixRepo.delete(m.get());
 		}
 	}
-
+	
 	/**
-	 * 
-	 * @param id    of the matrix
-	 * @param skill to be inserted or updated
-	 * @return changed matrix with skills inside
-	 */
+	* 
+	* @param id    of the matrix
+	* @param skill to be inserted or updated
+	* @return changed matrix with skills inside
+	*/
 	public Matrix putSkill(int id, SkillDTO skillDTO) {
 		Matrix m = matrixRepo.findById(id).orElseThrow(() -> new NotFoundException("Matrix Not Found for ID: " + id));
 		if (skillDTO.getId() == 0) {
@@ -146,34 +146,34 @@ public class MatrixService {
 			return insertSkills(m);
 		}
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the skill to be deleted
-	 */
+	* 
+	* @param id of the skill to be deleted
+	*/
 	public Matrix deleteSkill(int id) {
 		Skill s = skillRepo.findById(id).orElseThrow(() -> new NotFoundException("Skill Not Found for ID: " + id));
 		Matrix m = s.getMatrix();
 		skillRepo.delete(s);
 		return insertSkills(m);
 	}
-
+	
 	/**
-	 * 
-	 * @param m is the matrix to insert the skills into for serialization
-	 * @return the matrix with it's list of skills inside
-	 */
+	* 
+	* @param m is the matrix to insert the skills into for serialization
+	* @return the matrix with it's list of skills inside
+	*/
 	private Matrix insertSkills(Matrix m) {
 		List<Skill> skills = skillRepo.findAllByMatrix(m);
 		m.setSkills(skills);
 		return m;
 	}
-
+	
 	/**
-	 * 
-	 * @param max is the list of matrices to be serialized
-	 * @return the list with each matrix having its list of skills inserted
-	 */
+	* 
+	* @param max is the list of matrices to be serialized
+	* @return the list with each matrix having its list of skills inserted
+	*/
 	private List<Matrix> insertSkills(List<Matrix> max) {
 		for (Matrix m : max) {
 			List<Skill> skills = skillRepo.findAllByMatrix(m);
@@ -181,12 +181,12 @@ public class MatrixService {
 		}
 		return max;
 	}
-
+	
 	/**
-	 * 
-	 * @param m is the deserialized matrix
-	 * @return the list of the skills with each Matrix field set for SQL storage
-	 */
+	* 
+	* @param m is the deserialized matrix
+	* @return the list of the skills with each Matrix field set for SQL storage
+	*/
 	private List<Skill> extractSkills(Matrix m) {
 		List<Skill> skills = m.getSkills();
 		for (Skill s : skills) {

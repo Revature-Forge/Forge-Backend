@@ -47,7 +47,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class PortfolioService {
-
+	
 	PortfolioRepo portRepo;
 	AboutMeRepo aboutMeRepo;
 	CertificationRepo certificationRepo;

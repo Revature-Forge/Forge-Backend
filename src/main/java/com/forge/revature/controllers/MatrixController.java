@@ -21,82 +21,82 @@ import lombok.AllArgsConstructor;
 @RequestMapping("api/matrix")
 @AllArgsConstructor
 public class MatrixController {
-
+	
 	private MatrixService matrixService;
 	/**
-	 * 
-	 * @return a list of all matrices in the DB
-	 */
+	* 
+	* @return a list of all matrices in the DB
+	*/
 	@GetMapping
 	public List<Matrix> getAll() {
 		return matrixService.getAll();
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the matrix
-	 * @return the matrix with it
-	 */
+	* 
+	* @param id of the matrix
+	* @return the matrix with it
+	*/
 	@GetMapping("/{id}")
 	public Matrix getById(@PathVariable("id") int id) {
 		return matrixService.getById(id);
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the portfolio to fetch by
-	 * @return list of all matrices tied to the portfolio
-	 */
+	* 
+	* @param id of the portfolio to fetch by
+	* @return list of all matrices tied to the portfolio
+	*/
 	@GetMapping("/portfolio/{id}")
 	public List<Matrix> getByPortfolio(@PathVariable("id") int id) {
 		return matrixService.getByPortfolio(id);
 	}
-
+	
 	/**
-	 * 
-	 * @param matrix that is a new matrix
-	 * @return matrix with it's updated id number
-	 */
+	* 
+	* @param matrix that is a new matrix
+	* @return matrix with it's updated id number
+	*/
 	@PostMapping
 	public Matrix postMatrix(@RequestBody MatrixDTO matrixDTO) {
 		return matrixService.postMatrix(matrixDTO);
 	}
-
+	
 	/**
-	 * 
-	 * @param id     of already existing matrix
-	 * @param matrix with changes to update
-	 * @return the newly changed matrix
-	 */
+	* 
+	* @param id     of already existing matrix
+	* @param matrix with changes to update
+	* @return the newly changed matrix
+	*/
 	@PutMapping
 	public Matrix putMatrix(@RequestBody MatrixDTO matrixDTO) {
 		return matrixService.putMatrix(matrixDTO);
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the matrix to be deleted
-	 */
+	* 
+	* @param id of the matrix to be deleted
+	*/
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable("id") int id) {
 		matrixService.delete(id);
 	}
-
+	
 	/**
-	 * 
-	 * @param id    of the matrix
-	 * @param skill to be inserted or updated
-	 * @return changed matrix with skills inside
-	 */
+	* 
+	* @param id    of the matrix
+	* @param skill to be inserted or updated
+	* @return changed matrix with skills inside
+	*/
 	@PutMapping("/{id}/skill")
 	public Matrix putSkill(@PathVariable("id") int id, @RequestBody SkillDTO skillDTO) {
 		return matrixService.putSkill(id, skillDTO);
 	}
-
+	
 	/**
-	 * 
-	 * @param id of the skill to be deleted
-	 */
+	* 
+	* @param id of the skill to be deleted
+	*/
 	@DeleteMapping("/skill/{id}")
 	public Matrix deleteSkill(@PathVariable("id") int id) {
 		return matrixService.deleteSkill(id);

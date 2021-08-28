@@ -20,40 +20,40 @@ import lombok.AllArgsConstructor;
 @RequestMapping("api/projects")
 @AllArgsConstructor
 public class ProjectController {
-
+	
 	private ProjectService projectService;
-
-    public ResponseEntity<List<Project>> allExperience() {
-        return projectService.allExperience();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Project>> getExperience(@PathVariable(name = "id") long id) {
-    	return projectService.getExperience(id);
-    }
-
-    @GetMapping("/portfolio/{id}")
-    public ResponseEntity<List<Project>> portfolioExperience(@PathVariable(name = "id") int id) {
-    	return projectService.portfolioExperience(id);
-    }
-
-    @PostMapping
-    public void createExperience(@RequestBody Project proj) {
-        projectService.createExperience(proj);
-    }
-
-    @PostMapping("/{id}")
-    public void updateExperience(@PathVariable(name = "id") long id, @RequestBody Project proj) {
-    	projectService.updateExperience(id, proj);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteExperience(@PathVariable(name = "id") long id) {
-    	projectService.deleteExperience(id);
-    }
-
-    @GetMapping("/portfolio/all/{id}")
-    public List<Project> getPortfolioProjects(@PathVariable(name = "id") int portfolioId) {
-    	return projectService.getPortfolioProjects(portfolioId);
-    }
+	
+	public ResponseEntity<List<Project>> allExperience() {
+		return projectService.allExperience();
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Optional<Project>> getExperience(@PathVariable(name = "id") long id) {
+		return projectService.getExperience(id);
+	}
+	
+	@GetMapping("/portfolio/{id}")
+	public ResponseEntity<List<Project>> portfolioExperience(@PathVariable(name = "id") int id) {
+		return projectService.portfolioExperience(id);
+	}
+	
+	@PostMapping
+	public void createExperience(@RequestBody Project proj) {
+		projectService.createExperience(proj);
+	}
+	
+	@PostMapping("/{id}")
+	public void updateExperience(@PathVariable(name = "id") long id, @RequestBody Project proj) {
+		projectService.updateExperience(id, proj);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deleteExperience(@PathVariable(name = "id") long id) {
+		projectService.deleteExperience(id);
+	}
+	
+	@GetMapping("/portfolio/all/{id}")
+	public List<Project> getPortfolioProjects(@PathVariable(name = "id") int portfolioId) {
+		return projectService.getPortfolioProjects(portfolioId);
+	}
 }

@@ -19,41 +19,41 @@ import lombok.AllArgsConstructor;
 @RequestMapping("api/github")
 @AllArgsConstructor
 public class GitHubController {
-
-  private GitHubService gitHubService;
-
-  @GetMapping
-  public List<GitHub> getAll() {
-    return gitHubService.getAll();
-  }
-
-  @GetMapping("/{id}")
-  public GitHub getGitHub(@PathVariable int id) {
-	  return gitHubService.getGitHub(id);
-  }
-
-  @PostMapping
-  public GitHub postGitHub(@RequestBody GitHub gitHub) {
-	  return gitHubService.postGitHub(gitHub);
-  }
-
-  @PutMapping
-  public GitHub updateGitHub(@RequestBody GitHub updateGit) {
-	  return gitHubService.updateGitHub(updateGit);
-  }
-
-  @DeleteMapping("/{id}")
-  public void deleteGitHub(@PathVariable int id) {
-	  gitHubService.deleteGitHub(id);
-  }
-
-  @GetMapping("/portfolio/{id}")
-  public List<GitHub> getByPortfolioId(@PathVariable int id) {
-	  return gitHubService.getByPortfolioId(id);
-  }
-
-  @GetMapping("/portfolio/all/{id}")
-  public List<GitHub> getPortfolioGitHubs(@PathVariable(name = "id") int id) {
-	  return gitHubService.getPortfolioGitHubs(id);
-  }
+	
+	private GitHubService gitHubService;
+	
+	@GetMapping
+	public List<GitHub> getAll() {
+		return gitHubService.getAll();
+	}
+	
+	@GetMapping("/{id}")
+	public GitHub getGitHub(@PathVariable int id) {
+		return gitHubService.getGitHub(id);
+	}
+	
+	@PostMapping
+	public GitHub postGitHub(@RequestBody GitHub gitHub) {
+		return gitHubService.postGitHub(gitHub);
+	}
+	
+	@PutMapping
+	public GitHub updateGitHub(@RequestBody GitHub updateGit) {
+		return gitHubService.updateGitHub(updateGit);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deleteGitHub(@PathVariable int id) {
+		gitHubService.deleteGitHub(id);
+	}
+	
+	@GetMapping("/portfolio/{id}")
+	public List<GitHub> getByPortfolioId(@PathVariable int id) {
+		return gitHubService.getByPortfolioId(id);
+	}
+	
+	@GetMapping("/portfolio/all/{id}")
+	public List<GitHub> getPortfolioGitHubs(@PathVariable(name = "id") int id) {
+		return gitHubService.getPortfolioGitHubs(id);
+	}
 }

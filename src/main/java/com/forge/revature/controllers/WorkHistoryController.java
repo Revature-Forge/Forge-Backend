@@ -19,42 +19,42 @@ import lombok.AllArgsConstructor;
 @RequestMapping("api/workhistory")
 @AllArgsConstructor
 public class WorkHistoryController {
-
+	
 	WorkHistoryService workHistoryService;
-
-  @GetMapping
-  public List<WorkHistory> getAll() {
-    return workHistoryService.getAll();
-  }
-
-  @GetMapping("/{id}")
-  public WorkHistory getWorkHistory(@PathVariable int id) {
-	  return workHistoryService.getWorkHistory(id);
-  }
-
-  @PostMapping
-  public WorkHistory postWorkHistory(@RequestBody WorkHistory workHistory) {
-	  return workHistoryService.postWorkHistory(workHistory);
-  }
-
-  @PutMapping
-  public WorkHistory updateWorkHistory(@RequestBody WorkHistory updateWorkHist) {
-	  return workHistoryService.updateWorkHistory(updateWorkHist);
-  }
-
-  @DeleteMapping("/{id}")
-  public void deleteWorkHistory(@PathVariable int id) {
-	  workHistoryService.deleteWorkHistory(id);
-  }
-
-  @GetMapping("/portfolio/{id}")
-  public List<WorkHistory> getByPortfolioId(@PathVariable int id) {
-	  return workHistoryService.getByPortfolioId(id);
-  }
-
-  @GetMapping("/portfolio/all/{id}")
-  public List<WorkHistory> getPortfolioWorkHistories(@PathVariable(name = "id") int portfolioId) {
-	  return workHistoryService.getPortfolioWorkHistories(portfolioId);
-  }
-  
+	
+	@GetMapping
+	public List<WorkHistory> getAll() {
+		return workHistoryService.getAll();
+	}
+	
+	@GetMapping("/{id}")
+	public WorkHistory getWorkHistory(@PathVariable int id) {
+		return workHistoryService.getWorkHistory(id);
+	}
+	
+	@PostMapping
+	public WorkHistory postWorkHistory(@RequestBody WorkHistory workHistory) {
+		return workHistoryService.postWorkHistory(workHistory);
+	}
+	
+	@PutMapping
+	public WorkHistory updateWorkHistory(@RequestBody WorkHistory updateWorkHist) {
+		return workHistoryService.updateWorkHistory(updateWorkHist);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deleteWorkHistory(@PathVariable int id) {
+		workHistoryService.deleteWorkHistory(id);
+	}
+	
+	@GetMapping("/portfolio/{id}")
+	public List<WorkHistory> getByPortfolioId(@PathVariable int id) {
+		return workHistoryService.getByPortfolioId(id);
+	}
+	
+	@GetMapping("/portfolio/all/{id}")
+	public List<WorkHistory> getPortfolioWorkHistories(@PathVariable(name = "id") int portfolioId) {
+		return workHistoryService.getPortfolioWorkHistories(portfolioId);
+	}
+	
 }
