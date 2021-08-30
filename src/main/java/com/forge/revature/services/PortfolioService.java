@@ -66,6 +66,7 @@ public class PortfolioService {
 	WorkHistoryRepo workHistoryRepo;
 	MatrixRepo matrixRepo;
 	SkillRepo skillRepo;
+	EmailSenderService  emailSenderService;
 	
 	
 	public List<Portfolio> getAll(){
@@ -271,6 +272,7 @@ public class PortfolioService {
             old.get().setSubmitted(updated.isSubmitted());
             old.get().setFlags(updated.getFlags());
             portRepo.save(old.get());
+            emailSenderService.sendStatusEmail(old.get().getUser(),old.get());
         }
     }
 
