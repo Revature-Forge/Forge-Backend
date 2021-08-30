@@ -52,6 +52,11 @@ public class Portfolio {
 	private User admin;
 
 	private String feedback;
+	private boolean submissionTrigger;
+	private boolean reviewTrigger;
+	private String reviewTime;
+	private String submissionTime;
+	private Long responseTime;
 
 	@Column
 	@Convert(converter = HashMapConverter.class)
@@ -63,6 +68,11 @@ public class Portfolio {
 		this.approved = approved;
 		this.reviewed = reviewed;
 		this.feedback = feedback;
+		this.reviewTime = null;
+		this.submissionTime = null;
+		this.responseTime = 0L;
+		this.reviewTrigger = false;
+		this.submissionTrigger = false;
 	}
 
 	public Portfolio(int id, String name, User user, boolean submitted, boolean approved, boolean reviewed,
@@ -76,6 +86,11 @@ public class Portfolio {
 		this.reviewed = reviewed;
 		this.feedback = feedback;
 		this.flags = flags;
+		this.reviewTime = null;
+		this.submissionTime = null;
+		this.responseTime = 0L;
+		this.reviewTrigger = false;
+		this.submissionTrigger = false;
 	}
 
 }

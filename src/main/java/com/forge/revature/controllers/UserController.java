@@ -53,4 +53,9 @@ public class UserController {
 		return userService.deleteEquiv(id);
 	}
 
+    @PostMapping("/loginAuth0")
+    public User login(@RequestBody User user){
+    	return userService.auth0Login(user);
+    }
+
 }

@@ -49,6 +49,24 @@ public class UserService {
 		
 	}
 	
+	public User auth0Login(User user) {
+		Optional<User> foundUser = userRepo.findByEmail(user.getEmail());
+    	
+    	//If user is found, find the User
+    	if (foundUser.isPresent()) {
+    		User existingUser = foundUser.get();
+
+    		return existingUser;
+    	}
+    	
+        //if user does not exist, save, then do another query then return that user 2nd time.
+        userRepo.save(user);
+        Optional<User> foundUserRetry = userRepo.findByEmail(user.getEmail());
+        User existingUser = foundUserRetry.get();
+
+		return existingUser;
+	}
+	
 	public User postUser(User user){
 		return userRepo.save(user);
 	}
