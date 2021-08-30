@@ -2,6 +2,7 @@ package com.forge.revature.demo;
 
 import com.forge.revature.controllers.WorkHistoryController;
 import com.forge.revature.repo.WorkHistoryRepo;
+import com.forge.revature.services.WorkHistoryService;
 import com.forge.revature.models.WorkHistory;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.models.Portfolio;
@@ -35,6 +36,9 @@ public class WorkHistoryControllerTest {
   private static String baseUrl = "/api/workhistory";
   
   @MockBean
+  private WorkHistoryController workHistoryController;
+  
+  @MockBean
   private WorkHistoryRepo workHistoryRepo;
 
   @MockBean
@@ -44,8 +48,9 @@ public class WorkHistoryControllerTest {
 
   @BeforeEach
   public void setup() {
-    this.workHistory = new WorkHistory("Scrum Master", "Amazon", "Leading team meetings", "In charge of all scrum meetings", "Java", "May 20, 2010", "March 13, 2021");
-    this.workHistory.setId(1);
+	  this.workHistoryController = new WorkHistoryController(new WorkHistoryService(workHistoryRepo, portfolioRepo));
+	  this.workHistory = new WorkHistory("Scrum Master", "Amazon", "Leading team meetings", "In charge of all scrum meetings", "Java", "May 20, 2010", "March 13, 2021");
+	  this.workHistory.setId(1);
   }
 
   @Test
