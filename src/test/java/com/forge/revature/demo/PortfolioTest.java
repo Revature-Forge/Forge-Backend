@@ -54,7 +54,7 @@ import com.forge.revature.repo.ProjectRepo;
 import com.forge.revature.repo.UserRepo;
 import com.forge.revature.repo.WorkExperienceRepo;
 import com.forge.revature.repo.WorkHistoryRepo;
-import com.forge.revature.services.EmailSenderService;
+import com.forge.revature.services.PortfolioService;
 import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.SkillRepo;
 
@@ -110,9 +110,10 @@ public class PortfolioTest {
 	@BeforeEach
 	public void setup() {
 		mvc = MockMvcBuilders.standaloneSetup(
-				new PortfolioController(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
-						gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo, emailSenderService))
+				new PortfolioController(new PortfolioService(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo, 
+						gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo)))
 				.build();
+		
 	}
 
 	@Test

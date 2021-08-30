@@ -103,7 +103,7 @@ public class PortfolioController {
 	public void postFullPortfolio(@RequestBody FullPortfolio fullPortfolio){
 		portfolioService.postFullPortfolio(fullPortfolio);
 	}
-
+	
 	
 	/**
 	* 
