@@ -38,6 +38,7 @@ import com.forge.revature.models.User;
 import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.SkillRepo;
+import com.forge.revature.services.MatrixService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(MatrixController.class)
@@ -45,6 +46,9 @@ class MatrixControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
+	
+	@MockBean
+	private MatrixController controller;
 
 	@MockBean
 	private MatrixRepo matrixRepo;
@@ -63,6 +67,7 @@ class MatrixControllerTest {
 
 	@BeforeEach
 	void setup() {
+		controller = new MatrixController(new MatrixService(matrixRepo, skillRepo, portRepo));
 		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.", null);
 		matrix = new Matrix("Languages");
 		matrix.setPortfolio(portfolio);

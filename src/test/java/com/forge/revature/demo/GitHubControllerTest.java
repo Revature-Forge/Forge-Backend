@@ -5,6 +5,7 @@ import com.forge.revature.repo.GitHubRepo;
 import com.forge.revature.models.GitHub;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.services.GitHubService;
 import com.forge.revature.models.User;
 
 import java.util.*;
@@ -35,6 +36,9 @@ public class GitHubControllerTest {
   private static String baseUrl = "/api/github";
 
   @MockBean
+  private GitHubController gitHubController;
+  
+  @MockBean
   private GitHubRepo gitHubRepo;
 
   @MockBean
@@ -44,8 +48,9 @@ public class GitHubControllerTest {
 
   @BeforeEach
   public void setup() {
-    this.gitHub = new GitHub("www.github.com/user", "profile pic");
-    this.gitHub.setId(1);
+	  this.gitHubController = new GitHubController(new GitHubService(gitHubRepo, portfolioRepo));
+	  this.gitHub = new GitHub("www.github.com/user", "profile pic");
+	  this.gitHub.setId(1);
   }
 
   @Test
