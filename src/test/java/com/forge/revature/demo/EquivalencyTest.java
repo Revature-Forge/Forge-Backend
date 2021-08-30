@@ -25,6 +25,7 @@ import com.forge.revature.models.Equivalency;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.EquivalencyRepo;
+import com.forge.revature.services.EquivalencyService;
 
 @SpringBootTest
 public class EquivalencyTest {
@@ -37,7 +38,7 @@ public class EquivalencyTest {
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
-            .standaloneSetup(new EquivalencyController(repo))
+            .standaloneSetup(new EquivalencyController(new EquivalencyService(repo)))
             .build();
     }
 
