@@ -61,6 +61,28 @@ public class UserController {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED , "Either Email or Password is incorrect");
         
     }
+    
+    @PostMapping("/loginAuth0")
+    public User login(@RequestBody User user){
+    	
+    	Optional<User> foundUser = userRepo.findByEmail(user.getEmail());
+    	
+    	//If user is found, find the User
+    	if (foundUser.isPresent()) {
+    		User existingUser = foundUser.get();
+
+    		return existingUser;
+    	}
+    	
+        //if user does not exist, save, then do another query then return that user 2nd time.
+        userRepo.save(user);
+        Optional<User> foundUserRetry = userRepo.findByEmail(user.getEmail());
+        User existingUser = foundUserRetry.get();
+
+		return existingUser;
+        
+    }
+    
     @PostMapping
     public User postUser(@RequestBody User user){
         return userRepo.save(user);
