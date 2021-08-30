@@ -52,7 +52,6 @@ public class EmailSenderService {
 					while (map.hasNext()) {
 						Map.Entry pair = (Map.Entry) map.next();
 						if (pair.getValue().toString().length() > 0) {
-							System.out.println(pair.getValue().toString().length());
 							mapAsString.append("<li>" + pair.getKey() + " : " + pair.getValue() + "</li>");
 						}
 					}
@@ -148,7 +147,6 @@ public class EmailSenderService {
 				message.setContent(multipart);
 
 				mailSender.send(message);
-				System.out.println("Mail Sent");
 
 			}
 
