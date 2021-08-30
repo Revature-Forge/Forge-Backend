@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.forge.revature.aspects.LoggingAspect;
 import com.forge.revature.controllers.UserController;
 import com.forge.revature.repo.UserRepo;
+import com.forge.revature.services.UserService;
 
 /**
  * 
@@ -41,7 +42,7 @@ class TestLoggingAspect {
 
 	@BeforeEach
 	void init() {
-		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new UserController(repo));
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new UserController(new UserService(repo)));
 		aspectJProxyFactory.addAspect(LA);
 		DefaultAopProxyFactory proxyFactory = new DefaultAopProxyFactory();
 		AopProxy aopProxy = proxyFactory.createAopProxy(aspectJProxyFactory);

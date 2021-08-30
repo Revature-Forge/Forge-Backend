@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,17 @@ import com.forge.revature.repo.UserRepo;
 import lombok.AllArgsConstructor;
 
 @Service
-@AllArgsConstructor
 public class UserService {
 	
 	UserRepo userRepo;
 	
+	
+	@Autowired
+	public UserService(UserRepo userRepo) {
+		super();
+		this.userRepo = userRepo;
+	}
+
 	public List<User> getAll() {
 		List<User> users = StreamSupport.stream(userRepo.findAll().spliterator(), false)
 			.collect(Collectors.toList());
@@ -27,7 +35,7 @@ public class UserService {
 	}
 	
 	public User getByID(int id){
-		return userRepo.findById(id);
+		return userRepo.findById(id).get();
 	}
 	
 	public User login(String email , String password){

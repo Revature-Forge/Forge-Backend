@@ -25,6 +25,7 @@ import com.forge.revature.models.Education;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.EducationRepo;
+import com.forge.revature.services.EducationService;
 
 /**
  * @author Max Lee
@@ -53,7 +54,7 @@ public class EducationTests {
 
     @BeforeEach
     public void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new EducationController(educationRepo)).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new EducationController(new EducationService(educationRepo))).build();
         User user = new User(1, "Max", "Lee" , "max.lee@email.com" , "password", true);
         HashMap<String, String> map = new HashMap<>();
         Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "", map);
