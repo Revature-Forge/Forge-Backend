@@ -103,6 +103,9 @@ public class PortfolioTest {
 
 	@MockBean
 	SkillRepo skillRepo;
+	
+	@MockBean
+	EmailSenderService emailSenderService;
 
 	@BeforeEach
 	public void setup() {

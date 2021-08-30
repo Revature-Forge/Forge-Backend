@@ -21,6 +21,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forge.revature.models.AboutMe;
+import com.forge.revature.models.Certification;
+import com.forge.revature.models.Education;
+import com.forge.revature.models.Equivalency;
+import com.forge.revature.models.FullPortfolio;
+import com.forge.revature.models.GitHub;
+import com.forge.revature.models.Honor;
+import com.forge.revature.models.Matrix;
+import com.forge.revature.models.Portfolio;
+import com.forge.revature.models.Project;
+import com.forge.revature.models.Skill;
+import com.forge.revature.models.User;
+import com.forge.revature.models.WorkExperience;
+import com.forge.revature.models.WorkHistory;
+import com.forge.revature.repo.AboutMeRepo;
+import com.forge.revature.repo.CertificationRepo;
+import com.forge.revature.repo.EducationRepo;
+import com.forge.revature.repo.EquivalencyRepo;
+import com.forge.revature.repo.GitHubRepo;
+import com.forge.revature.repo.HonorRepo;
+import com.forge.revature.repo.MatrixRepo;
+import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.repo.ProjectRepo;
+import com.forge.revature.repo.SkillRepo;
+import com.forge.revature.repo.UserRepo;
+import com.forge.revature.repo.WorkExperienceRepo;
+import com.forge.revature.repo.WorkHistoryRepo;
+import com.forge.revature.services.EmailSenderService;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/portfolios")
