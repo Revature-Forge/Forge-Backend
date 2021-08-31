@@ -11,8 +11,8 @@ import com.forge.revature.models.User;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.UserRepo;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Service
 @NoArgsConstructor

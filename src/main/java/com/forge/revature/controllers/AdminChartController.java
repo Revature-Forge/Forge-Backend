@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +15,8 @@ import com.forge.revature.models.AdminChart;
 import com.forge.revature.models.User;
 import com.forge.revature.services.AdminChartService;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @RestController
@@ -41,7 +41,7 @@ public class AdminChartController {
 	 *		    when search success, return a response entity with status code 200
      *	                             and a body containing the json object
 	 */
-    @PostMapping
+    @GetMapping
     public ResponseEntity<List<AdminChart>> getAdminWorkReport() {
     	ArrayList<AdminChart> chartData = new ArrayList<AdminChart>();
 

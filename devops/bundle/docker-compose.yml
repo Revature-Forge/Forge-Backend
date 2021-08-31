@@ -5,8 +5,8 @@ services:
             context: ../../..
             dockerfile: Forge-Backend/devops/bundle/Dockerfile
         environment: 
-            DB_URL: "jdbc:postgresql://{IP OF DB}:5432/postgres"
-            DB_USER: "{DB USERNAME}"
-            DB_PASS: "{DB PASSWORD}"
+            DB_URL: "jdbc:postgresql://hwu5542-db.cxoqspxuezyw.us-east-2.rds.amazonaws.com:5432/postgres"
+            DB_USER: "postgres"
+            DB_PASS: "password"
         ports:
             - "8081:8081"

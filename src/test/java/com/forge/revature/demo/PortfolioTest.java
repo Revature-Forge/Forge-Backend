@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import com.forge.revature.controllers.FullPortfolioIgnoreMixin;
-import com.forge.revature.controllers.PortfolioIgnoreMixin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,7 +26,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forge.revature.controllers.FullPortfolioIgnoreMixin;
 import com.forge.revature.controllers.PortfolioController;
+import com.forge.revature.controllers.PortfolioIgnoreMixin;
 import com.forge.revature.models.AboutMe;
 import com.forge.revature.models.Certification;
 import com.forge.revature.models.Education;
@@ -49,13 +49,14 @@ import com.forge.revature.repo.EducationRepo;
 import com.forge.revature.repo.EquivalencyRepo;
 import com.forge.revature.repo.GitHubRepo;
 import com.forge.revature.repo.HonorRepo;
+import com.forge.revature.repo.MatrixRepo;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.ProjectRepo;
+import com.forge.revature.repo.SkillRepo;
 import com.forge.revature.repo.UserRepo;
 import com.forge.revature.repo.WorkExperienceRepo;
 import com.forge.revature.repo.WorkHistoryRepo;
-import com.forge.revature.repo.MatrixRepo;
-import com.forge.revature.repo.SkillRepo;
+import com.forge.revature.services.PortfolioService;
 
 @SpringBootTest
 public class PortfolioTest {
@@ -102,13 +103,14 @@ public class PortfolioTest {
 
 	@MockBean
 	SkillRepo skillRepo;
+	
+	private static PortfolioService portfolioService;
 
 	@BeforeEach
 	public void setup() {
-		mvc = MockMvcBuilders.standaloneSetup(
-				new PortfolioController(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
-						gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo))
-				.build();
+		portfolioService = new PortfolioService(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
+				gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo);
+		mvc = MockMvcBuilders.standaloneSetup(new PortfolioController(portfolioService)).build();
 	}
 
 	@Test
