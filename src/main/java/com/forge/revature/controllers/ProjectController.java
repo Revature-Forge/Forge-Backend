@@ -23,6 +23,7 @@ public class ProjectController {
 	
 	private ProjectService projectService;
 	
+	@GetMapping
 	public ResponseEntity<List<Project>> allExperience() {
 		return projectService.allExperience();
 	}

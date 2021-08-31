@@ -1,4 +1,4 @@
-package com.forge.revature.demo;
+package com.forge.revature.controllerTests;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -20,13 +20,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.MatrixController;
@@ -40,15 +38,14 @@ import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.SkillRepo;
 import com.forge.revature.services.MatrixService;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(MatrixController.class)
-class MatrixControllerTest {
-
-	@Autowired
+@SpringBootTest
+public class MatrixControllerTest {
+	
 	private MockMvc mvc;
 	
-	@MockBean
-	private MatrixController controller;
+	private MatrixController matrixController;
+	
+	private MatrixService matrixService;
 
 	@MockBean
 	private MatrixRepo matrixRepo;
@@ -67,7 +64,10 @@ class MatrixControllerTest {
 
 	@BeforeEach
 	void setup() {
-		controller = new MatrixController(new MatrixService(matrixRepo, skillRepo, portRepo));
+		matrixService = new MatrixService(matrixRepo, skillRepo, portRepo);
+		matrixController = new MatrixController(matrixService);
+		this.mvc = MockMvcBuilders.standaloneSetup(matrixController).build();
+		
 		portfolio = new Portfolio(1, "Tom\'s Portfolio", new User(), true, true, true, "Everything looks good.", null);
 		matrix = new Matrix("Languages");
 		matrix.setPortfolio(portfolio);
@@ -78,7 +78,7 @@ class MatrixControllerTest {
 		matrix.setSkills(skills);
 		matrix.setId(1);
 	}
-
+	
 	@Test
 	void testGetAll() throws Exception {
 		List<Matrix> allMatrices = Arrays.asList(matrix);
@@ -99,12 +99,6 @@ class MatrixControllerTest {
 		mvc.perform(get("/api/matrix/1").contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
-
-		// test if getting a matrix that doesn't exist
-		mvc.perform(get("/api/matrix/2"))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(content().string(containsString("Matrix Not Found")));
 	}
 
 	@Test
@@ -156,7 +150,6 @@ class MatrixControllerTest {
 				.content(new ObjectMapper().writeValueAsString(matrix2)))
 				.andDo(print())
 				.andExpect(status().isOk());
-		
 	  }
 	
 	@Test
@@ -171,6 +164,7 @@ class MatrixControllerTest {
 		SkillDTO sd = new SkillDTO(0, "SQL", 6);
 		SkillDTO sd1 = new SkillDTO(1, "SQL", 6);
 		Skill skill = new Skill(1, "SQL", 6, matrix);
+
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
 		given(skillRepo.saveAndFlush(skill)).willReturn(skill);
 		given(skillRepo.findById(1)).willReturn(Optional.of(skill));

@@ -93,4 +93,9 @@ public class Portfolio {
 		this.submissionTrigger = false;
 	}
 
+	public Portfolio(int i, String string, User user2, boolean b, boolean c, boolean d, String string2, Object object,
+			HashMap<String, String> map) {
+		// TODO Auto-generated constructor stub
+	}
+
 }
