@@ -1,11 +1,11 @@
-package com.forge.revature.demo;
+package com.forge.revature.controllerTests;
 
-import com.forge.revature.controllers.WorkHistoryController;
-import com.forge.revature.repo.WorkHistoryRepo;
-import com.forge.revature.services.WorkHistoryService;
-import com.forge.revature.models.WorkHistory;
-import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.controllers.GitHubController;
+import com.forge.revature.repo.GitHubRepo;
+import com.forge.revature.models.GitHub;
 import com.forge.revature.models.Portfolio;
+import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.services.GitHubService;
 import com.forge.revature.models.User;
 
 import java.util.*;
@@ -28,76 +28,79 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(WorkHistoryController.class)
-public class WorkHistoryControllerTest {
+@WebMvcTest(GitHubController.class)
+public class GitHubControllerTest {
   @Autowired
   private MockMvc mvc;
+  
+  private static String baseUrl = "/api/github";
 
-  private static String baseUrl = "/api/workhistory";
+  @MockBean
+  private GitHubController gitHubController;
   
   @MockBean
-  private WorkHistoryController workHistoryController;
-  
-  @MockBean
-  private WorkHistoryRepo workHistoryRepo;
+  private GitHubRepo gitHubRepo;
 
   @MockBean
   private PortfolioRepo portfolioRepo;
 
-  private WorkHistory workHistory;
+  private GitHub gitHub;
 
   @BeforeEach
   public void setup() {
-	  this.workHistoryController = new WorkHistoryController(new WorkHistoryService(workHistoryRepo, portfolioRepo));
-	  this.workHistory = new WorkHistory("Scrum Master", "Amazon", "Leading team meetings", "In charge of all scrum meetings", "Java", "May 20, 2010", "March 13, 2021");
-	  this.workHistory.setId(1);
+	  this.gitHubController = new GitHubController(new GitHubService(gitHubRepo, portfolioRepo));
+	  this.gitHub = new GitHub("www.github.com/user", "profile pic");
+	  this.gitHub.setId(1);
   }
 
   @Test
   public void testGetAll() throws Exception {
-    List<WorkHistory> allWorkHistory = Arrays.asList(workHistory);
+    List<GitHub> allGitHub = Arrays.asList(gitHub);
   
-    given(workHistoryRepo.findAll()).willReturn(allWorkHistory);
+    given(gitHubRepo.findAll()).willReturn(allGitHub);
 
     mvc.perform(get(baseUrl)
       .contentType(MediaType.APPLICATION_JSON))
+      .andDo(print())
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", hasSize(1)))
-      .andExpect(jsonPath("$[0].title", is(workHistory.getTitle())));
+      .andExpect(jsonPath("$[0].url", is(gitHub.getUrl())));
   }
 
   @Test
   public void testGet() throws Exception {
-    given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
-    given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
+    given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
+    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
+      .andDo(print())
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.title", is(workHistory.getTitle()))); //making sure getting the right data
+      .andExpect(jsonPath("$.url", is(gitHub.getUrl()))); //making sure getting the right data
 
     //checking when id does not exist (findById returns empty optional)
-    mvc.perform(get(baseUrl + "/2"))
+    mvc.perform(delete(baseUrl + "/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("WorkHistory not Found")));
+      .andExpect(content().string(containsString("GitHub not Found")));
   }
 
   @Test
   public void testPost() throws Exception {
-    given(workHistoryRepo.save(Mockito.any())).willReturn(workHistory);
+    given(gitHubRepo.save(Mockito.any())).willReturn(gitHub);
 
     mvc.perform(post(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
-      .content(new ObjectMapper().writeValueAsString(workHistory)))
+      .content(new ObjectMapper().writeValueAsString(gitHub)))
+      .andDo(print())
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.title", is(workHistory.getTitle())));
+      .andExpect(jsonPath("$.url", is(gitHub.getUrl())));
   }
 
   @Test
   void testDelete() throws Exception {
-    given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
-    given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
+    given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
+    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
@@ -107,15 +110,15 @@ public class WorkHistoryControllerTest {
     mvc.perform(delete(baseUrl + "/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("WorkHistory not Found")));
+      .andExpect(content().string(containsString("GitHub not Found")));
   }
 
   @Test
   void testUpdate() throws Exception {
-    given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
-    given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
+    given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
+    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
-    WorkHistory newGit = new WorkHistory("Scrum Master", "Google", "Leading team meetings", "In charge of all scrum meetings", "Java", "May 20, 2010", "March 13, 2021");
+    GitHub newGit = new GitHub("www.github.com/updatedUser", "updated profile pic");
     newGit.setId(2);
 
     //checking when id does not exist (findById returns empty optional)
@@ -124,29 +127,28 @@ public class WorkHistoryControllerTest {
       .content(new ObjectMapper().writeValueAsString(newGit)))
       .andDo(print())
       .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("WorkHistory not Found")));
-    
+      .andExpect(content().string(containsString("GitHub not Found")));
+
     newGit.setId(1);
 
-    given(workHistoryRepo.save(Mockito.any())).willReturn(newGit);
-
+    given(gitHubRepo.save(Mockito.any())).willReturn(newGit);
+   
     mvc.perform(put(baseUrl)
       .contentType(MediaType.APPLICATION_JSON)
       .content(new ObjectMapper().writeValueAsString(newGit)))
       .andDo(print())
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.title", is(newGit.getTitle())));
+      .andExpect(jsonPath("$.url", is(newGit.getUrl())));
   }
 
   @Test
   void testGetByPortfolioId() throws Exception {
 	  HashMap<String, String> map = new HashMap<>();
     Portfolio portfolio = new Portfolio(1, "new portfolio", new User(1, "test" , "user", "test@email.com" , "password", false), false, false, false, "", map);
-    workHistory.setPortfolio(portfolio);
-    List<WorkHistory> allWorkHistory = Arrays.asList(workHistory);
-  
-    given(workHistoryRepo.findByPortfolio(portfolio)).willReturn(allWorkHistory);
+    gitHub.setPortfolio(portfolio);
+    List<GitHub> allGitHubs = Arrays.asList(gitHub);
 
+    given(gitHubRepo.findByPortfolio(portfolio)).willReturn(allGitHubs);
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
     given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
@@ -155,25 +157,24 @@ public class WorkHistoryControllerTest {
       .andDo(print())
       .andExpect(content().contentType("application/json"))
       .andExpect(jsonPath("$", hasSize(1)))
-      .andExpect(jsonPath("$[0].title", is(workHistory.getTitle())))
+      .andExpect(jsonPath("$[0].url", is(gitHub.getUrl())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
     
-    // test for workhistory not found
+    // test for portfolio not found
     mvc.perform(get(baseUrl + "/portfolio/2"))
       .andDo(print())
       .andExpect(status().isNotFound())
       .andExpect(content().string(containsString("Portfolio not Found")));
     
     portfolio.setId(3);
-    allWorkHistory = new ArrayList<WorkHistory>();
-    given(workHistoryRepo.findByPortfolio(portfolio)).willReturn(allWorkHistory);
+    allGitHubs = new ArrayList<GitHub>();
+    given(gitHubRepo.findByPortfolio(portfolio)).willReturn(allGitHubs);
     given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
 
-    // test for workhistory not found with a found portfolio
+    // test for github not found with a found portfolio
     mvc.perform(get(baseUrl + "/portfolio/3"))
       .andDo(print())
       .andExpect(content().contentType("application/json"))
       .andExpect(jsonPath("$", hasSize(0)));
   }
-
 }

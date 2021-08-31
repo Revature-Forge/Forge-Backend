@@ -1,4 +1,4 @@
-package com.forge.revature.demo;
+package com.forge.revature.controllerTests;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;

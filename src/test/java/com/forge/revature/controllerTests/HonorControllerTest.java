@@ -1,4 +1,4 @@
-package com.forge.revature.demo;
+package com.forge.revature.controllerTests;
 
 import com.forge.revature.controllers.HonorController;
 import com.forge.revature.repo.HonorRepo;

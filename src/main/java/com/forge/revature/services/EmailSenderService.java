@@ -21,11 +21,18 @@ import org.springframework.stereotype.Service;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 
+import lombok.AllArgsConstructor;
+
 @Service
 public class EmailSenderService {
-	@Autowired
 	private JavaMailSender mailSender;
 
+	@Autowired
+	public EmailSenderService(JavaMailSender mailSender) {
+		super();
+		this.mailSender = mailSender;
+	}
+	
 	public void sendStatusEmail(User user, Portfolio portfolio) {
 
 		try {
@@ -156,4 +163,5 @@ public class EmailSenderService {
 		}
 
 	}
+
 }
