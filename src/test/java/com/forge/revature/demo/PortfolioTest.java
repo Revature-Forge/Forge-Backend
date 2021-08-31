@@ -57,6 +57,8 @@ import com.forge.revature.repo.UserRepo;
 import com.forge.revature.repo.WorkExperienceRepo;
 import com.forge.revature.repo.WorkHistoryRepo;
 import com.forge.revature.services.PortfolioService;
+import com.forge.revature.repo.MatrixRepo;
+import com.forge.revature.repo.SkillRepo;
 
 @SpringBootTest
 public class PortfolioTest {
@@ -104,13 +106,16 @@ public class PortfolioTest {
 	@MockBean
 	SkillRepo skillRepo;
 	
-	private static PortfolioService portfolioService;
+	@MockBean
+	EmailSenderService emailSenderService;
 
 	@BeforeEach
 	public void setup() {
-		portfolioService = new PortfolioService(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo,
-				gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo);
-		mvc = MockMvcBuilders.standaloneSetup(new PortfolioController(portfolioService)).build();
+		mvc = MockMvcBuilders.standaloneSetup(
+				new PortfolioController(new PortfolioService(repo, aboutMeRepo, certificationRepo, educationRepo, equivalencyRepo, 
+						gitHubRepo, honorRepo, projectRepo, workExperienceRepo, workHistoryRepo, matrixRepo, skillRepo)))
+				.build();
+		
 	}
 
 	@Test

@@ -8,5 +8,6 @@ INSERT INTO users VALUES (6,true,'bong@mail.com','Adminbong','Account','password
 =======
 INSERT INTO USERS VALUES ('1','true','admin@mail.com','Admin','Account','password');
 INSERT INTO USERS VALUES ('2','false','test@mail.com','Test','Account','password');
+INSERT INTO USERS VALUES ('3','false','beachsidedevelopers@gmail.com','Test','Account','password');
 
 >>>>>>> 64de1a5db9a3999de3572c3800d055026bca8f76

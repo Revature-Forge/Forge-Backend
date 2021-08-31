@@ -17,6 +17,7 @@ import com.forge.revature.controllers.WorkExperienceController;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.WorkExperience;
 import com.forge.revature.repo.WorkExperienceRepo;
+import com.forge.revature.services.WorkExperienceService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class WorkExperienceTest {
 
     @BeforeEach
     public void setup() {
-        mock = MockMvcBuilders.standaloneSetup(new WorkExperienceController(repo)).build();
+        mock = MockMvcBuilders.standaloneSetup(new WorkExperienceController(new WorkExperienceService(repo))).build();
     }
     
     @Test

@@ -4,6 +4,7 @@ import com.forge.revature.controllers.HonorController;
 import com.forge.revature.repo.HonorRepo;
 import com.forge.revature.models.Honor;
 import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.services.HonorService;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 
@@ -36,6 +37,9 @@ public class HonorControllerTest {
 
   @MockBean
   private HonorRepo honorRepo;
+  
+  @MockBean
+  private HonorController honorController;
 
   @MockBean
   private PortfolioRepo portfolioRepo;
@@ -44,6 +48,7 @@ public class HonorControllerTest {
 
   @BeforeEach
   public void setup() {
+	  this.honorController = new HonorController(new HonorService(honorRepo, portfolioRepo));
     this.honor = new Honor("Developer of the Year", "Top Performing Developer", "2019", "Revature");
     this.honor.setId(1);
   }
