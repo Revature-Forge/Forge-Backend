@@ -284,6 +284,7 @@ public class PortfolioService {
             old.get().setReviewed(updated.isReviewed());
             old.get().setSubmitted(updated.isSubmitted());
             old.get().setFlags(updated.getFlags());
+            old.get().setAdmin(updated.getAdmin());
             portRepo.save(old.get());
             emailSenderService.sendStatusEmail(old.get().getUser(),old.get());
         }
