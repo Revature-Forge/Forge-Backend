@@ -3,7 +3,7 @@ package com.forge.revature.controllers;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.forge.revature.models.AdminChart;
@@ -26,7 +26,7 @@ public class AdminChartController {
 	*		    when search success, return a response entity with status code 200
 	*	                             and a body containing the json object
 	*/
-	@PostMapping
+	@GetMapping
 	public ResponseEntity<List<AdminChart>> getAdminWorkReport() {
 		return adminChartService.getAdminWorkReport();
 	}
