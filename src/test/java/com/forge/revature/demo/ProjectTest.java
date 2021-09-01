@@ -15,6 +15,7 @@ import com.forge.revature.controllers.ProjectController;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.Project;
 import com.forge.revature.repo.ProjectRepo;
+import com.forge.revature.services.ProjectService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class ProjectTest {
 
     @BeforeEach
     public void setup() {
-        mock = MockMvcBuilders.standaloneSetup(new ProjectController(repo)).build();
+        mock = MockMvcBuilders.standaloneSetup(new ProjectController(new ProjectService(repo))).build();
     }
     
     @Test

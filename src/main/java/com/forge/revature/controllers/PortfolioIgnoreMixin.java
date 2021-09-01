@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.forge.revature.models.Portfolio;
 
 public abstract class PortfolioIgnoreMixin {
-    @JsonIgnore
-    Portfolio portfolio;
+	@JsonIgnore
+	Portfolio portfolio;
 }

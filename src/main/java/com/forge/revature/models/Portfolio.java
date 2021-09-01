@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.forge.revature.converter.HashMapConverter;
@@ -45,8 +46,17 @@ public class Portfolio {
 
 	@Column(columnDefinition = "boolean default false")
 	private boolean reviewed;
+	
+	@ManyToOne
+	@JoinColumn(name = "admin_id")
+	private User admin;
 
 	private String feedback;
+	private boolean submissionTrigger;
+	private boolean reviewTrigger;
+	private String reviewTime;
+	private String submissionTime;
+	private Long responseTime;
 
 	@Column
 	@Convert(converter = HashMapConverter.class)
@@ -58,6 +68,34 @@ public class Portfolio {
 		this.approved = approved;
 		this.reviewed = reviewed;
 		this.feedback = feedback;
+		this.reviewTime = null;
+		this.submissionTime = null;
+		this.responseTime = 0L;
+		this.reviewTrigger = false;
+		this.submissionTrigger = false;
+	}
+
+	public Portfolio(int id, String name, User user, boolean submitted, boolean approved, boolean reviewed,
+			String feedback, HashMap<String, String> flags) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.user = user;
+		this.submitted = submitted;
+		this.approved = approved;
+		this.reviewed = reviewed;
+		this.feedback = feedback;
+		this.flags = flags;
+		this.reviewTime = null;
+		this.submissionTime = null;
+		this.responseTime = 0L;
+		this.reviewTrigger = false;
+		this.submissionTrigger = false;
+	}
+
+	public Portfolio(int i, String string, User user2, boolean b, boolean c, boolean d, String string2, Object object,
+			HashMap<String, String> map) {
+		// TODO Auto-generated constructor stub
 	}
 
 }

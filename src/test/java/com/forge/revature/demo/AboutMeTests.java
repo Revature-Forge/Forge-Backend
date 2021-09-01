@@ -25,6 +25,7 @@ import com.forge.revature.models.AboutMe;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.AboutMeRepo;
+import com.forge.revature.services.AboutMeService;
 
 /**
  * @author Max Lee
@@ -53,7 +54,7 @@ public class AboutMeTests {
     @BeforeEach
     public void setup() {
     	HashMap<String, String> map = new HashMap<>();
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new AboutMeController(aboutMeRepo)).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new AboutMeController(new AboutMeService(aboutMeRepo))).build();
         User user = new User(1, "Max", "Lee" , "max.lee@email.com" , "password", true);
         Portfolio portfolio = new Portfolio(1, "My Portfolio", user, false, false, false, "", map);
         this.testAboutMe = new AboutMe(1, portfolio, "Hi I'm Max", "max@mail.net", "(333) 333-4444");
