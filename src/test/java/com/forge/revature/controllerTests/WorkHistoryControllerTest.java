@@ -82,18 +82,11 @@ public class WorkHistoryControllerTest {
   @Test
   public void testGet() throws Exception {
     given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
-    given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.title", is(workHistory.getTitle()))); //making sure getting the right data
-
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(get(baseUrl + "/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("WorkHistory not Found")));
   }
 
   @Test
@@ -110,35 +103,17 @@ public class WorkHistoryControllerTest {
   @Test
   void testDelete() throws Exception {
     given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
-    given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
-
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(delete(baseUrl + "/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("WorkHistory not Found")));
   }
 
   @Test
   void testUpdate() throws Exception {
     given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
-    given(workHistoryRepo.findById(2)).willReturn(Optional.empty());
 
     WorkHistory newGit = new WorkHistory("Scrum Master", "Google", "Leading team meetings", "In charge of all scrum meetings", "Java", "May 20, 2010", "March 13, 2021");
-    
-//    newGit.setId(2);
-//
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(put(baseUrl)
-//      .contentType(MediaType.APPLICATION_JSON)
-//      .content(new ObjectMapper().writeValueAsString(newGit)))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("WorkHistory not Found")));
     
     newGit.setId(1);
 
@@ -162,7 +137,6 @@ public class WorkHistoryControllerTest {
     given(workHistoryRepo.findByPortfolio(portfolio)).willReturn(allWorkHistory);
 
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
-    given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/portfolio/1"))
       .andExpect(status().isOk())
@@ -171,23 +145,6 @@ public class WorkHistoryControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].title", is(workHistory.getTitle())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
-    
-//    // test for workhistory not found
-//    mvc.perform(get(baseUrl + "/portfolio/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("Portfolio not Found")));
-    
-    portfolio.setId(3);
-    allWorkHistory = new ArrayList<WorkHistory>();
-    given(workHistoryRepo.findByPortfolio(portfolio)).willReturn(allWorkHistory);
-    given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
-
-//    // test for workhistory not found with a found portfolio
-//    mvc.perform(get(baseUrl + "/portfolio/3"))
-//      .andDo(print())
-//      .andExpect(content().contentType("application/json"))
-//      .andExpect(jsonPath("$", hasSize(0)));
   }
 
 }

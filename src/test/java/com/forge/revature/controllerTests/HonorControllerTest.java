@@ -81,18 +81,11 @@ public class HonorControllerTest {
   @Test
   public void testGet() throws Exception {
     given(honorRepo.findById(1)).willReturn(Optional.of(honor));
-    given(honorRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.title", is(honor.getTitle()))); //making sure getting the right data
-//
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(get(baseUrl + "/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("Honor not Found")));
   }
 
   @Test
@@ -109,35 +102,17 @@ public class HonorControllerTest {
   @Test
   void testDelete() throws Exception {
     given(honorRepo.findById(1)).willReturn(Optional.of(honor));
-    given(honorRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
-
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(delete(baseUrl + "/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("Honor not Found")));
   }
 
   @Test
   void testUpdate() throws Exception {
     given(honorRepo.findById(1)).willReturn(Optional.of(honor));
-    given(honorRepo.findById(2)).willReturn(Optional.empty());
 
     Honor newHonor = new Honor("Updated title", "updated description", "Updated dateReceived", "Updated receivedFrom");
-    newHonor.setId(2);
-
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(put(baseUrl)
-//      .contentType(MediaType.APPLICATION_JSON)
-//      .content(new ObjectMapper().writeValueAsString(newHonor)))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("Honor not Found")));
-
     newHonor.setId(1);
 
     given(honorRepo.save(Mockito.any())).willReturn(newHonor);
@@ -159,7 +134,6 @@ public class HonorControllerTest {
   
     given(honorRepo.findByPortfolio(portfolio)).willReturn(allHonors);
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
-    given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/portfolio/1"))
       .andExpect(status().isOk())
@@ -168,22 +142,5 @@ public class HonorControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].title", is(honor.getTitle())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
-    
-//    // test for portfolio not found
-//    mvc.perform(get(baseUrl + "/portfolio/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("Portfolio not Found")));
-    
-    portfolio.setId(3);
-    allHonors = new ArrayList<Honor>();
-    given(honorRepo.findByPortfolio(portfolio)).willReturn(allHonors);
-    given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
-
-//    // test for honor not found with a found portfolio
-//    mvc.perform(get(baseUrl + "/portfolio/3"))
-//      .andDo(print())
-//      .andExpect(content().contentType("application/json"))
-//      .andExpect(jsonPath("$", hasSize(0)));
-  }
+ }
 }
