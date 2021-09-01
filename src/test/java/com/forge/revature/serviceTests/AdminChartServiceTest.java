@@ -18,6 +18,7 @@ import com.forge.revature.models.User;
 import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.repo.UserRepo;
 import com.forge.revature.services.AdminChartService;
+import com.forge.revature.services.PortfolioService;
 
 @SpringBootTest
 public class AdminChartServiceTest {
@@ -27,6 +28,9 @@ public class AdminChartServiceTest {
 
 	@MockBean
 	private PortfolioRepo portfolioRepo;
+	
+	@MockBean
+	private PortfolioService portfolioService;
 	
 	private AdminChartService adminChartService;
 	
@@ -40,10 +44,10 @@ public class AdminChartServiceTest {
 	
 	@BeforeEach
 	public void setup() {
-		adminChartService = new AdminChartService(userRepo, portfolioRepo);
+		adminChartService = new AdminChartService(userRepo, portfolioRepo, portfolioService);
 		user = new User(1, "Hong", "Wu", "hong@mail.com", "password", true);
 		portfolio = new Portfolio(1, "hong Portfolio", user, true, true, true, user, "description", true, true, "", "", 0L, null);
-		adminChart = new AdminChart("Hong Wu", 1, 0);
+		adminChart = new AdminChart("Hong Wu", 1, 0, 0D, "");
 		allAdmin = new ArrayList<User>();
 		allAdmin.add(user);
 	}
@@ -64,6 +68,8 @@ public class AdminChartServiceTest {
 	@Test
 	public void getAdminListTest() throws Exception {
 		given(userRepo.findAllByAdmin(true)).willReturn(allAdmin);
+		given(portfolioService.calculateAverageResponseTime()).willReturn(10D);
+		given(portfolioService.calculateAverageResponseTimeString()).willReturn("time");
 		
 		assertEquals("Hong", adminChartService.getAdminList().get(0).getFName());
 	}

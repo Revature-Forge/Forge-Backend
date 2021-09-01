@@ -40,7 +40,7 @@ public class AdminChartControllerTest {
 
 	@Test
 	public void getAdminWorkReportTest() throws Exception {
-		this.adminChart = new AdminChart("Hong Wu", 1, 0);
+		this.adminChart = new AdminChart("Hong Wu", 1, 0, 0D, "");
 		List<AdminChart> adminChartList = new ArrayList<AdminChart>();
 		adminChartList.add(adminChart);
 
