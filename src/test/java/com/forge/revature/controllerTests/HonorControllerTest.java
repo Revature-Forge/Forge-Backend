@@ -141,4 +141,5 @@ public class HonorControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].title", is(honor.getTitle())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
+  }
 }

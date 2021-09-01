@@ -93,7 +93,7 @@ public class PortfolioService {
 	
 
 	//returns days, hours, minutes.
-	String calculateAverageResponseTimeString(){
+	public String calculateAverageResponseTimeString(){
 		List<Portfolio> portfolios =  getAll();
 		if(portfolios.size() == 0)
 		{
@@ -123,7 +123,7 @@ public class PortfolioService {
 	}
 	
 	//returns average response time in seconds
-	double calculateAverageResponseTime(){
+	public double calculateAverageResponseTime(){
 		List<Portfolio> portfolios =  getAll();
 		if(portfolios.size() == 0)
 		{
