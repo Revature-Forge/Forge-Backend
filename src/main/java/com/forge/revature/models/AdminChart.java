@@ -15,4 +15,13 @@ public class AdminChart {
 	int denied;
 	double responseTime;
 	String responseTimeString;
+	
+	public AdminChart(String name, int approved, int denied) {
+		super();
+		this.name = name;
+		this.approved = approved;
+		this.denied = denied;
+	}
+	
+	
 }
