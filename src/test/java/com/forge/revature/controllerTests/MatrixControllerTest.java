@@ -94,9 +94,8 @@ public class MatrixControllerTest {
 	@Test
 	void testGetById() throws Exception {
 		given(matrixRepo.findById(1)).willReturn(Optional.of(matrix));
-		given(matrixRepo.findById(2)).willReturn(Optional.empty());
 
-		mvc.perform(get("/api/matrix/1").contentType(MediaType.APPLICATION_JSON))
+    mvc.perform(get("/api/matrix/1").contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.header", is(matrix.getHeader())));
 	}

@@ -81,19 +81,12 @@ public class GitHubControllerTest {
   @Test
   public void testGet() throws Exception {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
-    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
       .andDo(print())
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.url", is(gitHub.getUrl()))); //making sure getting the right data
-
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(delete(baseUrl + "/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("GitHub not Found")));
   }
 
   @Test
@@ -111,35 +104,17 @@ public class GitHubControllerTest {
   @Test
   void testDelete() throws Exception {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
-    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
-
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(delete(baseUrl + "/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("GitHub not Found")));
   }
 
   @Test
   void testUpdate() throws Exception {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
-    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     GitHub newGit = new GitHub("www.github.com/updatedUser", "updated profile pic");
-    newGit.setId(2);
-
-//    //checking when id does not exist (findById returns empty optional)
-//    mvc.perform(put(baseUrl)
-//      .contentType(MediaType.APPLICATION_JSON)
-//      .content(new ObjectMapper().writeValueAsString(newGit)))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("GitHub not Found")));
-
     newGit.setId(1);
 
     given(gitHubRepo.save(Mockito.any())).willReturn(newGit);
@@ -161,7 +136,6 @@ public class GitHubControllerTest {
 
     given(gitHubRepo.findByPortfolio(portfolio)).willReturn(allGitHubs);
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
-    given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/portfolio/1"))
       .andExpect(status().isOk())
@@ -170,22 +144,3 @@ public class GitHubControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].url", is(gitHub.getUrl())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
-    
-//    // test for portfolio not found
-//    mvc.perform(get(baseUrl + "/portfolio/2"))
-//      .andDo(print())
-//      .andExpect(status().isNotFound())
-//      .andExpect(content().string(containsString("Portfolio not Found")));
-    
-    portfolio.setId(3);
-    allGitHubs = new ArrayList<GitHub>();
-    given(gitHubRepo.findByPortfolio(portfolio)).willReturn(allGitHubs);
-    given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
-
-//    // test for github not found with a found portfolio
-//    mvc.perform(get(baseUrl + "/portfolio/3"))
-//      .andDo(print())
-//      .andExpect(content().contentType("application/json"))
-//      .andExpect(jsonPath("$", hasSize(0)));
-  }
-}
