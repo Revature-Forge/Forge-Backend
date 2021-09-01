@@ -101,11 +101,17 @@ public class PortfolioService {
 		}
 		
 		double average = 0;
+		int count = 0;
 		for(int i = 0; i < portfolios.size(); ++i)
 		{
-			average += portfolios.get(i).getResponseTime();
+			if(portfolios.get(i).isReviewed()) {
+				average += portfolios.get(i).getResponseTime();
+				++count;
+			}
 		}
-		average /= portfolios.size();
+		if(count > 0) {
+			average /= count;
+		}
 		
 		int days = ((int)average)/86400;
 		double remainder = ((int)average)%86400;
@@ -125,11 +131,18 @@ public class PortfolioService {
 		}
 		
 		double average = 0;
+		int count = 0;
 		for(int i = 0; i < portfolios.size(); ++i)
 		{
-			average += portfolios.get(i).getResponseTime();
+			if(portfolios.get(i).isReviewed()) {
+				average += portfolios.get(i).getResponseTime();
+				++count;
+			}
 		}
-		average /= portfolios.size();
+		if(count > 0) {
+			average /= count;
+		}
+//		average /= portfolios.size();
 		return average;
 	}
     
@@ -271,6 +284,7 @@ public class PortfolioService {
             old.get().setReviewed(updated.isReviewed());
             old.get().setSubmitted(updated.isSubmitted());
             old.get().setFlags(updated.getFlags());
+            old.get().setAdmin(updated.getAdmin());
             portRepo.save(old.get());
             emailSenderService.sendStatusEmail(old.get().getUser(),old.get());
         }
