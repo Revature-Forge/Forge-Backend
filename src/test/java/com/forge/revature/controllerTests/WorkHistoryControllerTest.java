@@ -114,7 +114,6 @@ public class WorkHistoryControllerTest {
     given(workHistoryRepo.findById(1)).willReturn(Optional.of(workHistory));
 
     WorkHistory newGit = new WorkHistory("Scrum Master", "Google", "Leading team meetings", "In charge of all scrum meetings", "Java", "May 20, 2010", "March 13, 2021");
-    
     newGit.setId(1);
 
     given(workHistoryRepo.save(Mockito.any())).willReturn(newGit);
@@ -146,5 +145,4 @@ public class WorkHistoryControllerTest {
       .andExpect(jsonPath("$[0].title", is(workHistory.getTitle())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
   }
-
 }

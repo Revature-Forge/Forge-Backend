@@ -144,5 +144,3 @@ public class GitHubControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].url", is(gitHub.getUrl())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
-  }
-}

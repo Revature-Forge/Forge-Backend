@@ -102,7 +102,6 @@ public class HonorControllerTest {
   @Test
   void testDelete() throws Exception {
     given(honorRepo.findById(1)).willReturn(Optional.of(honor));
-
     mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
@@ -142,5 +141,4 @@ public class HonorControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].title", is(honor.getTitle())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
- }
 }
