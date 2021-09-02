@@ -1,39 +1,52 @@
-package com.forge.revature.demo;
+package com.forge.revature.controllerTests;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.GitHubController;
-import com.forge.revature.repo.GitHubRepo;
 import com.forge.revature.models.GitHub;
 import com.forge.revature.models.Portfolio;
-import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.models.User;
+import com.forge.revature.repo.GitHubRepo;
+import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.services.GitHubService;
 
-import java.util.*;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.http.MediaType;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.mockito.Mockito;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.mockito.BDDMockito.given;
-
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(GitHubController.class)
+@SpringBootTest
 public class GitHubControllerTest {
-  @Autowired
   private MockMvc mvc;
   
   private static String baseUrl = "/api/github";
 
+  private GitHubController gitHubController;
+  
+  private GitHubService gitHubService;
+  
   @MockBean
   private GitHubRepo gitHubRepo;
 
@@ -44,8 +57,11 @@ public class GitHubControllerTest {
 
   @BeforeEach
   public void setup() {
-    this.gitHub = new GitHub("www.github.com/user", "profile pic");
-    this.gitHub.setId(1);
+	  gitHubService = new GitHubService(gitHubRepo, portfolioRepo);
+	  gitHubController = new GitHubController(gitHubService);
+	  mvc = MockMvcBuilders.standaloneSetup(gitHubController).build();
+	  gitHub = new GitHub("www.github.com/user", "profile pic");
+	  gitHub.setId(1);
   }
 
   @Test
@@ -65,19 +81,12 @@ public class GitHubControllerTest {
   @Test
   public void testGet() throws Exception {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
-    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
       .andDo(print())
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.url", is(gitHub.getUrl()))); //making sure getting the right data
-
-    //checking when id does not exist (findById returns empty optional)
-    mvc.perform(delete(baseUrl + "/2"))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("GitHub not Found")));
   }
 
   @Test
@@ -95,35 +104,17 @@ public class GitHubControllerTest {
   @Test
   void testDelete() throws Exception {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
-    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
-
-    //checking when id does not exist (findById returns empty optional)
-    mvc.perform(delete(baseUrl + "/2"))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("GitHub not Found")));
   }
 
   @Test
   void testUpdate() throws Exception {
     given(gitHubRepo.findById(1)).willReturn(Optional.of(gitHub));
-    given(gitHubRepo.findById(2)).willReturn(Optional.empty());
 
     GitHub newGit = new GitHub("www.github.com/updatedUser", "updated profile pic");
-    newGit.setId(2);
-
-    //checking when id does not exist (findById returns empty optional)
-    mvc.perform(put(baseUrl)
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(new ObjectMapper().writeValueAsString(newGit)))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("GitHub not Found")));
-
     newGit.setId(1);
 
     given(gitHubRepo.save(Mockito.any())).willReturn(newGit);
@@ -145,7 +136,6 @@ public class GitHubControllerTest {
 
     given(gitHubRepo.findByPortfolio(portfolio)).willReturn(allGitHubs);
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
-    given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/portfolio/1"))
       .andExpect(status().isOk())
@@ -154,22 +144,5 @@ public class GitHubControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].url", is(gitHub.getUrl())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
-    
-    // test for portfolio not found
-    mvc.perform(get(baseUrl + "/portfolio/2"))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("Portfolio not Found")));
-    
-    portfolio.setId(3);
-    allGitHubs = new ArrayList<GitHub>();
-    given(gitHubRepo.findByPortfolio(portfolio)).willReturn(allGitHubs);
-    given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
-
-    // test for github not found with a found portfolio
-    mvc.perform(get(baseUrl + "/portfolio/3"))
-      .andDo(print())
-      .andExpect(content().contentType("application/json"))
-      .andExpect(jsonPath("$", hasSize(0)));
   }
 }

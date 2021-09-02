@@ -1,49 +1,66 @@
-package com.forge.revature.demo;
+package com.forge.revature.controllerTests;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.HonorController;
-import com.forge.revature.repo.HonorRepo;
 import com.forge.revature.models.Honor;
-import com.forge.revature.repo.PortfolioRepo;
 import com.forge.revature.models.Portfolio;
 import com.forge.revature.models.User;
+import com.forge.revature.repo.HonorRepo;
+import com.forge.revature.repo.PortfolioRepo;
+import com.forge.revature.services.HonorService;
 
-import java.util.*;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.http.MediaType;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.mockito.Mockito;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.mockito.BDDMockito.given;
-
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(HonorController.class)
+@SpringBootTest
 public class HonorControllerTest {
-  @Autowired
-  private MockMvc mvc;
+
+  MockMvc mvc;
   
-  private static String baseUrl = "/api/honor";
+  static String baseUrl = "/api/honor";
+
+  HonorController honorController;
+
+  HonorService honorService;
+  
+  @MockBean
+  HonorRepo honorRepo;
 
   @MockBean
-  private HonorRepo honorRepo;
+  PortfolioRepo portfolioRepo;
 
-  @MockBean
-  private PortfolioRepo portfolioRepo;
-
-  private Honor honor;
+  Honor honor;
 
   @BeforeEach
   public void setup() {
+	this.honorService = new HonorService(honorRepo, portfolioRepo);
+	this.honorController = new HonorController(honorService);
+	this.mvc = MockMvcBuilders.standaloneSetup(honorController).build();
     this.honor = new Honor("Developer of the Year", "Top Performing Developer", "2019", "Revature");
     this.honor.setId(1);
   }
@@ -64,18 +81,11 @@ public class HonorControllerTest {
   @Test
   public void testGet() throws Exception {
     given(honorRepo.findById(1)).willReturn(Optional.of(honor));
-    given(honorRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/1")
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.title", is(honor.getTitle()))); //making sure getting the right data
-
-    //checking when id does not exist (findById returns empty optional)
-    mvc.perform(get(baseUrl + "/2"))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("Honor not Found")));
   }
 
   @Test
@@ -92,35 +102,16 @@ public class HonorControllerTest {
   @Test
   void testDelete() throws Exception {
     given(honorRepo.findById(1)).willReturn(Optional.of(honor));
-    given(honorRepo.findById(2)).willReturn(Optional.empty());
-
     mvc.perform(delete(baseUrl + "/1"))
       .andDo(print())
       .andExpect(status().isOk());
-
-    //checking when id does not exist (findById returns empty optional)
-    mvc.perform(delete(baseUrl + "/2"))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("Honor not Found")));
   }
 
   @Test
   void testUpdate() throws Exception {
     given(honorRepo.findById(1)).willReturn(Optional.of(honor));
-    given(honorRepo.findById(2)).willReturn(Optional.empty());
 
     Honor newHonor = new Honor("Updated title", "updated description", "Updated dateReceived", "Updated receivedFrom");
-    newHonor.setId(2);
-
-    //checking when id does not exist (findById returns empty optional)
-    mvc.perform(put(baseUrl)
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(new ObjectMapper().writeValueAsString(newHonor)))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("Honor not Found")));
-
     newHonor.setId(1);
 
     given(honorRepo.save(Mockito.any())).willReturn(newHonor);
@@ -142,7 +133,6 @@ public class HonorControllerTest {
   
     given(honorRepo.findByPortfolio(portfolio)).willReturn(allHonors);
     given(portfolioRepo.findById(1)).willReturn(Optional.of(portfolio));
-    given(portfolioRepo.findById(2)).willReturn(Optional.empty());
 
     mvc.perform(get(baseUrl + "/portfolio/1"))
       .andExpect(status().isOk())
@@ -151,22 +141,5 @@ public class HonorControllerTest {
       .andExpect(jsonPath("$", hasSize(1)))
       .andExpect(jsonPath("$[0].title", is(honor.getTitle())))
       .andExpect(jsonPath("$[0].portfolio.id", is(portfolio.getId())));
-    
-    // test for portfolio not found
-    mvc.perform(get(baseUrl + "/portfolio/2"))
-      .andDo(print())
-      .andExpect(status().isNotFound())
-      .andExpect(content().string(containsString("Portfolio not Found")));
-    
-    portfolio.setId(3);
-    allHonors = new ArrayList<Honor>();
-    given(honorRepo.findByPortfolio(portfolio)).willReturn(allHonors);
-    given(portfolioRepo.findById(3)).willReturn(Optional.of(portfolio));
-
-    // test for honor not found with a found portfolio
-    mvc.perform(get(baseUrl + "/portfolio/3"))
-      .andDo(print())
-      .andExpect(content().contentType("application/json"))
-      .andExpect(jsonPath("$", hasSize(0)));
   }
 }

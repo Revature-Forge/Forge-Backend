@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forge.revature.controllers.UserController;
 import com.forge.revature.models.User;
 import com.forge.revature.repo.UserRepo;
+import com.forge.revature.services.UserService;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -36,7 +37,7 @@ public class UserTest {
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
-            .standaloneSetup(new UserController(repo))
+            .standaloneSetup(new UserController(new UserService(repo)))
             .build();
     }
 
