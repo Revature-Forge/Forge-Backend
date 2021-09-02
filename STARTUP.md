@@ -4,6 +4,16 @@
 - Within the new folder
     - Clone Forge-Backend
     - Clone Porfolio-Frontend
+- Within Forge-Backend folder
+    -Create a new .env file and add following environment variables with the correct values to be used. These
+     variables will be used in the application.properties file.
+        -USER_EMAIL=sample@mail.com  /*email which will be used to send emails to employees
+                                         replace sample@mail.com with correct email*/
+        -EMAIL_PASSWORD=samplePassword  /*password for the email used to send emails to employees
+                                        replace sample with correct password for provided email*/
+        -DB_NAME=sampleDBName  /*name of database the application will be conecting to.
+                                replace sampleDBName with correct database name*/
+    -Add any other environment variables you might need in the future in this .env file.
 
 <b>Have these projects within the same directory for the docker-compose to work.</b>
 
